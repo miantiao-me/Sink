@@ -8,18 +8,20 @@
     "node": ">=20.11"
   },
   "scripts": {
-    "dev": "nuxt dev",
     "build": "NODE_OPTIONS=--max-old-space-size=8192 nuxt build",
     "build:map": "node scripts/build-map.js",
     "build:colo": "node scripts/build-colo.js",
-    "preview": "wrangler pages dev dist",
-    "deploy": "wrangler pages deploy dist",
     "postinstall": "npm run build:map && nuxt prepare",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "typecheck": "nuxt typecheck",
+    "lint-staged": "lint-staged",
     "wrangler": "wrangler",
-    "lint-staged": "lint-staged"
+    "dev": "nuxt dev",
+    "deploy": "npm run deploy:pages",
+    "deploy:pages": "wrangler pages deploy dist",
+    "deploy:worker": "wrangler deploy",
+    "preview": "wrangler dev --var $(cat .env | sed 's/=/:/g')",
+    "test": "vitest"
   },
   "dependencies": {
     "@intlify/message-compiler": "^11.1.3",
@@ -50,7 +52,9 @@
     "zod": "^3.25.20"
   },
   "devDependencies": {
+    "@anatine/zod-mock": "^3.14.0",
     "@antfu/eslint-config": "^4.13.2",
+    "@cloudflare/vitest-pool-workers": "^0.8.33",
     "@nuxt/eslint": "^1.4.1",
     "@nuxt/eslint-config": "^1.4.1",
     "@nuxthub/core": "^0.8.27",
@@ -61,12 +65,14 @@
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "eslint": "^9.27.0",
+    "eslint-plugin-format": "^1.0.1",
     "lint-staged": "^16.0.0",
     "nuxt": "^3.17.4",
     "shadcn-nuxt": "^2.1.0",
     "simple-git-hooks": "^2.13.0",
     "tailwind-merge": "^3.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "vitest": "^3.1.4",
     "vue-tsc": "^2.2.10",
     "wrangler": "^4.16.1"
   },

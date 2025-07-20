@@ -1,13 +1,12 @@
-// @ts-check
 import antfu from '@antfu/eslint-config'
 import withNuxt from './.nuxt/eslint.config.mjs'
 
 export default withNuxt(
-  antfu(),
+  antfu({
+    formatters: true,
+  }),
   {
     ignores: ['app/components/ui', '.data', 'public/*.json'],
-  },
-  {
     rules: {
       '@typescript-eslint/ban-ts-comment': 'off',
       'no-console': 'off',

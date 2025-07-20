@@ -6,13 +6,13 @@ Sink provides some configuration options, which can be referred to in [.env.exam
 
 ## `NUXT_PUBLIC_PREVIEW_MODE`
 
-> If you are using Worker deployment, this variable needs to be configured in  **Settings** -> **Build** -> **Variables and Secrets** and **Settings** -> **Variables and Secrets**.
+> If you are using Worker deployment, this variable needs to be configured in **Settings** -> **Build** -> **Variables and Secrets** and **Settings** -> **Variables and Secrets**.
 
 Sets the site to demo mode, the generated links will expire after 5 minutes, and the links cannot be edited or deleted.
 
 ## `NUXT_PUBLIC_SLUG_DEFAULT_LENGTH`
 
-> If you are using Worker deployment, this variable needs to be configured in  **Settings** -> **Build** -> **Variables and Secrets** and **Settings** -> **Variables and Secrets**.
+> If you are using Worker deployment, this variable needs to be configured in **Settings** -> **Build** -> **Variables and Secrets** and **Settings** -> **Variables and Secrets**.
 
 Sets the default length of the generated SLUG.
 
@@ -61,3 +61,7 @@ Set the maximum query data volume for the Metric list.
 ## `NUXT_DISABLE_BOT_ACCESS_LOG`
 
 Access statistics do not count bot traffic.
+
+## `NUXT_API_CORS`
+
+Set the environment variable `NUXT_API_CORS=true` during build to enable CORS support for the API.
