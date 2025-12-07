@@ -4,7 +4,7 @@ import { ArrowUpDown } from 'lucide-vue-next'
 defineProps({
   sortBy: {
     type: String,
-    default: 'az',
+    default: 'newest',
   },
 })
 
