@@ -53,6 +53,7 @@
 - **Customizable Slug:** Support for personalized slugs and case sensitivity.
 - **🪄 AI Slug:** Leverage AI to generate slugs.
 - **Link Expiration:** Set expiration dates for your links.
+- **Mobile Deep Links:** Automatically redirect mobile users to native apps when available.
 
 ## 🪧 Demo
 
