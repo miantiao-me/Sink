@@ -8,7 +8,7 @@ let cursor = ''
 let listComplete = false
 let listError = false
 
-const sortBy = ref('az')
+const sortBy = ref('newest')
 
 const displayedLinks = computed(() => {
   const sorted = [...links.value]
