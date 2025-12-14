@@ -1,11 +1,12 @@
 import type { LinkSchema } from '@@/schemas/link'
 import type { z } from 'zod'
 import { parsePath, withQuery } from 'ufo'
+import { handleMobileDeepLink } from '../utils/mobile-deep-links'
 
 export default eventHandler(async (event) => {
   const { pathname: slug } = parsePath(event.path.replace(/^\/|\/$/g, '')) // remove leading and trailing slashes
   const { slugRegex, reserveSlug } = useAppConfig(event)
-  const { homeURL, linkCacheTtl, redirectWithQuery, caseSensitive } = useRuntimeConfig(event)
+  const { homeURL, linkCacheTtl, redirectWithQuery, caseSensitive, redirectStatusCode } = useRuntimeConfig(event)
   const { cloudflare } = event.context
 
   if (event.path === '/' && homeURL)
@@ -36,8 +37,17 @@ export default eventHandler(async (event) => {
       catch (error) {
         console.error('Failed write access log:', error)
       }
+
       const target = redirectWithQuery ? withQuery(link.url, getQuery(event)) : link.url
-      return sendRedirect(event, target, +useRuntimeConfig(event).redirectStatusCode)
+
+      // Check for mobile deep linking
+      const { shouldInterceptRedirect, htmlResponse } = await handleMobileDeepLink(event, target)
+      if (shouldInterceptRedirect && htmlResponse) {
+        return htmlResponse
+      }
+
+      // Default redirect
+      return sendRedirect(event, target, +redirectStatusCode)
     }
   }
 })

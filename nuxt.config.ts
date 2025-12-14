@@ -31,6 +31,8 @@ export default defineNuxtConfig({
     caseSensitive: false,
     listQueryLimit: 500,
     disableBotAccessLog: false,
+    enableMobileDeepLinks: false,
+    deepLinkTimeout: 3000,
     public: {
       previewMode: '',
       slugDefaultLength: '6',

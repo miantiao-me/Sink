@@ -65,3 +65,15 @@ Access statistics do not count bot traffic.
 ## `NUXT_API_CORS`
 
 Set the environment variable `NUXT_API_CORS=true` during build to enable CORS support for the API.
+
+## `NUXT_ENABLE_MOBILE_DEEP_LINKS`
+
+Enables mobile deep link functionality. When enabled, mobile users accessing shortened links will be automatically redirected to the corresponding native app if available (e.g., Instagram app for Instagram links, Amazon app for Amazon product links).
+
+Default: `false`
+
+## `NUXT_DEEP_LINK_TIMEOUT`
+
+Sets the timeout in milliseconds for deep link attempts before falling back to the web browser. This gives the system time to attempt opening the native app before redirecting to the web version.
+
+Default: `3000` (3 seconds)
