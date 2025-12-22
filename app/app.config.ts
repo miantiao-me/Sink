@@ -1,6 +1,6 @@
 export default defineAppConfig({
-  title: 'Sink',
-  email: 'sink.cool@miantiao.me',
+  title: 'glsoft.ai',
+  email: 'ok@vip.david888.com',
   github: 'https://github.com/miantiao-me/sink',
   twitter: 'https://sink.cool/kai',
   telegram: 'https://sink.cool/telegram',

@@ -1,0 +1,4 @@
+name = "sink"
+pages_build_output_dir = "dist"
+compatibility_date = "2025-05-08"
+compatibility_flags = ["nodejs_compat"]
