@@ -1,11 +1,22 @@
-<script setup>
+<script setup lang="ts">
+import type { ZodAny } from 'zod'
+import type { Shape } from '@/components/ui/auto-form/interface'
 import { LinkSchema, nanoid } from '@@/schemas/link'
 import { toTypedSchema } from '@vee-validate/zod'
 import { Shuffle, Sparkles } from 'lucide-vue-next'
 import { useForm } from 'vee-validate'
 import { toast } from 'vue-sonner'
 import { z } from 'zod'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
+import AutoFormField from '@/components/ui/auto-form/AutoFormField.vue'
 import { DependencyType } from '@/components/ui/auto-form/interface'
+import { beautifyObjectName, getBaseSchema, getBaseType, getDefaultValueInZodStack } from '@/components/ui/auto-form/utils'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { applyUtmToUrl, extractUtmFromUrl, normalizeUtmFields, stripUtmFromUrl } from '@/lib/utm'
 
 const props = defineProps({
   link: {
@@ -51,6 +62,43 @@ const fieldConfig = {
   },
 }
 
+const optionalShapes = computed(() => {
+  const optionalSchema = getBaseSchema((EditLinkSchema.shape as Record<string, ZodAny>).optional)
+  if (!optionalSchema || !('shape' in optionalSchema))
+    return {} as Record<string, Shape>
+
+  const shapes: Record<string, Shape> = {}
+  const shape = optionalSchema.shape as Record<string, ZodAny>
+
+  Object.keys(shape).forEach((name) => {
+    const item = shape[name]
+    const baseItem = getBaseSchema(item) as ZodAny
+    let options = (baseItem && 'values' in baseItem._def) ? baseItem._def.values as string[] : undefined
+    if (!Array.isArray(options) && typeof options === 'object')
+      options = Object.values(options)
+
+    shapes[name] = {
+      type: getBaseType(item),
+      default: getDefaultValueInZodStack(item),
+      options,
+      required: !['ZodOptional', 'ZodNullable'].includes(item._def.typeName),
+      schema: item,
+    }
+  })
+
+  return shapes
+})
+
+const utmPlaceholders = {
+  source: 'twitter',
+  medium: 'social',
+  campaign: 'landing_test',
+  term: 'paid keywords',
+  content: 'text ad',
+}
+
+const utmDescription = 'UTM tags help you understand where your traffic is coming from and what\'s driving clicks.'
+
 const dependencies = [
   {
     sourceField: 'slug',
@@ -60,6 +108,16 @@ const dependencies = [
   },
 ]
 
+function getInitialUtmValues() {
+  if (link.value?.utm)
+    return link.value.utm
+
+  if (isEdit && link.value?.url)
+    return extractUtmFromUrl(link.value.url)
+
+  return undefined
+}
+
 const form = useForm({
   validationSchema: toTypedSchema(EditLinkSchema),
   initialValues: {
@@ -67,11 +125,24 @@ const form = useForm({
     url: link.value.url,
     optional: {
       comment: link.value.comment,
+      utm: getInitialUtmValues(),
     },
   },
   validateOnMount: isEdit,
   keepValuesOnUnmount: isEdit,
 })
+
+function applyUtmPreview() {
+  if (!form.values.url)
+    return
+
+  const normalizedUtm = normalizeUtmFields(form.values.optional?.utm)
+  const nextUrl = normalizedUtm
+    ? applyUtmToUrl(form.values.url, normalizedUtm)
+    : stripUtmFromUrl(form.values.url)
+
+  form.setFieldValue('url', nextUrl)
+}
 
 function randomSlug() {
   form.setFieldValue('slug', nanoid()())
@@ -101,14 +172,29 @@ onMounted(() => {
   if (link.value.expiration) {
     form.setFieldValue('optional.expiration', unix2date(link.value.expiration))
   }
+
+  if (isEdit && !form.values.optional?.utm && link.value?.url) {
+    const extracted = extractUtmFromUrl(link.value.url)
+    if (extracted)
+      form.setFieldValue('optional.utm', extracted)
+  }
 })
 
 async function onSubmit(formData) {
+  const optionalData = formData.optional || {}
+  const normalizedUtm = normalizeUtmFields(optionalData.utm)
+  const url = normalizedUtm
+    ? applyUtmToUrl(formData.url, normalizedUtm)
+    : optionalData.utm
+      ? stripUtmFromUrl(formData.url)
+      : formData.url
+
   const link = {
-    url: formData.url,
+    url,
     slug: formData.slug,
-    ...(formData.optional || []),
-    expiration: formData.optional?.expiration ? date2unix(formData.optional?.expiration, 'end') : undefined,
+    ...optionalData,
+    utm: normalizedUtm,
+    expiration: optionalData.expiration ? date2unix(optionalData.expiration, 'end') : undefined,
   }
   const { link: newLink } = await useAPI(isEdit ? '/api/link/edit' : '/api/link/create', {
     method: isEdit ? 'PUT' : 'POST',
@@ -183,6 +269,108 @@ const { previewMode } = useRuntimeConfig().public
               v-bind="slotProps"
             />
           </div>
+        </template>
+        <template #optional="{ fieldName, shape }">
+          <Accordion type="single" as-child class="w-full" collapsible>
+            <FormItem>
+              <AccordionItem :value="fieldName" class="border-none">
+                <AccordionTrigger>
+                  <Label class="text-base">
+                    {{ shape.schema?.description || beautifyObjectName(fieldName) }}
+                  </Label>
+                </AccordionTrigger>
+                <AccordionContent class="space-y-5 p-1">
+                  <AutoFormField
+                    v-if="optionalShapes.comment"
+                    :shape="optionalShapes.comment"
+                    :field-name="`${fieldName}.comment`"
+                    :config="fieldConfig.optional?.comment"
+                  />
+                  <AutoFormField
+                    v-if="optionalShapes.expiration"
+                    :shape="optionalShapes.expiration"
+                    :field-name="`${fieldName}.expiration`"
+                    :config="fieldConfig.optional?.expiration"
+                  />
+                  <Card class="bg-muted/20">
+                    <CardHeader class="pb-3">
+                      <CardTitle class="text-base">
+                        UTM Builder
+                      </CardTitle>
+                      <CardDescription>
+                        {{ utmDescription }}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent class="grid gap-4">
+                      <div
+                        class="
+                          grid gap-4
+                          sm:grid-cols-2
+                        "
+                      >
+                        <FormField v-slot="{ componentField }" name="optional.utm.source">
+                          <FormItem>
+                            <FormLabel>Source</FormLabel>
+                            <FormControl>
+                              <Input :placeholder="utmPlaceholders.source" v-bind="componentField" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        </FormField>
+                        <FormField v-slot="{ componentField }" name="optional.utm.medium">
+                          <FormItem>
+                            <FormLabel>Medium</FormLabel>
+                            <FormControl>
+                              <Input :placeholder="utmPlaceholders.medium" v-bind="componentField" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        </FormField>
+                        <FormField v-slot="{ componentField }" name="optional.utm.campaign">
+                          <FormItem>
+                            <FormLabel>Campaign</FormLabel>
+                            <FormControl>
+                              <Input :placeholder="utmPlaceholders.campaign" v-bind="componentField" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        </FormField>
+                        <FormField v-slot="{ componentField }" name="optional.utm.term">
+                          <FormItem>
+                            <FormLabel>Term</FormLabel>
+                            <FormControl>
+                              <Input :placeholder="utmPlaceholders.term" v-bind="componentField" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        </FormField>
+                        <FormField v-slot="{ componentField }" name="optional.utm.content">
+                          <FormItem class="sm:col-span-2">
+                            <FormLabel>Content</FormLabel>
+                            <FormControl>
+                              <Input :placeholder="utmPlaceholders.content" v-bind="componentField" />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        </FormField>
+                      </div>
+                      <div class="flex items-center justify-end">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          @click="applyUtmPreview"
+                        >
+                          Apply
+                        </Button>
+                      </div>
+                      <!-- TODO: Add UTM presets (save/apply) -->
+                    </CardContent>
+                  </Card>
+                </AccordionContent>
+              </AccordionItem>
+            </FormItem>
+          </Accordion>
         </template>
         <DialogFooter>
           <DialogClose as-child>
