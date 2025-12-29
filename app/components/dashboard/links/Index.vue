@@ -1,6 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import { useInfiniteScroll } from '@vueuse/core'
 import { Loader } from 'lucide-vue-next'
+import { Label } from '@/components/ui/label'
+import {
+  TagsInput,
+  TagsInputInput,
+  TagsInputItem,
+  TagsInputItemDelete,
+  TagsInputItemText,
+} from '@/components/ui/tags-input'
+import { normalizeTags } from '@/lib/tags'
 
 const links = ref([])
 const limit = 24
@@ -9,9 +18,34 @@ let listComplete = false
 let listError = false
 
 const sortBy = ref('az')
+const tagFilters = ref<string[]>([])
+
+const availableTags = computed(() => {
+  const tags = new Set<string>()
+  for (const link of links.value || []) {
+    if (Array.isArray(link.tags)) {
+      for (const tag of link.tags)
+        tags.add(tag)
+    }
+  }
+  return Array.from(tags).sort((a, b) => a.localeCompare(b))
+})
+
+const tagSuggestions = computed(() => {
+  const selected = new Set(tagFilters.value.map(tag => tag.toLowerCase()))
+  return availableTags.value.filter(tag => !selected.has(tag.toLowerCase()))
+})
 
 const displayedLinks = computed(() => {
-  const sorted = [...links.value]
+  const activeFilters = normalizeTags(tagFilters.value).map(tag => tag.toLowerCase())
+  const filtered = activeFilters.length
+    ? links.value.filter((link) => {
+        const tags = (link.tags || []).map(tag => tag.toLowerCase())
+        return tags.some(tag => activeFilters.includes(tag))
+      })
+    : links.value
+
+  const sorted = [...filtered]
   switch (sortBy.value) {
     case 'newest':
       return sorted.sort((a, b) => b.createdAt - a.createdAt)
@@ -25,6 +59,10 @@ const displayedLinks = computed(() => {
       return sorted
   }
 })
+
+function addTagFilter(tag: string) {
+  tagFilters.value = normalizeTags([...tagFilters.value, tag])
+}
 
 async function getLinks() {
   try {
@@ -88,6 +126,41 @@ function updateLinkList(link, type) {
         </div>
       </DashboardNav>
       <LazyDashboardLinksSearch />
+    </div>
+    <div class="flex flex-col gap-2">
+      <Label class="text-sm font-medium">Filter by tags</Label>
+      <div class="grid gap-2">
+        <TagsInput
+          :model-value="tagFilters"
+          @update:model-value="tagFilters = normalizeTags($event)"
+        >
+          <TagsInputItem
+            v-for="tag in tagFilters"
+            :key="tag"
+            :value="tag"
+          >
+            <TagsInputItemText />
+            <TagsInputItemDelete />
+          </TagsInputItem>
+          <TagsInputInput placeholder="Add or select tags..." />
+        </TagsInput>
+        <div
+          v-if="tagSuggestions.length"
+          class="flex flex-wrap items-center gap-2"
+        >
+          <Button
+            v-for="tag in tagSuggestions"
+            :key="tag"
+            type="button"
+            variant="secondary"
+            size="sm"
+            class="h-6 px-2 text-xs"
+            @click="addTagFilter(tag)"
+          >
+            {{ tag }}
+          </Button>
+        </div>
+      </div>
     </div>
     <section
       class="

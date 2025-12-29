@@ -16,6 +16,14 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import {
+  TagsInput,
+  TagsInputInput,
+  TagsInputItem,
+  TagsInputItemDelete,
+  TagsInputItemText,
+} from '@/components/ui/tags-input'
+import { normalizeTags } from '@/lib/tags'
 import { applyUtmToUrl, extractUtmFromUrl, normalizeUtmFields, stripUtmFromUrl } from '@/lib/utm'
 
 const props = defineProps({
@@ -118,6 +126,25 @@ function getInitialUtmValues() {
   return undefined
 }
 
+const availableTags = ref<string[]>([])
+
+async function loadAvailableTags() {
+  try {
+    const links = await useAPI('/api/link/search')
+    const tags = new Set<string>()
+    for (const link of links || []) {
+      if (Array.isArray(link.tags)) {
+        for (const tag of link.tags)
+          tags.add(tag)
+      }
+    }
+    availableTags.value = Array.from(tags).sort((a, b) => a.localeCompare(b))
+  }
+  catch (error) {
+    console.error(error)
+  }
+}
+
 const form = useForm({
   validationSchema: toTypedSchema(EditLinkSchema),
   initialValues: {
@@ -126,11 +153,22 @@ const form = useForm({
     optional: {
       comment: link.value.comment,
       utm: getInitialUtmValues(),
+      tags: link.value.tags || [],
     },
   },
   validateOnMount: isEdit,
   keepValuesOnUnmount: isEdit,
 })
+
+const tagSuggestions = computed(() => {
+  const selected = new Set((form.values.optional?.tags || []).map(tag => tag.toLowerCase()))
+  return availableTags.value.filter(tag => !selected.has(tag.toLowerCase()))
+})
+
+function addTagSuggestion(tag: string) {
+  const current = form.values.optional?.tags || []
+  form.setFieldValue('optional.tags', normalizeTags([...current, tag]))
+}
 
 function applyUtmPreview() {
   if (!form.values.url)
@@ -178,11 +216,19 @@ onMounted(() => {
     if (extracted)
       form.setFieldValue('optional.utm', extracted)
   }
+
+  loadAvailableTags()
+})
+
+watch(dialogOpen, (open) => {
+  if (open)
+    loadAvailableTags()
 })
 
 async function onSubmit(formData) {
   const optionalData = formData.optional || {}
   const normalizedUtm = normalizeUtmFields(optionalData.utm)
+  const normalizedTags = normalizeTags(optionalData.tags)
   const url = normalizedUtm
     ? applyUtmToUrl(formData.url, normalizedUtm)
     : optionalData.utm
@@ -194,6 +240,7 @@ async function onSubmit(formData) {
     slug: formData.slug,
     ...optionalData,
     utm: normalizedUtm,
+    tags: normalizedTags,
     expiration: optionalData.expiration ? date2unix(optionalData.expiration, 'end') : undefined,
   }
   const { link: newLink } = await useAPI(isEdit ? '/api/link/edit' : '/api/link/create', {
@@ -365,6 +412,56 @@ const { previewMode } = useRuntimeConfig().public
                         </Button>
                       </div>
                       <!-- TODO: Add UTM presets (save/apply) -->
+                    </CardContent>
+                  </Card>
+                  <Card>
+                    <CardHeader class="pb-3">
+                      <CardTitle class="text-base">
+                        Tags
+                      </CardTitle>
+                      <CardDescription>
+                        Group links by project or campaign to filter later.
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent class="grid gap-3">
+                      <FormField v-slot="{ componentField }" name="optional.tags">
+                        <FormItem>
+                          <FormLabel>Tags</FormLabel>
+                          <FormControl>
+                            <TagsInput
+                              :model-value="componentField.modelValue || []"
+                              @update:model-value="componentField['onUpdate:modelValue']"
+                            >
+                              <TagsInputItem
+                                v-for="tag in componentField.modelValue || []"
+                                :key="tag"
+                                :value="tag"
+                              >
+                                <TagsInputItemText />
+                                <TagsInputItemDelete />
+                              </TagsInputItem>
+                              <TagsInputInput placeholder="Add tag..." />
+                            </TagsInput>
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      </FormField>
+                      <div
+                        v-if="tagSuggestions.length"
+                        class="flex flex-wrap items-center gap-2"
+                      >
+                        <Button
+                          v-for="tag in tagSuggestions"
+                          :key="tag"
+                          type="button"
+                          variant="secondary"
+                          size="sm"
+                          class="h-6 px-2 text-xs"
+                          @click="addTagSuggestion(tag)"
+                        >
+                          {{ tag }}
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 </AccordionContent>

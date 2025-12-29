@@ -15,7 +15,7 @@ const links = ref([])
 
 const { results: filteredLinks } = useFuse(searchTerm, links, {
   fuseOptions: {
-    keys: ['slug', 'url', 'comment'],
+    keys: ['slug', 'url', 'comment', 'tags'],
   },
   resultLimit: 20,
 })
