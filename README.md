@@ -5,7 +5,7 @@
 <a href="https://trendshift.io/repositories/10421" target="_blank">
   <img
     src="https://trendshift.io/api/badge/repositories/10421"
-    alt="ccbikai/Sink | Trendshift"
+    alt="miantiao-me/Sink | Trendshift"
     width="250"
     height="55"
   />
@@ -35,7 +35,7 @@
   />
 </a>
 
-[<img src="https://devin.ai/assets/deepwiki-badge.png" alt="DeepWiki" height="20"/>](https://deepwiki.com/ccbikai/Sink)
+[<img src="https://devin.ai/assets/deepwiki-badge.png" alt="DeepWiki" height="20"/>](https://deepwiki.com/miantiao-me/Sink)
 ![Cloudflare](https://img.shields.io/badge/Cloudflare-F69652?style=flat&logo=cloudflare&logoColor=white)
 ![Nuxt](https://img.shields.io/badge/Nuxt-00DC82?style=flat&logo=nuxtdotjs&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
@@ -83,6 +83,7 @@ Site Token: SinkCool
 We welcome your contributions and PRs.
 
 - [x] Browser Extension - [Sink Tool](https://github.com/zhuzhuyule/sink-extension)
+- [x] Chrome Extension - [Sink Quick Shorten](https://chromewebstore.google.com/detail/sink-quick-shorten/emlojomjpenjgkaphajcokijobpkejih)
 - [x] Raycast Extension - [Raycast-Sink](https://github.com/foru17/raycast-sink)
 - [x] Apple Shortcuts - [Sink Shortcuts](https://s.search1api.com/sink001)
 - [x] iOS App - [Sink](https://apps.apple.com/app/id6745417598)
@@ -144,4 +145,4 @@ We currently do not support native MCP Server, but we have OpenAPI documentation
 ## ☕ Sponsor
 
 1. [Follow Me on X(Twitter)](https://404.li/kai).
-2. [Become a sponsor to on GitHub](https://github.com/sponsors/ccbikai).
+2. [Become a sponsor to on GitHub](https://github.com/sponsors/miantiao-me).

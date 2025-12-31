@@ -23,7 +23,7 @@ export default eventHandler(async (event) => {
       { role: 'user', content: 'https://sink.cool/' },
       { role: 'assistant', content: '{"slug": "sink-cool"}' },
 
-      { role: 'user', content: 'https://github.com/ccbikai/sink' },
+      { role: 'user', content: 'https://github.com/miantiao-me/sink' },
       { role: 'assistant', content: '{"slug": "sink"}' },
 
       {

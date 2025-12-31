@@ -1,6 +1,6 @@
 # Deployment on Cloudflare Pages
 
-1. [Fork](https://github.com/ccbikai/Sink/fork) the repository to your GitHub account.
+1. [Fork](https://github.com/miantiao-me/Sink/fork) the repository to your GitHub account.
 2. Create a project in [Cloudflare Pages](https://developers.cloudflare.com/pages/).
 3. Select the `Sink` repository and choose the `Nuxt.js` preset.
 4. Configure the following environment variables:
