@@ -98,6 +98,8 @@ const { title, github } = useAppConfig()
                 href="/dashboard"
                 :title="`${title} Dashboard`"
               >{{ $t('dashboard.title') }}</a>
+             <!--
+              SHOEB EDITED
               <a
                 :href="github"
                 target="_blank"
@@ -115,7 +117,7 @@ const { title, github } = useAppConfig()
                   class="mr-1 h-5 w-5"
                 />
                 GitHub</a>
-
+-->
               <SwitchLanguage />
 
               <SwitchTheme />
