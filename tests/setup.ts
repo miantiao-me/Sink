@@ -1,6 +1,12 @@
+import { execSync } from 'node:child_process'
 import fs from 'node:fs'
 
 export default function () {
+  // Integration tests expect the Worker bundle referenced by `wrangler.jsonc` to exist.
+  // Build it on-demand for clean environments.
+  if (!fs.existsSync('dist/server/index.mjs'))
+    execSync('pnpm build', { stdio: 'inherit' })
+
   // Wrangler's Miniflare options require this path to exist when assets are configured.
   fs.mkdirSync('dist/public', { recursive: true })
 
