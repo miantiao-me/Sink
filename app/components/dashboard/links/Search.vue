@@ -62,7 +62,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <TriggerTemplate v-slot="attrs">
+  <TriggerTemplate v-slot="{ $slots: _, ...attrs }">
     <Button
       v-bind="attrs"
       variant="outline"
