@@ -38,9 +38,9 @@
     "footer": {
       "copyright": "產品來自 HTML.ZONE",
       "social": {
-        "email": "郵箱",
+        "email": "信箱",
         "telegram": "Telegram",
-        "blog": "部落個",
+        "blog": "部落格",
         "twitter": "Twitter",
         "mastodon": "Mastodon",
         "github": "GitHub"
@@ -54,14 +54,14 @@
     "links": "連結",
     "analysis": "分析",
     "realtime": "即時",
-    "migrate": "導入/導出"
+    "migrate": "匯入/匯出"
   },
   "sidebar": {
-    "subtitle": "短連結服務",
+    "subtitle": "縮網址服務",
     "platform": "平台",
     "settings": "設定",
-    "import": "導入",
-    "export": "導出",
+    "import": "匯入",
+    "export": "匯出",
     "github": "GitHub",
     "stars": "Stars"
   },
@@ -81,7 +81,7 @@
         "description": "監控連結分析病收集有價值的統計數據"
       },
       "serverless": {
-        "title": "免伺服器",
+        "title": "無伺服器",
         "description": "無需傳統伺服器即可部署"
       },
       "customizable_slug": {
@@ -90,11 +90,11 @@
       },
       "ai_slug": {
         "title": "AI 短連結",
-        "description": "利用 AI 生成短連接"
+        "description": "利用 AI 生成短連結"
       },
       "link_expiration": {
         "title": "短連結過期",
-        "description": "為您的短連結設置過期日期"
+        "description": "為您的短連結設定過期日期"
       }
     },
     "cta": {
@@ -106,7 +106,17 @@
       "title": "使用優秀的技術構建"
     },
     "twitter": {
-      "follow": "在 X(Twitter) 上關注我"
+      "follow": "在 X(Twitter) 上追蹤我"
+    },
+    "stats": {
+      "title": "有關 Sink 的數據",
+      "subtitle": "受到全球開發者信賴",
+      "stars": "個 GitHub 星星",
+      "forks": "次分叉"
+    },
+    "testimonials": {
+      "title": "深受用戶喜愛",
+      "subtitle": "看看開發者們都怎麼描述 Sink"
     }
   },
   "dashboard": {
@@ -126,7 +136,7 @@
     "loading": "載入中",
     "no_data": "暫無數據",
     "none": "（無）",
-    "filter_placeholder": "過濾連結...",
+    "filter_placeholder": "篩選連結...",
     "date_picker": {
       "today": "今天",
       "last_24h": "最近24小時",
@@ -148,9 +158,9 @@
       "slug": "短連結",
       "language": "語言",
       "timezone": "時區",
-      "device": "設備",
-      "deviceType": "設備類型",
-      "os": "操作系統",
+      "device": "裝置",
+      "deviceType": "裝置類型",
+      "os": "作業系統",
       "browser": "瀏覽器",
       "browserType": "瀏覽器類型"
     },
@@ -169,23 +179,23 @@
     "create": "創建連結",
     "edit": "編輯連結",
     "delete_confirm_title": "確定要刪除嗎？",
-    "delete_confirm_desc": "此操作無法撤銷。这將從伺服器中永久刪除您的連結。",
+    "delete_confirm_desc": "此操作無法撤銷。這將從伺服器中永久刪除您的連結。",
     "delete_success": "刪除成功！",
     "delete_failed": "刪除失敗！",
     "update_success": "連結更新成功",
     "create_success": "連結創建成功",
     "preview_mode_tip": "預覽模式下的連結最多有效5分鐘",
     "search_placeholder": "搜尋連結...",
-    "no_results": "未找到連結。",
+    "no_results": "找不到連結。",
     "group_title": "連結列表",
     "copy_success": "複製成功！",
     "created_at": "創建時間",
     "updated_at": "更新時間",
     "expires_at": "過期時間",
     "no_more": "沒有更多連結",
-    "load_failed": "加載連接失敗,",
-    "download_qr_code": "下載QR code",
-    "change_qr_color": "更改二維碼顏色",
+    "load_failed": "載入連結失敗,",
+    "download_qr_code": "下載 QR code",
+    "change_qr_color": "更改 QR code 顏色",
     "form": {
       "url": "連結地址",
       "slug": "短連結",
@@ -206,35 +216,35 @@
   },
   "migrate": {
     "export": {
-      "title": "導出連結",
+      "title": "匯出連結",
       "description": "將所有連結下載為 JSON 檔案",
-      "button": "導出全部",
+      "button": "匯出全部",
       "total_links": "連結總數",
-      "success": "導出成功",
-      "failed": "導出失敗"
+      "success": "匯出成功",
+      "failed": "匯出失敗"
     },
     "import": {
-      "title": "導入連結",
-      "description": "上傳 JSON 檔案以導入連結",
+      "title": "匯入連結",
+      "description": "上傳 JSON 檔案以匯入連結",
       "dropzone": "拖曳 JSON 檔案至此或點擊上傳",
-      "links_found": "條連結",
-      "button": "開始導入",
-      "importing": "導入中...",
-      "import_more": "繼續導入",
+      "links_found": "個連結",
+      "button": "開始匯入",
+      "importing": "匯入中...",
+      "import_more": "繼續匯入",
       "download_success": "下載成功項",
       "download_skipped": "下載跳過項",
       "download_failed": "下載失敗項",
       "result": {
-        "title": "導入結果",
-        "success": "成功導入",
+        "title": "匯入結果",
+        "success": "成功匯入",
         "skipped": "已跳過（已存在）",
         "failed": "失敗",
-        "success_message": "成功導入 {count} 條連結"
+        "success_message": "成功匯入 {count} 個連結"
       },
       "errors": {
         "invalid_json": "無效的 JSON 檔案",
-        "invalid_format": "檔案格式無效，請使用從 Sink 導出的檔案",
-        "no_links": "檔案中未找到連結",
+        "invalid_format": "檔案格式無效，請使用從 Sink 匯出的檔案",
+        "no_links": "檔案中找不到連結",
         "parse_error": "檔案解析失敗"
       }
     }
