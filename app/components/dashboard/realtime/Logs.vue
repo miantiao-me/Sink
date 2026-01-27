@@ -1,25 +1,28 @@
-<script setup>
+<script setup lang="ts">
+import type { LogEvent } from '@/types'
 import AnimatedList from '@/components/spark-ui/AnimatedList.vue'
 import Notification from '@/components/spark-ui/Notification.vue'
 
-const time = inject('time')
-const filters = inject('filters')
-const logs = ref([])
+const realtimeStore = useDashboardRealtimeStore()
+const logs = ref<LogEvent[]>([])
 const logskey = ref(0)
 
 async function getEvents() {
-  const data = await useAPI('/api/logs/events', {
+  if (realtimeStore.timeRange.startAt === 0) {
+    return
+  }
+  const data = await useAPI<LogEvent[]>('/api/logs/events', {
     query: {
-      startAt: time.value.startAt,
-      endAt: time.value.endAt,
-      ...filters.value,
+      startAt: realtimeStore.timeRange.startAt,
+      endAt: realtimeStore.timeRange.endAt,
+      ...realtimeStore.filters,
     },
   })
-  logs.value = data?.reverse()
+  logs.value = data?.reverse() ?? []
   logskey.value = Date.now()
 }
 
-watch([time, filters], getEvents, {
+watch([() => realtimeStore.timeRange, () => realtimeStore.filters], getEvents, {
   deep: true,
 })
 

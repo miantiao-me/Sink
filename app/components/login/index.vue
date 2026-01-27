@@ -1,34 +1,37 @@
-<script setup>
+<script setup lang="ts">
 import { AlertCircle } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 import { z } from 'zod'
 
 const { t } = useI18n()
-
-const LoginSchema = z.object({
-  token: z.string().describe('SiteToken'),
-})
-const loginFieldConfig = {
-  token: {
-    inputProps: {
-      type: 'password',
-      placeholder: '********',
-    },
-  },
-}
-
 const { previewMode } = useRuntimeConfig().public
 
-async function onSubmit(form) {
+const token = ref('')
+const error = ref('')
+
+const LoginSchema = z.object({
+  token: z.string().min(1),
+})
+
+async function handleSubmit() {
+  error.value = ''
+  const result = LoginSchema.safeParse({ token: token.value })
+
+  if (!result.success) {
+    error.value = t('login.token_required')
+    return
+  }
+
   try {
-    localStorage.setItem('SinkSiteToken', form.token)
+    localStorage.setItem('SinkSiteToken', token.value)
     await useAPI('/api/verify')
     navigateTo('/dashboard')
   }
   catch (e) {
+    localStorage.removeItem('SinkSiteToken')
     console.error(e)
     toast.error(t('login.failed'), {
-      description: e.message,
+      description: e instanceof Error ? e.message : String(e),
     })
   }
 }
@@ -45,25 +48,36 @@ async function onSubmit(form) {
       </CardDescription>
     </CardHeader>
     <CardContent class="grid gap-4">
-      <AutoForm
-        class="space-y-6"
-        :schema="LoginSchema"
-        :field-config="loginFieldConfig"
-        @submit="onSubmit"
-      >
+      <form class="space-y-6" @submit.prevent="handleSubmit">
+        <FieldGroup>
+          <Field :data-invalid="!!error">
+            <FieldLabel for="token">
+              {{ $t('login.token_label') }}
+            </FieldLabel>
+            <Input
+              id="token"
+              v-model="token"
+              type="password"
+              placeholder="********"
+              :aria-invalid="!!error"
+            />
+            <FieldError v-if="error" :errors="[error]" />
+          </Field>
+        </FieldGroup>
+
         <Alert v-if="previewMode">
           <AlertCircle class="h-4 w-4" />
           <AlertTitle>{{ $t('login.tips') }}</AlertTitle>
           <AlertDescription>
-            {{ $t('login.preview_token') }} <code
-              class="font-mono text-green-500"
-            >SinkCool</code> .
+            {{ $t('login.preview_token') }}
+            <code class="font-mono text-green-500">SinkCool</code>
           </AlertDescription>
         </Alert>
-        <Button class="w-full">
+
+        <Button class="w-full" type="submit">
           {{ $t('login.submit') }}
         </Button>
-      </AutoForm>
+      </form>
     </CardContent>
   </Card>
 </template>

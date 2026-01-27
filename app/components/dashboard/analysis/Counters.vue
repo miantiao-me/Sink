@@ -1,32 +1,33 @@
-<script setup>
+<script setup lang="ts">
+import type { CounterData } from '@/types'
 import NumberFlow from '@number-flow/vue'
 import { Flame, MousePointerClick, Users } from 'lucide-vue-next'
 
-const defaultData = Object.freeze({
+const defaultData: CounterData = Object.freeze({
   visits: 0,
   visitors: 0,
   referers: 0,
 })
 
-const counters = ref(defaultData)
+const counters = ref<CounterData>(defaultData)
 
-const id = inject('id')
-const time = inject('time')
-const filters = inject('filters')
+const id = inject(LINK_ID_KEY, computed(() => undefined))
+const analysisStore = useDashboardAnalysisStore()
+
 async function getLinkCounters() {
   counters.value = defaultData
-  const { data } = await useAPI('/api/stats/counters', {
+  const result = await useAPI<{ data: CounterData[] }>('/api/stats/counters', {
     query: {
       id: id.value,
-      startAt: time.value.startAt,
-      endAt: time.value.endAt,
-      ...filters.value,
+      startAt: analysisStore.dateRange.startAt,
+      endAt: analysisStore.dateRange.endAt,
+      ...analysisStore.filters,
     },
   })
-  counters.value = data?.[0]
+  counters.value = result.data?.[0] ?? defaultData
 }
 
-watch([time, filters], getLinkCounters, {
+watch([() => analysisStore.dateRange, () => analysisStore.filters], getLinkCounters, {
   deep: true,
 })
 

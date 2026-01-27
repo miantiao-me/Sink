@@ -5,7 +5,12 @@ import withNuxt from './.nuxt/eslint.config.mjs'
 export default withNuxt(antfu(
   {
     formatters: true,
-    ignores: ['app/components/ui/**', '.data', 'public/*.json'],
+    pnpm: false,
+    ignores: [
+      'app/components/ui/**',
+      'app/data/**',
+      'public/*.json',
+    ],
     rules: {
       '@typescript-eslint/ban-ts-comment': 'off',
       'no-console': 'off',

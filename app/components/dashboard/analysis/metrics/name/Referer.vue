@@ -1,7 +1,7 @@
-<script setup>
-defineProps({
-  name: String,
-})
+<script setup lang="ts">
+defineProps<{
+  name?: string
+}>()
 </script>
 
 <template>
@@ -15,14 +15,14 @@ defineProps({
       class="float-left h-5 w-5 p-0.5"
     >
       <AvatarImage
-        :src="`https://unavatar.io/${name}?fallback=false`"
+        :src="`https://unavatar.webp.se/${name}?fallback=false`"
         :alt="name"
         loading="lazy"
       />
       <AvatarFallback>
         <img
           src="/icon.png"
-          alt="Sink"
+          :alt="name"
           loading="lazy"
         >
       </AvatarFallback>

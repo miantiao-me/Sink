@@ -25,7 +25,9 @@
     "tips": "提示",
     "preview_token": "預覽模式的站點密碼是",
     "submit": "登入",
-    "failed": "登入失敗，請重試"
+    "failed": "登入失敗，請重試",
+    "token_label": "站點密碼",
+    "token_required": "請輸入密碼"
   },
   "logout": {
     "title": "登出？",
@@ -51,9 +53,22 @@
   "nav": {
     "links": "連結",
     "analysis": "分析",
-    "realtime": "即時"
+    "realtime": "即時",
+    "migrate": "導入/導出"
+  },
+  "sidebar": {
+    "subtitle": "短連結服務",
+    "platform": "平台",
+    "settings": "設定",
+    "import": "導入",
+    "export": "導出",
+    "github": "GitHub",
+    "stars": "Stars"
   },
   "home": {
+    "hero": {
+      "github_repo": "GitHub 倉庫"
+    },
     "features": {
       "title": "功能特色",
       "subtitle": "簡單而實用的功能",
@@ -156,6 +171,7 @@
     "delete_confirm_title": "確定要刪除嗎？",
     "delete_confirm_desc": "此操作無法撤銷。这將從伺服器中永久刪除您的連結。",
     "delete_success": "刪除成功！",
+    "delete_failed": "刪除失敗！",
     "update_success": "連結更新成功",
     "create_success": "連結創建成功",
     "preview_mode_tip": "預覽模式下的連結最多有效5分鐘",
@@ -169,12 +185,58 @@
     "no_more": "沒有更多連結",
     "load_failed": "加載連接失敗,",
     "download_qr_code": "下載QR code",
+    "change_qr_color": "更改二維碼顏色",
+    "form": {
+      "url": "連結地址",
+      "slug": "短連結",
+      "comment": "備註",
+      "expiration": "過期時間",
+      "pick_date": "選擇日期"
+    },
     "sort": {
       "newest": "最新",
       "oldest": "最舊",
       "az": "短連結(A-Z)",
       "za": "短連結(Z-A)",
       "tip": "體驗功能: 僅對已經加載的連結有效"
+    },
+    "update_failed": "更新連結失敗",
+    "create_failed": "創建連結失敗",
+    "ai_slug_failed": "AI 生成短連結失敗"
+  },
+  "migrate": {
+    "export": {
+      "title": "導出連結",
+      "description": "將所有連結下載為 JSON 檔案",
+      "button": "導出全部",
+      "total_links": "連結總數",
+      "success": "導出成功",
+      "failed": "導出失敗"
+    },
+    "import": {
+      "title": "導入連結",
+      "description": "上傳 JSON 檔案以導入連結",
+      "dropzone": "拖曳 JSON 檔案至此或點擊上傳",
+      "links_found": "條連結",
+      "button": "開始導入",
+      "importing": "導入中...",
+      "import_more": "繼續導入",
+      "download_success": "下載成功項",
+      "download_skipped": "下載跳過項",
+      "download_failed": "下載失敗項",
+      "result": {
+        "title": "導入結果",
+        "success": "成功導入",
+        "skipped": "已跳過（已存在）",
+        "failed": "失敗",
+        "success_message": "成功導入 {count} 條連結"
+      },
+      "errors": {
+        "invalid_json": "無效的 JSON 檔案",
+        "invalid_format": "檔案格式無效，請使用從 Sink 導出的檔案",
+        "no_links": "檔案中未找到連結",
+        "parse_error": "檔案解析失敗"
+      }
     }
   }
 }

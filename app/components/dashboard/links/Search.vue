@@ -1,7 +1,11 @@
-<script setup>
+<script setup lang="ts">
+import type { Link } from '@/types'
 import { createReusableTemplate, useMagicKeys, useMediaQuery } from '@vueuse/core'
 import { useFuse } from '@vueuse/integrations/useFuse'
 
+defineOptions({
+  inheritAttrs: false,
+})
 const [TriggerTemplate, TriggerComponent] = createReusableTemplate()
 const [SearchTemplate, SearchComponent] = createReusableTemplate()
 
@@ -11,7 +15,7 @@ const router = useRouter()
 
 const isOpen = ref(false)
 const searchTerm = ref('')
-const links = ref([])
+const links = ref<Link[]>([])
 
 const { results: filteredLinks } = useFuse(searchTerm, links, {
   fuseOptions: {
@@ -28,12 +32,23 @@ const { Meta_K, Ctrl_K } = useMagicKeys({
   },
 })
 
+function sanitizeSlotAttrs(attrs?: Record<string, unknown>) {
+  if (!attrs)
+    return {}
+
+  return Object.fromEntries(
+    Object.entries(attrs).filter(([key]) => !key.startsWith('$')),
+  ) as Record<string, unknown>
+}
+
 watch([Meta_K, Ctrl_K], (v) => {
   if (v[0] || v[1])
     isOpen.value = true
 })
 
-function selectLink(link) {
+function selectLink(link: Link | undefined) {
+  if (!link)
+    return
   isOpen.value = false
   router.push({
     path: '/dashboard/link',
@@ -42,7 +57,12 @@ function selectLink(link) {
 }
 
 async function getLinks() {
-  links.value = await useAPI('/api/link/search')
+  try {
+    links.value = await useAPI('/api/link/search') as Link[]
+  }
+  catch (error) {
+    console.error(error)
+  }
 }
 
 onMounted(() => {
@@ -51,8 +71,9 @@ onMounted(() => {
 </script>
 
 <template>
-  <TriggerTemplate>
+  <TriggerTemplate v-slot="attrs">
     <Button
+      v-bind="sanitizeSlotAttrs(attrs)"
       variant="outline"
       size="sm"
       class="
@@ -86,7 +107,7 @@ onMounted(() => {
     </Button>
   </TriggerTemplate>
   <SearchTemplate>
-    <Command class="h-12">
+    <Command class="h-auto">
       <CommandInput v-model="searchTerm" :placeholder="$t('links.search_placeholder')" />
     </Command>
     <!-- disable command search -->
@@ -130,7 +151,10 @@ onMounted(() => {
     <DialogTrigger as-child>
       <TriggerComponent />
     </DialogTrigger>
-    <DialogContent class="gap-0 overflow-hidden p-0 shadow-lg">
+    <DialogContent class="gap-0 overflow-hidden p-0 shadow-lg" :show-close-button="false">
+      <DialogHeader class="sr-only">
+        <DialogTitle>{{ $t('links.search_placeholder') }}</DialogTitle>
+      </DialogHeader>
       <SearchComponent />
     </DialogContent>
   </Dialog>
@@ -139,6 +163,9 @@ onMounted(() => {
       <TriggerComponent />
     </DrawerTrigger>
     <DrawerContent class="h-[500px] gap-0">
+      <DrawerHeader class="sr-only">
+        <DrawerTitle>{{ $t('links.search_placeholder') }}</DrawerTitle>
+      </DrawerHeader>
       <SearchComponent />
     </DrawerContent>
   </Drawer>

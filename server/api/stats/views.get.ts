@@ -5,14 +5,17 @@ import { z } from 'zod'
 const { select } = SqlBricks
 
 const unitMap: { [x: string]: string } = {
-  minute: '%H:%M',
+  minute: '%Y-%m-%d %H:%i',
   hour: '%Y-%m-%d %H',
   day: '%Y-%m-%d',
 }
 
 const ViewsQuerySchema = QuerySchema.extend({
-  unit: z.string(),
-  clientTimezone: z.string().default('Etc/UTC'),
+  unit: z.enum(['minute', 'hour', 'day']),
+  clientTimezone: z.string()
+    .regex(/^[A-Z_]+(?:\/[A-Z_-]+)*$/i)
+    .max(64)
+    .default('Etc/UTC'),
 })
 
 function query2sql(query: z.infer<typeof ViewsQuerySchema>, event: H3Event): string {

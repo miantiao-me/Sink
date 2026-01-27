@@ -25,7 +25,9 @@
     "tips": "Tipps",
     "preview_token": "Der Site-Token für den Vorschaumodus ist",
     "submit": "Anmelden",
-    "failed": "Anmeldung fehlgeschlagen, bitte versuche es erneut"
+    "failed": "Anmeldung fehlgeschlagen, bitte versuche es erneut",
+    "token_label": "Site-Token",
+    "token_required": "Token ist erforderlich"
   },
   "logout": {
     "title": "Abmelden?",
@@ -51,9 +53,22 @@
   "nav": {
     "links": "Links",
     "analysis": "Analyse",
-    "realtime": "Echtzeit"
+    "realtime": "Echtzeit",
+    "migrate": "Import/Export"
+  },
+  "sidebar": {
+    "subtitle": "Link-Verkürzer",
+    "platform": "Plattform",
+    "settings": "Einstellungen",
+    "import": "Importieren",
+    "export": "Exportieren",
+    "github": "GitHub",
+    "stars": "Stars"
   },
   "home": {
+    "hero": {
+      "github_repo": "GitHub-Repository"
+    },
     "features": {
       "title": "Funktionen",
       "subtitle": "Einfache und effektive Funktionalität.",
@@ -156,6 +171,7 @@
     "delete_confirm_title": "Bist du dir absolut sicher?",
     "delete_confirm_desc": "Diese Aktion kann nicht rückgängig gemacht werden. Dadurch wird dein Link wirklich von den Servern gelöscht.",
     "delete_success": "Erfolgreich gelöscht!",
+    "delete_failed": "Löschen fehlgeschlagen!",
     "update_success": "Link erfolgreich aktualisiert",
     "create_success": "Link erfolgreich erstellt",
     "preview_mode_tip": "Der Link im Vorschaumodus ist bis zu 5 Minuten gültig.",
@@ -169,12 +185,58 @@
     "no_more": "Keine weiteren Links",
     "load_failed": "Laden der Links fehlgeschlagen,",
     "download_qr_code": "QR-Code herunterladen",
+    "change_qr_color": "QR-Code-Farbe ändern",
+    "form": {
+      "url": "URL",
+      "slug": "Slug",
+      "comment": "Kommentar",
+      "expiration": "Ablaufdatum",
+      "pick_date": "Datum auswählen"
+    },
     "sort": {
       "newest": "Neueste zuerst",
       "oldest": "Älteste zuerst",
       "az": "Slug A-Z",
       "za": "Slug Z-A",
       "tip": "Hinweis: Nur für geladene Links"
+    },
+    "update_failed": "Link konnte nicht aktualisiert werden",
+    "create_failed": "Link konnte nicht erstellt werden",
+    "ai_slug_failed": "KI-Slug konnte nicht generiert werden"
+  },
+  "migrate": {
+    "export": {
+      "title": "Links exportieren",
+      "description": "Laden Sie alle Links als JSON-Datei herunter",
+      "button": "Alle exportieren",
+      "total_links": "Gesamtlinks",
+      "success": "Export erfolgreich",
+      "failed": "Export fehlgeschlagen"
+    },
+    "import": {
+      "title": "Links importieren",
+      "description": "Laden Sie eine JSON-Datei hoch, um Links zu importieren",
+      "dropzone": "JSON-Datei hierher ziehen oder klicken zum Hochladen",
+      "links_found": "Links gefunden",
+      "button": "Import starten",
+      "importing": "Importiere...",
+      "import_more": "Weitere importieren",
+      "download_success": "Erfolgreiche herunterladen",
+      "download_skipped": "Übersprungene herunterladen",
+      "download_failed": "Fehlgeschlagene herunterladen",
+      "result": {
+        "title": "Importergebnis",
+        "success": "Erfolgreich importiert",
+        "skipped": "Übersprungen (bereits vorhanden)",
+        "failed": "Fehlgeschlagen",
+        "success_message": "{count} Links erfolgreich importiert"
+      },
+      "errors": {
+        "invalid_json": "Ungültige JSON-Datei",
+        "invalid_format": "Ungültiges Dateiformat. Bitte verwenden Sie eine von Sink exportierte Datei.",
+        "no_links": "Keine Links in der Datei gefunden",
+        "parse_error": "Datei konnte nicht analysiert werden"
+      }
     }
   }
 }

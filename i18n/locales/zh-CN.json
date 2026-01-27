@@ -25,7 +25,9 @@
     "tips": "提示",
     "preview_token": "预览模式的站点令牌是",
     "submit": "登录",
-    "failed": "登录失败，请重试"
+    "failed": "登录失败，请重试",
+    "token_label": "站点令牌",
+    "token_required": "请输入令牌"
   },
   "logout": {
     "title": "退出登录？",
@@ -51,9 +53,22 @@
   "nav": {
     "links": "链接",
     "analysis": "分析",
-    "realtime": "实时"
+    "realtime": "实时",
+    "migrate": "导入/导出"
+  },
+  "sidebar": {
+    "subtitle": "短链接服务",
+    "platform": "平台",
+    "settings": "设置",
+    "import": "导入",
+    "export": "导出",
+    "github": "GitHub",
+    "stars": "Stars"
   },
   "home": {
+    "hero": {
+      "github_repo": "GitHub 仓库"
+    },
     "features": {
       "title": "功能特点",
       "subtitle": "简单而实用的功能",
@@ -92,6 +107,16 @@
     },
     "twitter": {
       "follow": "在 X(Twitter) 上关注我"
+    },
+    "stats": {
+      "title": "Sink 数据",
+      "subtitle": "受到全球开发者的信赖",
+      "stars": "GitHub Stars",
+      "forks": "Forks"
+    },
+    "testimonials": {
+      "title": "用户好评",
+      "subtitle": "看看开发者们怎么说"
     }
   },
   "dashboard": {
@@ -156,6 +181,7 @@
     "delete_confirm_title": "确定要删除吗？",
     "delete_confirm_desc": "此操作无法撤销。这将从服务器中永久删除您的链接。",
     "delete_success": "删除成功！",
+    "delete_failed": "删除失败！",
     "update_success": "链接更新成功",
     "create_success": "链接创建成功",
     "preview_mode_tip": "预览模式下的链接最多有效5分钟。",
@@ -169,12 +195,58 @@
     "no_more": "没有更多链接",
     "load_failed": "加载链接失败,",
     "download_qr_code": "下载二维码",
+    "change_qr_color": "更改二维码颜色",
+    "form": {
+      "url": "链接地址",
+      "slug": "短链",
+      "comment": "备注",
+      "expiration": "过期时间",
+      "pick_date": "选择日期"
+    },
     "sort": {
       "newest": "最新",
       "oldest": "最旧",
       "az": "短链(A-Z)",
       "za": "短链(Z-A)",
       "tip": "体验功能: 仅对已经加载的链接有效"
+    },
+    "update_failed": "更新链接失败",
+    "create_failed": "创建链接失败",
+    "ai_slug_failed": "AI 生成短链失败"
+  },
+  "migrate": {
+    "export": {
+      "title": "导出链接",
+      "description": "将所有链接下载为 JSON 文件",
+      "button": "导出全部",
+      "total_links": "链接总数",
+      "success": "导出成功",
+      "failed": "导出失败"
+    },
+    "import": {
+      "title": "导入链接",
+      "description": "上传 JSON 文件以导入链接",
+      "dropzone": "拖拽 JSON 文件到此处或点击上传",
+      "links_found": "条链接",
+      "button": "开始导入",
+      "importing": "导入中...",
+      "import_more": "继续导入",
+      "download_success": "下载成功项",
+      "download_skipped": "下载跳过项",
+      "download_failed": "下载失败项",
+      "result": {
+        "title": "导入结果",
+        "success": "成功导入",
+        "skipped": "已跳过（已存在）",
+        "failed": "失败",
+        "success_message": "成功导入 {count} 条链接"
+      },
+      "errors": {
+        "invalid_json": "无效的 JSON 文件",
+        "invalid_format": "文件格式无效，请使用从 Sink 导出的文件",
+        "no_links": "文件中未找到链接",
+        "parse_error": "文件解析失败"
+      }
     }
   }
 }

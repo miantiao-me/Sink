@@ -1,51 +1,48 @@
-<script setup>
+<script setup lang="ts">
+import type { MetricItem } from '@/types'
 import { Maximize } from 'lucide-vue-next'
 
-const props = defineProps({
-  type: {
-    type: String,
-    required: true,
-  },
-  name: {
-    type: String,
-    required: true,
-  },
-})
+const props = defineProps<{
+  type: string
+  name: string
+}>()
 
-const id = inject('id')
-const time = inject('time')
-const filters = inject('filters')
+const id = inject(LINK_ID_KEY, computed(() => undefined))
+const analysisStore = useDashboardAnalysisStore()
 
 const total = ref(0)
-const metrics = ref([])
-const top10 = ref([])
+const metrics = ref<MetricItem[]>([])
+const top10 = ref<MetricItem[]>([])
+
+interface RawMetricData {
+  name: string
+  count: number
+}
 
 async function getLinkMetrics() {
   total.value = 0
   metrics.value = []
   top10.value = []
-  const { data } = await useAPI('/api/stats/metrics', {
+  const result = await useAPI<{ data: RawMetricData[] }>('/api/stats/metrics', {
     query: {
       type: props.type,
       id: id.value,
-      startAt: time.value.startAt,
-      endAt: time.value.endAt,
-      ...filters.value,
+      startAt: analysisStore.dateRange.startAt,
+      endAt: analysisStore.dateRange.endAt,
+      ...analysisStore.filters,
     },
   })
-  if (Array.isArray(data)) {
-    const colors = colorGradation(data.length)
-    total.value = data.reduce((acc, cur) => acc + Number(cur.count), 0)
-    metrics.value = data.map((item, i) => {
-      item.color = colors[i]
-      item.percent = Math.floor(item.count / total.value * 100) || (item.count ? 1 : 0)
-      return item
-    })
+  if (Array.isArray(result.data)) {
+    total.value = result.data.reduce((acc, cur) => acc + Number(cur.count), 0)
+    metrics.value = result.data.map(item => ({
+      ...item,
+      percent: Math.floor(item.count / total.value * 100) || (item.count ? 1 : 0),
+    }))
     top10.value = metrics.value.slice(0, 10)
   }
 }
 
-watch([time, filters], getLinkMetrics, {
+watch([() => analysisStore.dateRange, () => analysisStore.filters], getLinkMetrics, {
   deep: true,
 })
 

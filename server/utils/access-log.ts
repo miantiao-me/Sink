@@ -110,7 +110,7 @@ export function useAccessLog(event: H3Event) {
     device: [ExtraDevices.device || []].flat(),
   })).getResult()
 
-  const { request: { cf } } = event.context.cloudflare
+  const { request: { cf }, env } = event.context.cloudflare
   const link = event.context.link || {}
 
   const isBot = cf?.botManagement?.verifiedBot
@@ -149,7 +149,7 @@ export function useAccessLog(event: H3Event) {
   }
 
   if (process.env.NODE_ENV === 'production') {
-    return hubAnalytics().put({
+    return env.ANALYTICS.writeDataPoint({
       indexes: [link.id], // only one index
       blobs: logs2blobs(accessLogs),
       doubles: logs2doubles(accessLogs),

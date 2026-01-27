@@ -1,14 +1,8 @@
-<script setup>
-defineProps({
-  tabs: {
-    type: Array,
-    required: true,
-  },
-  rawTabs: {
-    type: Array,
-    required: true,
-  },
-})
+<script setup lang="ts">
+defineProps<{
+  tabs: string[]
+  rawTabs: string[]
+}>()
 </script>
 
 <template>

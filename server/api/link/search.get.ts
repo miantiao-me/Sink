@@ -66,8 +66,8 @@ export default eventHandler(async (event) => {
   catch (err) {
     console.error('Error fetching link list:', err)
     throw createError({
-      statusCode: 500,
-      message: 'Failed to fetch link list',
+      status: 500,
+      statusText: 'Failed to fetch link list',
     })
   }
 })

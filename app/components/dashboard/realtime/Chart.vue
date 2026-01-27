@@ -1,30 +1,33 @@
-<script setup>
+<script setup lang="ts">
+import type { CounterData } from '@/types'
 import NumberFlow from '@number-flow/vue'
 import { MousePointerClick } from 'lucide-vue-next'
 
-provide('id', ref())
+provide(LINK_ID_KEY, computed(() => undefined))
 
-const time = inject('time')
-const filters = inject('filters')
-const stats = ref({ visits: 0 })
+const realtimeStore = useDashboardRealtimeStore()
+const stats = ref<CounterData>({ visits: 0, visitors: 0, referers: 0 })
 
 async function getRealtimeStats() {
-  const { data } = await useAPI('/api/stats/counters', {
+  if (realtimeStore.timeRange.startAt === 0) {
+    return
+  }
+  const result = await useAPI<{ data: CounterData[] }>('/api/stats/counters', {
     query: {
-      startAt: time.value.startAt,
-      endAt: time.value.endAt,
-      ...filters.value,
+      startAt: realtimeStore.timeRange.startAt,
+      endAt: realtimeStore.timeRange.endAt,
+      ...realtimeStore.filters,
     },
   })
 
-  stats.value = data?.[0] || {}
+  stats.value = result.data?.[0] || { visits: 0, visitors: 0, referers: 0 }
 }
 
-watch([time, filters], getRealtimeStats, {
+watch([() => realtimeStore.timeRange, () => realtimeStore.filters], getRealtimeStats, {
   deep: true,
 })
 
-onMounted(async () => {
+onMounted(() => {
   getRealtimeStats()
 })
 </script>
@@ -61,6 +64,9 @@ onMounted(async () => {
       class="h-40 w-full border-none p-0! shadow-none"
       mode="simple"
       chart-type="bar"
+      :start-at="realtimeStore.timeRange.startAt"
+      :end-at="realtimeStore.timeRange.endAt"
+      :filters="realtimeStore.filters"
     />
   </Card>
 </template>

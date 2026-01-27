@@ -1,85 +1,64 @@
-<script setup>
-import { now } from '@internationalized/date'
-import { useIntervalFn, useUrlSearchParams } from '@vueuse/core'
-import { safeDestr } from 'destr'
+<script setup lang="ts">
+import { useIntersectionObserver } from '@vueuse/core'
 
-const searchParams = useUrlSearchParams('history')
+const realtimeStore = useDashboardRealtimeStore()
 
-const timePicker = ref(null)
+const globeContainer = useTemplateRef('globeContainer')
+const showGlobe = ref(false)
 
-const time = ref({
-  startAt: date2unix(now().subtract({ hours: 1 })),
-  endAt: date2unix(now()),
-})
-
-provide('time', time)
-
-function changeTime(timeRange, timeName) {
-  console.log('changeTime', timeRange, timeName)
-  time.value.startAt = timeRange[0]
-  time.value.endAt = timeRange[1]
-
-  searchParams.time = timeName
-}
-
-const filters = ref({})
-
-provide('filters', filters)
-
-function changeFilter(type, value) {
-  console.log('changeFilter', type, value)
-  filters.value[type] = value
-
-  searchParams.filters = JSON.stringify(filters.value)
-}
-
-useIntervalFn(() => {
-  timePicker.value?.restoreTimeRange()
-}, 5 * 60 * 1000)
-
-function restoreSearchParams() {
-  try {
-    if (searchParams.filters) {
-      filters.value = safeDestr(searchParams.filters)
+const { stop } = useIntersectionObserver(
+  globeContainer,
+  ([{ isIntersecting }]) => {
+    if (isIntersecting) {
+      showGlobe.value = true
+      stop()
     }
-  }
-  catch (error) {
-    console.error('restore searchParams error', error)
-  }
-}
+  },
+  { threshold: 0.1 },
+)
 
 onBeforeMount(() => {
-  restoreSearchParams()
+  realtimeStore.restoreFromUrl()
+  realtimeStore.initDefaultTimeRange()
 })
 </script>
 
 <template>
-  <main class="space-y-6">
-    <div
+  <div
+    class="
+      relative flex w-full flex-col gap-4
+      md:block md:h-full
+    "
+  >
+    <DashboardRealtimeChart
       class="
-        flex flex-col gap-6
-        sm:flex-row sm:justify-between sm:gap-2
+        z-10
+        md:absolute md:top-0 md:left-0
+      "
+    />
+    <div
+      ref="globeContainer"
+      class="
+        aspect-square
+        md:absolute md:inset-0 md:aspect-auto
       "
     >
-      <DashboardNav class="flex-1">
-        <DashboardTimePicker ref="timePicker" @update:time-range="changeTime" />
-      </DashboardNav>
-      <DashboardFilters @change="changeFilter" />
-    </div>
-    <div class="relative space-y-4">
-      <DashboardRealtimeChart
-        class="
-          top-0 left-0 z-10
-          md:absolute
-        "
+      <LazyDashboardRealtimeGlobe
+        v-if="showGlobe"
+        class="h-full w-full"
       />
-      <LazyDashboardRealtimeGlobe />
-      <DashboardRealtimeLogs
-        class="
-          top-0 right-0 z-10 h-full
-          md:absolute
-        "
-      />
+      <div
+        v-else
+        class="flex h-full w-full items-center justify-center"
+      >
+        <div class="size-3/4 animate-pulse rounded-full bg-muted/20" />
+      </div>
     </div>
-  </main>
+    <DashboardRealtimeLogs
+      class="
+        z-10 h-[400px]
+        md:absolute md:top-0 md:right-0 md:h-full
+      "
+    />
+  </div>
 </template>

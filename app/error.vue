@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import errorImage from './assets/images/404.svg?raw'
 </script>
 

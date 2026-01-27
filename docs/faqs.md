@@ -50,3 +50,13 @@ To improve query performance, we have limited the amount of data. If you need to
 ## 8. I don't want to count bot or crawler traffic
 
 Set `NUXT_DISABLE_BOT_ACCESS_LOG` to `true`.
+
+## 9. How does the Import/Export feature work?
+
+Import and Export are designed to work within Cloudflare Workers' KV operation limits (50 per request by default).
+
+- **Export**: Downloads links in batches, automatically paginating until complete.
+- **Import**: Uploads links in batches (half of `NUXT_PUBLIC_KV_BATCH_LIMIT`, default 25) since each link requires 2 KV operations (check existence + write).
+- **Expired links**: Imported as-is to support migration scenarios.
+- **Duplicate slugs**: Skipped during import (existing links are preserved).
+- **Validation**: All links are validated against the schema before import starts.

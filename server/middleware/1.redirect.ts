@@ -4,8 +4,8 @@ import { parsePath, withQuery } from 'ufo'
 
 export default eventHandler(async (event) => {
   const { pathname: slug } = parsePath(event.path.replace(/^\/|\/$/g, '')) // remove leading and trailing slashes
-  const { slugRegex, reserveSlug } = useAppConfig(event)
-  const { homeURL, linkCacheTtl, redirectWithQuery, caseSensitive } = useRuntimeConfig(event)
+  const { slugRegex, reserveSlug } = useAppConfig()
+  const { homeURL, linkCacheTtl, caseSensitive, redirectWithQuery, redirectStatusCode } = useRuntimeConfig(event)
   const { cloudflare } = event.context
 
   if (event.path === '/' && homeURL)
@@ -37,7 +37,7 @@ export default eventHandler(async (event) => {
         console.error('Failed write access log:', error)
       }
       const target = redirectWithQuery ? withQuery(link.url, getQuery(event)) : link.url
-      return sendRedirect(event, target, +useRuntimeConfig(event).redirectStatusCode)
+      return sendRedirect(event, target, +redirectStatusCode)
     }
   }
 })

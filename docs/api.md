@@ -24,7 +24,7 @@ This place provides an example of creating a short link API. Other APIs are curr
   HEADER authorization: Bearer SinkCool
   HEADER content-type: application/json
   BODY  {
-          "url": "https://github.com/ccbikai/Sink/issues/14",
+          "url": "https://github.com/miantiao-me/Sink/issues/14",
           "slug": "issue14"
         }
 ```
@@ -36,7 +36,7 @@ The BODY data must be JSON.
   BODY  {
           "link": {
             "id": "xpqhaurv5q",
-            "url": "https://github.com/ccbikai/Sink/issues/14",
+            "url": "https://github.com/miantiao-me/Sink/issues/14",
             "slug": "issue14",
             "createdAt": 1718119809,
             "updatedAt": 1718119809

@@ -23,7 +23,10 @@ export function shortDate(unix = 0) {
 }
 
 export function longDate(unix = 0) {
-  return new Date(unix * 1000).toLocaleString()
+  const longDate = new Intl.DateTimeFormat(undefined, {
+    dateStyle: 'long',
+  })
+  return longDate.format(unix * 1000)
 }
 
 export function shortTime(unix = 0) {
@@ -31,6 +34,13 @@ export function shortTime(unix = 0) {
     timeStyle: 'short',
   })
   return shortTime.format(unix * 1000)
+}
+
+export function longTime(unix = 0) {
+  const longTime = new Intl.DateTimeFormat(undefined, {
+    timeStyle: 'long',
+  })
+  return longTime.format(unix * 1000)
 }
 
 export function date2unix(dateValue: DateValue | Date, type?: string) {

@@ -1,18 +1,22 @@
-<script setup>
-import { now, startOfMonth, startOfWeek } from '@internationalized/date'
+<script setup lang="ts">
+import type { DateRange, DateValue } from 'reka-ui'
+import { getLocalTimeZone, now, startOfMonth, startOfWeek } from '@internationalized/date'
 import { useUrlSearchParams } from '@vueuse/core'
 import { safeDestr } from 'destr'
 
-const emit = defineEmits(['update:dateRange'])
+const emit = defineEmits<{
+  'update:dateRange': [value: [number, number]]
+}>()
 
-const time = inject('time')
+const analysisStore = useDashboardAnalysisStore()
 
-const dateRange = ref('last-7d')
+const dateRange = ref<string | null>('last-7d')
 const openCustomDateRange = ref(false)
-const customDate = ref()
-const customDateRange = ref()
+const customDate = ref<DateValue | undefined>()
+const customDateRange = ref<DateRange | undefined>()
 
 const locale = getLocale()
+const tz = getLocalTimeZone()
 
 function updateCustomDate(customDateValue) {
   emit('update:dateRange', [date2unix(customDateValue, 'start'), date2unix(customDateValue, 'end')])
@@ -35,25 +39,25 @@ function isDateDisabled(dateValue) {
 watch(dateRange, (newValue) => {
   switch (newValue) {
     case 'today':
-      emit('update:dateRange', [date2unix(now(), 'start'), date2unix(now())])
+      emit('update:dateRange', [date2unix(now(tz), 'start'), date2unix(now(tz))])
       break
     case 'last-24h':
-      emit('update:dateRange', [date2unix(now().subtract({ hours: 24 })), date2unix(now())])
+      emit('update:dateRange', [date2unix(now(tz).subtract({ hours: 24 })), date2unix(now(tz))])
       break
     case 'this-week':
-      emit('update:dateRange', [date2unix(startOfWeek(now(), locale), 'start'), date2unix(now())])
+      emit('update:dateRange', [date2unix(startOfWeek(now(tz), locale), 'start'), date2unix(now(tz))])
       break
     case 'last-7d':
-      emit('update:dateRange', [date2unix(now().subtract({ days: 7 })), date2unix(now())])
+      emit('update:dateRange', [date2unix(now(tz).subtract({ days: 7 })), date2unix(now(tz))])
       break
     case 'this-month':
-      emit('update:dateRange', [date2unix(startOfMonth(now()), 'start'), date2unix(now())])
+      emit('update:dateRange', [date2unix(startOfMonth(now(tz)), 'start'), date2unix(now(tz))])
       break
     case 'last-30d':
-      emit('update:dateRange', [date2unix(now().subtract({ days: 30 })), date2unix(now())])
+      emit('update:dateRange', [date2unix(now(tz).subtract({ days: 30 })), date2unix(now(tz))])
       break
     case 'last-90d':
-      emit('update:dateRange', [date2unix(now().subtract({ days: 90 })), date2unix(now())])
+      emit('update:dateRange', [date2unix(now(tz).subtract({ days: 90 })), date2unix(now(tz))])
       break
     case 'custom':
       openCustomDateRange.value = true
@@ -68,13 +72,9 @@ function restoreDateRange() {
   try {
     const searchParams = useUrlSearchParams('history')
     if (searchParams.time) {
-      const time = safeDestr(searchParams.time)
+      const time = safeDestr<{ startAt: number, endAt: number }>(searchParams.time as string)
       emit('update:dateRange', [time.startAt, time.endAt])
-      dateRange.value = 'custom'
-      nextTick(() => {
-        openCustomDateRange.value = false
-        customDateRange.value = undefined
-      })
+      dateRange.value = null
     }
   }
   catch (error) {
@@ -92,7 +92,7 @@ onBeforeMount(() => {
     <SelectTrigger>
       <SelectValue v-if="dateRange" />
       <div v-else>
-        {{ shortDate(time.startAt) }} - {{ shortDate(time.endAt) }}
+        {{ shortDate(analysisStore.dateRange.startAt) }} - {{ shortDate(analysisStore.dateRange.endAt) }}
       </div>
     </SelectTrigger>
     <SelectContent>

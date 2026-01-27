@@ -25,7 +25,9 @@
     "tips": "Astuces",
     "preview_token": "Le jeton du site pour le mode aperçu est",
     "submit": "Connexion",
-    "failed": "Échec de la connexion, veuillez réessayer"
+    "failed": "Échec de la connexion, veuillez réessayer",
+    "token_label": "Jeton du site",
+    "token_required": "Le jeton est requis"
   },
   "logout": {
     "title": "Déconnexion ?",
@@ -51,9 +53,22 @@
   "nav": {
     "links": "Liens",
     "analysis": "Statistiques",
-    "realtime": "Realtime"
+    "realtime": "Realtime",
+    "migrate": "Import/Export"
+  },
+  "sidebar": {
+    "subtitle": "Raccourcisseur de liens",
+    "platform": "Plateforme",
+    "settings": "Paramètres",
+    "import": "Importer",
+    "export": "Exporter",
+    "github": "GitHub",
+    "stars": "Stars"
   },
   "home": {
+    "hero": {
+      "github_repo": "Dépôt GitHub"
+    },
     "features": {
       "title": "Fonctionnalités",
       "subtitle": "Fonctionnalité simple et adéquate",
@@ -156,6 +171,7 @@
     "delete_confirm_title": "Êtes-vous absolument sûr ?",
     "delete_confirm_desc": "Cette action est irréversible. Cela supprimera votre lien des serveurs.",
     "delete_success": "Suppression réussie !",
+    "delete_failed": "Échec de la suppression !",
     "update_success": "Lien mis à jour avec succès",
     "create_success": "Lien créé avec succès",
     "preview_mode_tip": "Le lien en mode aperçu est valide jusqu'à 5 minutes.",
@@ -169,12 +185,58 @@
     "no_more": "Plus de liens",
     "load_failed": "Échec du chargement des liens,",
     "download_qr_code": "Télécharger le code QR",
+    "change_qr_color": "Changer la couleur du code QR",
+    "form": {
+      "url": "URL",
+      "slug": "Slug",
+      "comment": "Commentaire",
+      "expiration": "Expiration",
+      "pick_date": "Choisir une date"
+    },
     "sort": {
       "newest": "Les plus récents",
       "oldest": "Les plus anciens",
       "az": "Slug A-Z",
       "za": "Slug Z-A",
       "tip": "Essai : uniquement pour les liens chargés"
+    },
+    "update_failed": "Échec de la mise à jour du lien",
+    "create_failed": "Échec de la création du lien",
+    "ai_slug_failed": "Échec de la génération du slug IA"
+  },
+  "migrate": {
+    "export": {
+      "title": "Exporter les liens",
+      "description": "Téléchargez tous vos liens au format JSON",
+      "button": "Tout exporter",
+      "total_links": "Total des liens",
+      "success": "Export réussi",
+      "failed": "Échec de l'export"
+    },
+    "import": {
+      "title": "Importer des liens",
+      "description": "Téléchargez un fichier JSON pour importer des liens",
+      "dropzone": "Déposez le fichier JSON ici ou cliquez pour télécharger",
+      "links_found": "liens trouvés",
+      "button": "Lancer l'import",
+      "importing": "Importation...",
+      "import_more": "Importer plus",
+      "download_success": "Télécharger les éléments réussis",
+      "download_skipped": "Télécharger les éléments ignorés",
+      "download_failed": "Télécharger les éléments échoués",
+      "result": {
+        "title": "Résultat de l'import",
+        "success": "Importé avec succès",
+        "skipped": "Ignoré (existe déjà)",
+        "failed": "Échoué",
+        "success_message": "{count} liens importés avec succès"
+      },
+      "errors": {
+        "invalid_json": "Fichier JSON invalide",
+        "invalid_format": "Format de fichier invalide. Veuillez utiliser un fichier exporté depuis Sink.",
+        "no_links": "Aucun lien trouvé dans le fichier",
+        "parse_error": "Échec de l'analyse du fichier"
+      }
     }
   }
 }

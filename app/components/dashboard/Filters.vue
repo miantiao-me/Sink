@@ -1,23 +1,31 @@
-<script setup>
+<script setup lang="ts">
+import type { Link } from '@/types'
 import { createReusableTemplate, useMediaQuery, useUrlSearchParams, watchDebounced } from '@vueuse/core'
 import { safeDestr } from 'destr'
 import { Check, ChevronsUpDown } from 'lucide-vue-next'
 import { VList } from 'virtua/vue'
 import { cn } from '@/lib/utils'
 
-const emit = defineEmits(['change'])
+const emit = defineEmits<{
+  change: [key: string, value: string]
+}>()
 
 const [TriggerTemplate, TriggerComponent] = createReusableTemplate()
 const [FilterTemplate, FilterComponent] = createReusableTemplate()
 
 const isDesktop = useMediaQuery('(min-width: 640px)')
 
-const links = ref([])
+const links = ref<Link[]>([])
 const isOpen = ref(false)
-const selectedLinks = ref([])
+const selectedLinks = ref<string[]>([])
 
 async function getLinks() {
-  links.value = await useAPI('/api/link/search')
+  try {
+    links.value = await useAPI('/api/link/search')
+  }
+  catch (error) {
+    console.error(error)
+  }
 }
 
 onMounted(() => {
@@ -31,7 +39,7 @@ watchDebounced(selectedLinks, (value) => {
 function restoreFilters() {
   const searchParams = useUrlSearchParams('history')
   if (searchParams.filters) {
-    const filters = safeDestr(searchParams.filters)
+    const filters = safeDestr<{ slug?: string }>(searchParams.filters as string)
     if (filters.slug) {
       selectedLinks.value = filters.slug.split(',')
     }
@@ -113,6 +121,9 @@ onBeforeMount(() => {
       <TriggerComponent />
     </DrawerTrigger>
     <DrawerContent class="h-[500px]">
+      <DrawerHeader class="sr-only">
+        <DrawerTitle>{{ $t('dashboard.filter_placeholder') }}</DrawerTitle>
+      </DrawerHeader>
       <FilterComponent />
     </DrawerContent>
   </Drawer>

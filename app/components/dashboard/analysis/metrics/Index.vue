@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 const { t } = useI18n()
 
-const tabs = {
+const tabs: Record<string, string[]> = {
   location: ['country', 'region', 'city'],
   referer: ['referer', 'slug'],
   time: ['language', 'timezone'],

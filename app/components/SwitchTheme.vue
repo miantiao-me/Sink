@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { Laptop, Moon, Sun } from 'lucide-vue-next'
 
 const colorMode = useColorMode()

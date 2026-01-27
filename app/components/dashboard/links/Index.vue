@@ -1,18 +1,25 @@
-<script setup>
+<script setup lang="ts">
+import type { Link, LinkListResponse, LinkUpdateType } from '@/types'
 import { useInfiniteScroll } from '@vueuse/core'
 import { Loader } from 'lucide-vue-next'
 
-const links = ref([])
+const linksStore = useDashboardLinksStore()
+
+const links = ref<Link[]>([])
+const listComplete = ref(false)
+const listError = ref(false)
 const limit = 24
 let cursor = ''
-let listComplete = false
-let listError = false
 
-const sortBy = ref('az')
+const scrollContainer = ref<HTMLElement | Window | null>(null)
+
+onMounted(() => {
+  scrollContainer.value = document.querySelector('.overflow-y-auto') as HTMLElement | null
+})
 
 const displayedLinks = computed(() => {
   const sorted = [...links.value]
-  switch (sortBy.value) {
+  switch (linksStore.sortBy) {
     case 'newest':
       return sorted.sort((a, b) => b.createdAt - a.createdAt)
     case 'oldest':
@@ -33,31 +40,31 @@ async function getLinks() {
         limit,
         cursor,
       },
-    })
-    links.value = links.value.concat(data.links).filter(Boolean) // Sometimes cloudflare will return null, filter out
+    }) as LinkListResponse
+    links.value = links.value.concat(data.links).filter(Boolean)
     cursor = data.cursor
-    listComplete = data.list_complete
-    listError = false
+    listComplete.value = data.list_complete
+    listError.value = false
   }
   catch (error) {
     console.error(error)
-    listError = true
+    listError.value = true
   }
 }
 
 const { isLoading } = useInfiniteScroll(
-  document,
+  scrollContainer as unknown as Ref<HTMLElement | null>,
   getLinks,
   {
     distance: 150,
     interval: 1000,
     canLoadMore: () => {
-      return !listError && !listComplete
+      return !listError.value && !listComplete.value
     },
   },
 )
 
-function updateLinkList(link, type) {
+function updateLinkList(link: Link, type: LinkUpdateType) {
   if (type === 'edit') {
     const index = links.value.findIndex(l => l.id === link.id)
     links.value[index] = link
@@ -68,61 +75,52 @@ function updateLinkList(link, type) {
   }
   else {
     links.value.unshift(link)
-    sortBy.value = 'newest'
+    linksStore.sortBy = 'newest'
   }
 }
+
+const unsubscribe = linksStore.onLinkUpdate(({ link, type }) => {
+  updateLinkList(link, type)
+})
+
+onUnmounted(() => {
+  unsubscribe()
+})
 </script>
 
 <template>
-  <main class="space-y-6">
-    <div
-      class="
-        flex flex-col gap-6
-        sm:flex-row sm:justify-between sm:gap-2
-      "
-    >
-      <DashboardNav class="flex-1">
-        <div class="flex items-center gap-2">
-          <DashboardLinksEditor @update:link="updateLinkList" />
-          <DashboardLinksSort v-model:sort-by="sortBy" />
-        </div>
-      </DashboardNav>
-      <LazyDashboardLinksSearch />
-    </div>
-    <section
-      class="
-        grid grid-cols-1 gap-4
-        md:grid-cols-2
-        lg:grid-cols-3
-      "
-    >
-      <DashboardLinksLink
-        v-for="link in displayedLinks"
-        :key="link.id"
-        :link="link"
-        @update:link="updateLinkList"
-      />
-    </section>
-    <div
-      v-if="isLoading"
-      class="flex items-center justify-center"
-    >
-      <Loader class="animate-spin" />
-    </div>
-    <div
-      v-if="!isLoading && listComplete"
-      class="flex items-center justify-center text-sm"
-    >
-      {{ $t('links.no_more') }}
-    </div>
-    <div
-      v-if="listError"
-      class="flex items-center justify-center text-sm"
-    >
-      {{ $t('links.load_failed') }}
-      <Button variant="link" @click="getLinks">
-        {{ $t('common.try_again') }}
-      </Button>
-    </div>
-  </main>
+  <section
+    class="
+      grid grid-cols-1 gap-4
+      md:grid-cols-2
+      lg:grid-cols-3
+    "
+  >
+    <DashboardLinksLink
+      v-for="link in displayedLinks"
+      :key="link.id"
+      :link="link"
+    />
+  </section>
+  <div
+    v-if="isLoading"
+    class="flex items-center justify-center"
+  >
+    <Loader class="animate-spin" />
+  </div>
+  <div
+    v-if="!isLoading && listComplete"
+    class="flex items-center justify-center text-sm"
+  >
+    {{ $t('links.no_more') }}
+  </div>
+  <div
+    v-if="listError"
+    class="flex items-center justify-center text-sm"
+  >
+    {{ $t('links.load_failed') }}
+    <Button variant="link" @click="getLinks">
+      {{ $t('common.try_again') }}
+    </Button>
+  </div>
 </template>

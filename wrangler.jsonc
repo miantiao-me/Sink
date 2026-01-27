@@ -4,7 +4,8 @@
   "main": "dist/server/index.mjs",
   "assets": {
     "binding": "ASSETS",
-    "directory": "dist/public"
+    "directory": "dist/public",
+    "html_handling": "drop-trailing-slash"
   },
   "compatibility_date": "2025-05-08",
   "compatibility_flags": [
@@ -13,7 +14,8 @@
   "keep_vars": true,
   "upload_source_maps": true,
   "ai": {
-    "binding": "AI"
+    "binding": "AI",
+    "remote": true
   },
   "analytics_engine_datasets": [
     {
@@ -26,5 +28,15 @@
       "binding": "KV",
       "id": "d66d889d117d4f7581c68e538b0a5ea7" // IMPORTANT: Change this to your KV namespace ID
     }
-  ]
+  ],
+  "r2_buckets": [
+    {
+      "binding": "R2",
+      "preview_bucket_name": "sink",
+      "bucket_name": "sink" // IMPORTANT: Change this to your R2 bucket name, or create one with `wrangler r2 bucket create sink`
+    }
+  ],
+  "triggers": {
+    "crons": ["0 0 * * *"] // Run backup task daily at 00:00 UTC
+  }
 }

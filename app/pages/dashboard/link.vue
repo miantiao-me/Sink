@@ -1,44 +1,54 @@
-<script setup>
+<script setup lang="ts">
+import type { Link } from '@/types'
+
+definePageMeta({
+  layout: 'dashboard',
+})
+
 const slug = useRoute().query.slug
+const linksStore = useDashboardLinksStore()
 
-const link = ref({})
-const id = computed(() => link.value.id)
+const link = ref<Link | null>(null)
+const id = computed(() => link.value?.id)
 
-provide('id', id)
+provide(LINK_ID_KEY, id)
 
 async function getLink() {
-  const data = await useAPI('/api/link/query', {
-    query: {
-      slug,
-    },
+  const data = await useAPI<Link>('/api/link/query', {
+    query: { slug },
   })
-  // data.id = 'y1c4fhirl5'
   link.value = data
-}
-
-function updateLink(link, type) {
-  if (type === 'delete') {
-    navigateTo('/dashboard/links', {
-      replace: true,
-    })
-  }
 }
 
 onMounted(() => {
   getLink()
 })
+
+const unsubscribe = linksStore.onLinkUpdate(({ link: updatedLink, type }) => {
+  if (updatedLink.id !== link.value?.id)
+    return
+
+  if (type === 'delete') {
+    navigateTo('/dashboard/links', { replace: true })
+  }
+  else if (type === 'edit') {
+    link.value = updatedLink
+  }
+})
+
+onUnmounted(() => {
+  unsubscribe()
+})
 </script>
 
 <template>
   <main class="space-y-6">
-    <DashboardBreadcrumb title="Link" />
     <DashboardLinksLink
-      v-if="link.id"
+      v-if="link?.id"
       :link="link"
-      @update:link="updateLink"
     />
     <DashboardAnalysis
-      v-if="link.id"
+      v-if="link?.id"
       :link="link"
     />
   </main>

@@ -1,32 +1,223 @@
 # Repository Guidelines
 
-## Project Structure & Module Organization
+This document provides guidelines for agentic coding agents operating in the Sink codebase.
 
-Sink runs on Nuxt 4 and Cloudflare Workers. Application code lives in `app/` (pages, layouts, components, composables) while Worker entry points and API handlers are in `server/`. Zod schemas for payload validation are in `schemas/`, static assets in `public/`, and reference docs (deployment, API, configuration) in `docs/`. Automated scripts (`build-map.js`, `build-colo.js`) sit in `scripts/`; tests reside in `tests/` with `setup.ts`, `sink.spec.ts`, and utilities. Core configuration is centralized in `nuxt.config.ts`, `wrangler.jsonc`, `eslint.config.mjs`, and `vitest.config.ts`.
+## Project Overview
+
+Sink is a simple, speedy, and secure link shortener with analytics, running 100% on Cloudflare. It uses Nuxt 4 as the frontend framework and Cloudflare Workers for serverless backend.
+
+**All documentation and comments within this project must be written in English.**
+
+## Project Structure
+
+```
+app/                    # Nuxt 4 application (pages, layouts, components, composables)
+  ├── components/       # Vue components (PascalCase)
+  │   ├── ui/           # shadcn-vue base components (auto-generated, do not edit)
+  │   ├── dashboard/    # Dashboard-specific components
+  │   └── home/         # Landing page components
+  ├── composables/      # Vue composables (camelCase)
+  ├── layouts/          # Nuxt layouts
+  ├── pages/            # File-based routing
+  ├── stores/           # Pinia stores
+  ├── types/            # TypeScript type definitions
+  ├── utils/            # Utility functions
+  ├── lib/              # Shared library helpers
+  └── assets/           # CSS, images
+server/                 # Nitro server (Cloudflare Workers)
+  ├── api/              # API endpoints
+  ├── middleware/       # Server middleware
+  └── utils/            # Server utilities
+schemas/                # Zod schemas for validation
+tests/                  # Vitest tests
+scripts/                # Build scripts
+docs/                   # Documentation
+public/                 # Static assets
+i18n/                   # Internationalization files
+```
 
 ## Build, Test, and Development Commands
 
-Use pnpm with Node 20.11+. Key commands:
+Use **pnpm** (v10+) with **Node.js 20.11+**.
 
-- `pnpm dev` spins up the Nuxt dev server with local Worker bindings.
-- `pnpm build` runs `nuxt build` plus the map generator to verify production bundles.
-- `pnpm preview` executes `wrangler dev --var ...` for a full Worker preview.
-- `pnpm lint` / `pnpm lint:fix` invoke ESLint (`@antfu/eslint-config`, `eslint-plugin-better-tailwindcss`).
-- `pnpm test` triggers the Vitest suite.
-- `pnpm deploy:worker` and `pnpm deploy:pages` publish to Cloudflare Workers or Pages respectively.
+### Development
 
-## Coding Style & Naming Conventions
+```bash
+pnpm dev                  # Start Nuxt dev server on port 7465
+pnpm preview              # Full Worker preview via wrangler dev
+```
 
-Favor TypeScript with `<script setup>` single-file components, 2-space indentation, single quotes, and trailing commas. Components and composables use PascalCase (`app/components/StatsCard.vue`), route directories use kebab-case (`app/dashboard/links`), and functions/state use camelCase. Keep Tailwind or shadcn-vue tokens in reusable helpers under `app/lib` or `components/ui`; avoid magic values inline. Run `pnpm lint` before every commit to satisfy ESLint, Tailwind, and lint-staged hooks.
+### Building
 
-## Testing Guidelines
+```bash
+pnpm build                # Production build (nuxt build + map generator)
+pnpm build:map            # Generate country map data
+pnpm build:colo           # Generate Cloudflare colo data
+```
 
-Vitest is configured in `vitest.config.ts` with `@cloudflare/vitest-pool-workers` handling Worker contexts. Place new specs in `tests/*.spec.ts`, reusing `tests/utils.ts` and `tests/setup.ts` for shared fixtures. Prioritize coverage for link creation flows, analytics counters, and permission boundaries. Mock Cloudflare KV and Analytics interactions—credentials must never be required for local runs. CI executes `pnpm test`, so ensure suites pass offline.
+### Linting
 
-## Commit & Pull Request Guidelines
+```bash
+pnpm lint:fix             # Run ESLint with auto-fix
+pnpm types:check          # TypeScript type checking
+```
 
-Git history follows Conventional Commits (`fix: adjust analytics filter`, `chore(release): bump version to v0.2.1`). Before pushing, confirm `pnpm lint && pnpm test` pass and attach screenshots or recordings for UI changes. PR descriptions should outline motivation, scope, related issues, and rollout considerations. When adding or renaming environment variables, update `docs/configuration.md` and mention new `.env` keys in the PR body.
+### Deployment
 
-## Configuration & Security Tips
+```bash
+pnpm deploy:pages         # Deploy to Cloudflare Pages
+pnpm deploy:worker        # Deploy to Cloudflare Workers
+```
 
-Environment variables (e.g., `NUXT_SITE_TOKEN`, KV bindings, Analytics tokens) live in `.env`, while `wrangler.jsonc` defines Worker bindings. Use `pnpm preview` or `wrangler dev --var KEY:VALUE` to inject local secrets. Never commit real credentials—document placeholders in `docs/configuration.md` instead. If Cloudflare resources or binding names change, update both `wrangler` config and the corresponding references under `server/` to avoid deployment regressions.
+## Code Style Guidelines
+
+This project uses `@antfu/eslint-config` with additional Tailwind CSS linting.
+
+### General Rules
+
+- **Indentation**: 2 spaces
+- **Quotes**: Single quotes for strings
+- **Semicolons**: No semicolons
+- **Trailing commas**: Always use trailing commas
+- **Line length**: No strict limit, but keep readable
+
+### TypeScript
+
+- Use TypeScript for all code
+- Prefer `interface` for object types, `type` for unions/intersections
+- Avoid `any`; use proper typing or `unknown` when necessary
+- Use Zod schemas for runtime validation (see `schemas/`)
+
+```typescript
+// Good
+interface Link {
+  id: string
+  url: string
+  slug: string
+}
+
+// Zod schema example
+export const LinkSchema = z.object({
+  id: z.string().trim().max(26),
+  url: z.string().trim().url().max(2048),
+  slug: z.string().trim().max(2048).regex(new RegExp(slugRegex)),
+})
+```
+
+### Vue Components
+
+- Use `<script setup lang="ts">` for all components
+- Component files use PascalCase: `LinkEditor.vue`
+- Props defined with `defineProps<{ ... }>()`
+- Emits defined with `defineEmits<{ ... }>()`
+
+```vue
+<script setup lang="ts">
+import type { Link } from '@/types'
+
+const props = defineProps<{
+  link: Link
+}>()
+
+const emit = defineEmits<{
+  update: [link: Link]
+}>()
+</script>
+
+<template>
+  <!-- Template here -->
+  <div>{{ props.link.slug }}</div>
+</template>
+```
+
+### Imports
+
+- **Prefer Nuxt auto-imports** for Vue utilities, composables, and components
+- Auto-imported: `ref`, `computed`, `watch`, `useRoute`, `useFetch`, `defineStore`, etc.
+- Explicit imports for:
+  - External libraries: `import { z } from 'zod'`
+  - Types: `import type { Link } from '@/types'`
+  - Icons: `import { Copy, Link } from 'lucide-vue-next'`
+  - Path aliases: `@/` (app), `@@/` (root)
+
+### Naming Conventions
+
+| Item                | Convention                    | Example                  |
+| ------------------- | ----------------------------- | ------------------------ |
+| Components          | PascalCase                    | `LinkEditor.vue`         |
+| Composables         | camelCase with `use` prefix   | `useDashboardRoute()`    |
+| Stores              | camelCase with `use...Store`  | `useDashboardLinksStore` |
+| API routes          | kebab-case with method suffix | `create.post.ts`         |
+| Directories         | kebab-case                    | `dashboard/links/`       |
+| Functions/variables | camelCase                     | `getLink`, `shortLink`   |
+| Constants           | UPPER_SNAKE_CASE              | `DASHBOARD_ROUTES`       |
+
+### Error Handling
+
+- Use `createError()` for API errors with proper status codes
+- Validate inputs with Zod schemas and `readValidatedBody()`
+
+```typescript
+// Server API example
+export default eventHandler(async (event) => {
+  const link = await readValidatedBody(event, LinkSchema.parse)
+
+  if (existingLink) {
+    throw createError({
+      status: 409,
+      statusText: 'Link already exists',
+    })
+  }
+})
+```
+
+### UI Components
+
+- Use shadcn-vue components from `app/components/ui/`
+- **Do not edit** files in `components/ui/` directly (auto-generated)
+- Add custom components to appropriate subdirectories
+- Use Tailwind CSS v4 for styling
+
+## Cloudflare Bindings
+
+Defined in `wrangler.jsonc`:
+
+- `KV`: Workers KV for link storage
+- `ANALYTICS`: Analytics Engine for tracking
+- `AI`: Workers AI for slug generation
+- `ASSETS`: Static assets binding
+
+Access in server code via `event.context.cloudflare.env`:
+
+```typescript
+const { KV, ANALYTICS, AI } = event.context.cloudflare.env
+```
+
+## Environment Variables
+
+Key variables (set in `.env`):
+
+- `NUXT_SITE_TOKEN`: Authentication token
+- `NUXT_REDIRECT_STATUS_CODE`: HTTP redirect code (default: 301)
+- `NUXT_LINK_CACHE_TTL`: Cache TTL in seconds
+- `NUXT_AI_MODEL`: AI model for slug generation
+
+See `docs/configuration.md` for full list.
+
+## Commit Guidelines
+
+Follow Conventional Commits:
+
+```
+feat: add link expiration feature
+fix: correct analytics date filter
+docs: update API documentation
+chore(deps): bump dependencies
+refactor: simplify link store logic
+```
+
+## Pre-commit Hooks
+
+- `simple-git-hooks` runs `lint-staged` on commit
+- `lint-staged` runs `eslint --fix` on staged `.js`, `.ts`, `.tsx`, `.vue` files
+- Always run `pnpm lint:fix` before committing

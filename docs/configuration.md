@@ -16,6 +16,12 @@ Sets the site to demo mode, the generated links will expire after 5 minutes, and
 
 Sets the default length of the generated SLUG.
 
+## `NUXT_PUBLIC_KV_BATCH_LIMIT`
+
+> If you are using Worker deployment, this variable needs to be configured in **Settings** -> **Build** -> **Variables and Secrets** and **Settings** -> **Variables and Secrets**.
+
+Sets the maximum number of KV operations per request for import/export. Default is 50 (Cloudflare Workers limit per request). Import operations use half of this value since each link requires 2 KV operations (check existence + write).
+
 ## `NUXT_REDIRECT_STATUS_CODE`
 
 Redirects default to use HTTP 301 status code, you can set it to `302`/`307`/`308`.
@@ -65,3 +71,14 @@ Access statistics do not count bot traffic.
 ## `NUXT_API_CORS`
 
 Set the environment variable `NUXT_API_CORS=true` during build to enable CORS support for the API.
+
+## `NUXT_DISABLE_AUTO_BACKUP`
+
+Set to `true` to disable the automatic daily KV backup to R2 storage. Default is `false`.
+
+This feature requires:
+
+1. R2 bucket binding configured in `wrangler.jsonc`
+2. Create R2 bucket: `wrangler r2 bucket create sink`
+
+Backups are stored in R2 with the path `backups/links-{timestamp}.json` and run daily at 00:00 UTC.

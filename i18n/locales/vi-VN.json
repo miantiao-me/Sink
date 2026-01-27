@@ -25,7 +25,9 @@
     "tips": "Mẹo",
     "preview_token": "Token của chế độ xem trước là",
     "submit": "Đăng nhập",
-    "failed": "Đăng nhập thất bại, vui lòng thử lại"
+    "failed": "Đăng nhập thất bại, vui lòng thử lại",
+    "token_label": "Token trang",
+    "token_required": "Vui lòng nhập token"
   },
   "logout": {
     "title": "Đăng xuất?",
@@ -51,9 +53,22 @@
   "nav": {
     "links": "Liên kết",
     "analysis": "Phân tích",
-    "realtime": "Thời gian thực"
+    "realtime": "Thời gian thực",
+    "migrate": "Nhập/Xuất"
+  },
+  "sidebar": {
+    "subtitle": "Rút gọn liên kết",
+    "platform": "Nền tảng",
+    "settings": "Cài đặt",
+    "import": "Nhập",
+    "export": "Xuất",
+    "github": "GitHub",
+    "stars": "Stars"
   },
   "home": {
+    "hero": {
+      "github_repo": "Kho GitHub"
+    },
     "features": {
       "title": "Tính năng",
       "subtitle": "Đơn giản và đủ dùng",
@@ -156,6 +171,7 @@
     "delete_confirm_title": "Bạn có chắc chắn không?",
     "delete_confirm_desc": "Hành động này không thể hoàn tác. Điều này sẽ xóa hoàn toàn liên kết khỏi máy chủ.",
     "delete_success": "Xóa thành công!",
+    "delete_failed": "Xóa thất bại!",
     "update_success": "Cập nhật liên kết thành công",
     "create_success": "Tạo liên kết thành công",
     "preview_mode_tip": "Liên kết ở chế độ xem trước có hiệu lực trong 5 phút.",
@@ -169,12 +185,58 @@
     "no_more": "Không còn liên kết nào",
     "load_failed": "Tải liên kết thất bại,",
     "download_qr_code": "Tải mã QR",
+    "change_qr_color": "Thay đổi màu mã QR",
+    "form": {
+      "url": "URL",
+      "slug": "Slug",
+      "comment": "Ghi chú",
+      "expiration": "Hết hạn",
+      "pick_date": "Chọn ngày"
+    },
     "sort": {
       "newest": "Mới nhất trước",
       "oldest": "Cũ nhất trước",
       "az": "Slug A-Z",
       "za": "Slug Z-A",
       "tip": "Trải nghiệm: Chỉ áp dụng với các liên kết đã tải"
+    },
+    "update_failed": "Cập nhật liên kết thất bại",
+    "create_failed": "Tạo liên kết thất bại",
+    "ai_slug_failed": "Tạo slug AI thất bại"
+  },
+  "migrate": {
+    "export": {
+      "title": "Xuất liên kết",
+      "description": "Tải xuống tất cả liên kết dưới dạng tệp JSON",
+      "button": "Xuất tất cả",
+      "total_links": "Tổng liên kết",
+      "success": "Xuất thành công",
+      "failed": "Xuất thất bại"
+    },
+    "import": {
+      "title": "Nhập liên kết",
+      "description": "Tải lên tệp JSON để nhập liên kết",
+      "dropzone": "Kéo thả tệp JSON vào đây hoặc nhấp để tải lên",
+      "links_found": "liên kết được tìm thấy",
+      "button": "Bắt đầu nhập",
+      "importing": "Đang nhập...",
+      "import_more": "Nhập thêm",
+      "download_success": "Tải về các mục thành công",
+      "download_skipped": "Tải về các mục đã bỏ qua",
+      "download_failed": "Tải về các mục thất bại",
+      "result": {
+        "title": "Kết quả nhập",
+        "success": "Nhập thành công",
+        "skipped": "Đã bỏ qua (đã tồn tại)",
+        "failed": "Thất bại",
+        "success_message": "Đã nhập thành công {count} liên kết"
+      },
+      "errors": {
+        "invalid_json": "Tệp JSON không hợp lệ",
+        "invalid_format": "Định dạng tệp không hợp lệ. Vui lòng sử dụng tệp được xuất từ Sink.",
+        "no_links": "Không tìm thấy liên kết trong tệp",
+        "parse_error": "Không thể phân tích tệp"
+      }
     }
   }
 }

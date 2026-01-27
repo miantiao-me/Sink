@@ -1,4 +1,5 @@
-import { destr } from 'destr'
+import { generateText, Output } from 'ai'
+import { createWorkersAI } from 'workers-ai-provider'
 import { z } from 'zod'
 
 export default eventHandler(async (event) => {
@@ -10,30 +11,34 @@ export default eventHandler(async (event) => {
 
   if (AI) {
     const { aiPrompt, aiModel } = useRuntimeConfig(event)
-    const { slugRegex } = useAppConfig(event)
-    const messages = [
-      { role: 'system', content: aiPrompt.replace('{slugRegex}', slugRegex.toString()) },
+    const { slugRegex } = useAppConfig()
 
-      { role: 'user', content: 'https://www.cloudflare.com/' },
-      { role: 'assistant', content: '{"slug": "cloudflare"}' },
+    const workersai = createWorkersAI({ binding: AI })
+    const { output } = await generateText({
+      model: workersai(aiModel as Parameters<typeof workersai>[0]),
+      output: Output.object({
+        schema: z.object({
+          slug: z.string().describe('The generated slug for the URL'),
+        }),
+      }),
+      system: aiPrompt.replace('{slugRegex}', slugRegex.toString()),
+      messages: [
+        { role: 'user', content: 'https://www.cloudflare.com/' },
+        { role: 'assistant', content: JSON.stringify({ slug: 'cloudflare' }) },
 
-      { role: 'user', content: 'https://github.com/nuxt-hub/' },
-      { role: 'assistant', content: '{"slug": "nuxt-hub"}' },
+        { role: 'user', content: 'https://github.com/nuxt/' },
+        { role: 'assistant', content: JSON.stringify({ slug: 'nuxt' }) },
 
-      { role: 'user', content: 'https://sink.cool/' },
-      { role: 'assistant', content: '{"slug": "sink-cool"}' },
+        { role: 'user', content: 'https://sink.cool/' },
+        { role: 'assistant', content: JSON.stringify({ slug: 'sink-cool' }) },
 
-      { role: 'user', content: 'https://github.com/ccbikai/sink' },
-      { role: 'assistant', content: '{"slug": "sink"}' },
+        { role: 'user', content: 'https://github.com/miantiao-me/sink' },
+        { role: 'assistant', content: JSON.stringify({ slug: 'sink' }) },
 
-      {
-        role: 'user',
-        content: url,
-      },
-    ]
-    // @ts-expect-error Workers AI is not typed
-    const { response } = await hubAI().run(aiModel, { messages })
-    return destr(response)
+        { role: 'user', content: url },
+      ],
+    })
+    return output
   }
   else {
     throw createError({ status: 501, statusText: 'AI not enabled' })

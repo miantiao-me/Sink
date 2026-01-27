@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { LogOut } from 'lucide-vue-next'
 
 function logOut() {

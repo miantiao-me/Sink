@@ -1,16 +1,20 @@
+import { z } from 'zod'
+
+const QueryParamsSchema = z.object({
+  slug: z.string().trim().min(1).max(2048),
+})
+
 export default eventHandler(async (event) => {
-  const slug = getQuery(event).slug
-  if (slug) {
-    const { cloudflare } = event.context
-    const { KV } = cloudflare.env
-    const { metadata, value: link } = await KV.getWithMetadata(`link:${slug}`, { type: 'json' })
-    if (link) {
-      return {
-        ...metadata,
-        ...link,
-      }
+  const { slug } = await getValidatedQuery(event, QueryParamsSchema.parse)
+
+  const { link, metadata } = await getLinkWithMetadata(event, slug)
+  if (link) {
+    return {
+      ...metadata,
+      ...link,
     }
   }
+
   throw createError({
     status: 404,
     statusText: 'Not Found',

@@ -25,7 +25,9 @@
     "tips": "Tips",
     "preview_token": "The site token for preview mode is",
     "submit": "Login",
-    "failed": "Login failed, please try again"
+    "failed": "Login failed, please try again",
+    "token_label": "Site Token",
+    "token_required": "Token is required"
   },
   "logout": {
     "title": "LogOut?",
@@ -51,9 +53,22 @@
   "nav": {
     "links": "Links",
     "analysis": "Analysis",
-    "realtime": "Realtime"
+    "realtime": "Realtime",
+    "migrate": "Import/Export"
+  },
+  "sidebar": {
+    "subtitle": "Link Shortener",
+    "platform": "Platform",
+    "settings": "Settings",
+    "import": "Import",
+    "export": "Export",
+    "github": "GitHub",
+    "stars": "Stars"
   },
   "home": {
+    "hero": {
+      "github_repo": "GitHub Repo"
+    },
     "features": {
       "title": "Features",
       "subtitle": "Simple and sufficient functionality",
@@ -91,7 +106,17 @@
       "title": "Built with awesome technologies"
     },
     "twitter": {
-      "follow": "Follow me on X(Twitter)"
+      "follow": "Follow on X(Twitter)"
+    },
+    "stats": {
+      "title": "Sink in Numbers",
+      "subtitle": "Trusted by developers around the world",
+      "stars": "Stars on GitHub",
+      "forks": "Forks"
+    },
+    "testimonials": {
+      "title": "Loved by Users",
+      "subtitle": "See what developers are saying about Sink"
     }
   },
   "dashboard": {
@@ -156,6 +181,7 @@
     "delete_confirm_title": "Are you absolutely sure?",
     "delete_confirm_desc": "This action cannot be undone. This will really delete your link from servers.",
     "delete_success": "Delete successful!",
+    "delete_failed": "Delete failed!",
     "update_success": "Link updated successfully",
     "create_success": "Link created successfully",
     "preview_mode_tip": "The preview mode link is valid for up to 5 minutes.",
@@ -169,12 +195,58 @@
     "no_more": "No more links",
     "load_failed": "Loading links failed,",
     "download_qr_code": "Download QR Code",
+    "change_qr_color": "Change QR code color",
+    "form": {
+      "url": "URL",
+      "slug": "Slug",
+      "comment": "Comment",
+      "expiration": "Expiration",
+      "pick_date": "Pick a date"
+    },
     "sort": {
       "newest": "Newest First",
       "oldest": "Oldest First",
       "az": "Slug A-Z",
       "za": "Slug Z-A",
       "tip": "Experience: Only for loaded links"
+    },
+    "update_failed": "Failed to update link",
+    "create_failed": "Failed to create link",
+    "ai_slug_failed": "Failed to generate AI slug"
+  },
+  "migrate": {
+    "export": {
+      "title": "Export Links",
+      "description": "Download all your links as a JSON file",
+      "button": "Export All",
+      "total_links": "Total links",
+      "success": "Export successful",
+      "failed": "Export failed"
+    },
+    "import": {
+      "title": "Import Links",
+      "description": "Upload a JSON file to import links",
+      "dropzone": "Drop JSON file here or click to upload",
+      "links_found": "links found",
+      "button": "Start Import",
+      "importing": "Importing...",
+      "import_more": "Import More",
+      "download_success": "Download Success Items",
+      "download_skipped": "Download Skipped Items",
+      "download_failed": "Download Failed Items",
+      "result": {
+        "title": "Import Result",
+        "success": "Successfully imported",
+        "skipped": "Skipped (already exists)",
+        "failed": "Failed",
+        "success_message": "{count} links imported successfully"
+      },
+      "errors": {
+        "invalid_json": "Invalid JSON file",
+        "invalid_format": "Invalid file format. Please use a file exported from Sink.",
+        "no_links": "No links found in file",
+        "parse_error": "Failed to parse file"
+      }
     }
   }
 }

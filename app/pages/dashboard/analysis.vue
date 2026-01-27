@@ -1,10 +1,13 @@
-<script setup>
-provide('id', ref())
+<script setup lang="ts">
+definePageMeta({
+  layout: 'dashboard',
+})
+
+provide(LINK_ID_KEY, computed(() => undefined))
 </script>
 
 <template>
   <main class="space-y-6">
-    <DashboardBreadcrumb title="Analysis" />
     <DashboardAnalysis />
   </main>
 </template>

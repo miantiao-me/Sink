@@ -1,5 +1,4 @@
 <script lang="ts" setup>
-import { computed, onMounted, ref, useSlots } from 'vue'
 import { cn } from '@/lib/utils'
 
 const props = withDefaults(defineProps<{
@@ -86,7 +85,7 @@ onMounted(() => loadComponents())
         v-for="(item, idx) in itemsToShow"
         :key="item.props.key"
         v-motion
-        :initial="getInitial(idx)" :enter="getEnter(idx)" :leave="getLeave()"
+        :initial="getInitial(+idx)" :enter="getEnter(+idx)" :leave="getLeave()"
         :class="cn('mx-auto w-full')"
       >
         <component :is="item" />

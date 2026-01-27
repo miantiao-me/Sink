@@ -1,24 +1,29 @@
-<script setup>
+<script setup lang="ts">
+import type { Link } from '@/types'
 import { toast } from 'vue-sonner'
 
-const props = defineProps({
-  link: {
-    type: Object,
-    required: true,
-  },
-})
+const props = defineProps<{
+  link: Link
+}>()
 
-const emit = defineEmits(['update:link'])
+const { t } = useI18n()
+const linksStore = useDashboardLinksStore()
 
 async function deleteLink() {
-  await useAPI('/api/link/delete', {
-    method: 'POST',
-    body: {
-      slug: props.link.slug,
-    },
-  })
-  emit('update:link', props.link, 'delete')
-  toast('Delete successful!')
+  try {
+    await useAPI('/api/link/delete', {
+      method: 'POST',
+      body: {
+        slug: props.link.slug,
+      },
+    })
+    linksStore.notifyLinkUpdate(props.link, 'delete')
+    toast(t('links.delete_success'))
+  }
+  catch (error) {
+    console.error(error)
+    toast.error(t('links.delete_failed'))
+  }
 }
 </script>
 

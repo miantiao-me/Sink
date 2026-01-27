@@ -1,62 +1,50 @@
-<script setup>
-import { now } from '@internationalized/date'
-import { useUrlSearchParams } from '@vueuse/core'
+<script setup lang="ts">
+import { getLocalTimeZone, now } from '@internationalized/date'
 
-const emit = defineEmits(['update:timeRange'])
+const emit = defineEmits<{
+  'update:timeRange': [value: [number, number], key: string]
+}>()
 
-const timeRange = ref('last-1h')
+const realtimeStore = useDashboardRealtimeStore()
+const timeRange = ref(realtimeStore.timeName || 'last-1h')
+const tz = getLocalTimeZone()
+
+watch(() => realtimeStore.timeName, (newName) => {
+  if (newName && newName !== timeRange.value) {
+    timeRange.value = newName
+  }
+})
 
 watch(timeRange, (newValue) => {
   switch (newValue) {
     case 'today':
-      emit('update:timeRange', [date2unix(now(), 'start'), date2unix(now())], newValue)
+      emit('update:timeRange', [date2unix(now(tz), 'start'), date2unix(now(tz))], newValue)
       break
     case 'last-5m':
-      emit('update:timeRange', [date2unix(now().subtract({ minutes: 5 })), date2unix(now())], newValue)
+      emit('update:timeRange', [date2unix(now(tz).subtract({ minutes: 5 })), date2unix(now(tz))], newValue)
       break
     case 'last-10m':
-      emit('update:timeRange', [date2unix(now().subtract({ minutes: 10 })), date2unix(now())], newValue)
+      emit('update:timeRange', [date2unix(now(tz).subtract({ minutes: 10 })), date2unix(now(tz))], newValue)
       break
     case 'last-30m':
-      emit('update:timeRange', [date2unix(now().subtract({ minutes: 30 })), date2unix(now())], newValue)
+      emit('update:timeRange', [date2unix(now(tz).subtract({ minutes: 30 })), date2unix(now(tz))], newValue)
       break
     case 'last-1h':
-      emit('update:timeRange', [date2unix(now().subtract({ hours: 1 })), date2unix(now())], newValue)
+      emit('update:timeRange', [date2unix(now(tz).subtract({ hours: 1 })), date2unix(now(tz))], newValue)
       break
     case 'last-6h':
-      emit('update:timeRange', [date2unix(now().subtract({ hours: 6 })), date2unix(now())], newValue)
+      emit('update:timeRange', [date2unix(now(tz).subtract({ hours: 6 })), date2unix(now(tz))], newValue)
       break
     case 'last-12h':
-      emit('update:timeRange', [date2unix(now().subtract({ hours: 12 })), date2unix(now())], newValue)
+      emit('update:timeRange', [date2unix(now(tz).subtract({ hours: 12 })), date2unix(now(tz))], newValue)
       break
     case 'last-24h':
-      emit('update:timeRange', [date2unix(now().subtract({ hours: 24 })), date2unix(now())], newValue)
+      emit('update:timeRange', [date2unix(now(tz).subtract({ hours: 24 })), date2unix(now(tz))], newValue)
       break
     default:
       break
   }
 }, { deep: true })
-
-function restoreTimeRange() {
-  try {
-    const searchParams = useUrlSearchParams('history')
-    if (searchParams.time) {
-      timeRange.value = searchParams.time
-      triggerRef(timeRange)
-    }
-  }
-  catch (error) {
-    console.error('restore searchParams error', error)
-  }
-}
-
-defineExpose({
-  restoreTimeRange,
-})
-
-onBeforeMount(() => {
-  restoreTimeRange()
-})
 </script>
 
 <template>

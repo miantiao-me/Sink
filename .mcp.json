@@ -1,0 +1,12 @@
+{
+  "mcpServers": {
+    "shadcn-vue": {
+      "command": "npx",
+      "args": ["shadcn-vue@latest", "mcp"]
+    },
+    "nuxt": {
+      "type": "http",
+      "url": "https://nuxt.com/mcp"
+    }
+  }
+}

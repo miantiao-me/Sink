@@ -1,16 +1,11 @@
-<script setup>
+<script setup lang="ts">
+import type { MetricItem } from '@/types'
 import { VList } from 'virtua/vue'
 
-defineProps({
-  metrics: {
-    type: Array,
-    required: true,
-  },
-  type: {
-    type: String,
-    required: true,
-  },
-})
+defineProps<{
+  metrics: MetricItem[]
+  type: string
+}>()
 </script>
 
 <template>
@@ -72,7 +67,6 @@ defineProps({
                 <Progress
                   v-model="metric.percent"
                   class="h-2"
-                  :color="metric.color"
                 />
               </TooltipTrigger>
               <TooltipContent>
@@ -85,3 +79,13 @@ defineProps({
     </VList>
   </div>
 </template>
+
+<style scoped>
+:deep([data-slot='progress']) {
+  background-color: var(--muted);
+}
+
+:deep([data-slot='progress-indicator']) {
+  background-color: var(--chart-1);
+}
+</style>
