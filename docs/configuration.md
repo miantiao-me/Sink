@@ -82,3 +82,11 @@ This feature requires:
 2. Create R2 bucket: `wrangler r2 bucket create sink`
 
 Backups are stored in R2 with the path `backups/links-{timestamp}.json` and run daily at 00:00 UTC.
+
+## `NUXT_NOT_FOUND_REDIRECT`
+
+Optional custom redirect target when a slug is not found.
+If this is not set, Sink will fall back to its default 404 page.
+
+Example:
+`NUXT_NOT_FOUND_REDIRECT="https://sink.cool/404"`

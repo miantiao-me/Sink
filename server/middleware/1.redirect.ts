@@ -92,5 +92,15 @@ export default eventHandler(async (event) => {
 
       return sendRedirect(event, buildTarget(link.url), +redirectStatusCode)
     }
+
+    if (!link) {
+      const { notFoundRedirect } = useRuntimeConfig(event)
+
+      if (notFoundRedirect) {
+        return sendRedirect(event, notFoundRedirect, 302)
+      }
+
+      return void 0
+    }
   }
 })

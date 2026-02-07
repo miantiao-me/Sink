@@ -33,6 +33,7 @@ export default defineNuxtConfig({
     listQueryLimit: 500,
     disableBotAccessLog: false,
     disableAutoBackup: false,
+    notFoundRedirect: process.env.NUXT_NOT_FOUND_REDIRECT,
     public: {
       previewMode: '',
       slugDefaultLength: '6',
