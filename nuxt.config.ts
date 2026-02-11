@@ -90,6 +90,17 @@ export default defineNuxtConfig({
         },
       },
     },
+    cloudflare: {
+      wrangler: {
+        kv_namespaces: [
+          {
+            binding: 'KV',
+            preview_id: process.env.KV_NAMESPACE_ID,
+            id: process.env.KV_NAMESPACE_ID,
+          },
+        ],
+      },
+    },
   },
   vite: {
     plugins: [
