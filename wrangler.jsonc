@@ -35,14 +35,14 @@
     {
       "binding": "KV",
       "preview_id": "ef93d42dc4b34969bab404d2e80f8dd3",
-      "id": "ef93d42dc4b34969bab404d2e80f8dd3" // IMPORTANT: Change this to your KV namespace ID
+      "id": "9e85cfa8c8f24d4298be0e09d18295a9" // IMPORTANT: Change this to your KV namespace ID
     }
   ],
   "r2_buckets": [
     {
       "binding": "R2",
       "preview_bucket_name": "sink",
-      "bucket_name": "sink" // IMPORTANT: Change this to your R2 bucket name, or create one with `wrangler r2 bucket create sink`
+      "bucket_name": "guanwu-sink" // IMPORTANT: Change this to your R2 bucket name, or create one with `wrangler r2 bucket create sink`
     }
   ],
   "triggers": {
