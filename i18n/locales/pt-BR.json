@@ -1,0 +1,306 @@
+{
+  "common": {
+    "i18n": "Multi idiomas",
+    "abbreviations": "Br",
+    "current_language": "Português (BR)",
+    "try_again": "Tente novamente",
+    "cancel": "Cancelar",
+    "continue": "Continuar",
+    "close": "Fechar",
+    "save": "Salvar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "delete_success": "Excluído com sucesso!",
+    "search": "Buscar"
+  },
+  "theme": {
+    "toggle": "Alternar tema",
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Sistema"
+  },
+  "login": {
+    "title": "Login",
+    "description": "Insira seu token do site para entrar",
+    "tips": "Dicas",
+    "preview_token": "O token do site para modo de visualização é",
+    "submit": "Entrar",
+    "failed": "Falha no login, por favor tente novamente",
+    "token_label": "Token do site",
+    "token_required": "Token é obrigatório"
+  },
+  "logout": {
+    "title": "Sair?",
+    "confirm": "Tem certeza que deseja sair?",
+    "action": "Sair"
+  },
+  "layouts": {
+    "footer": {
+      "copyright": "Produtos da HTML.ZONE",
+      "social": {
+        "email": "E-mail",
+        "telegram": "Telegram",
+        "blog": "Blog",
+        "twitter": "Twitter",
+        "mastodon": "Mastodon",
+        "github": "GitHub"
+      }
+    },
+    "header": {
+      "select_language": "Selecionar idioma"
+    }
+  },
+  "nav": {
+    "links": "Links",
+    "analysis": "Análise",
+    "realtime": "Tempo Real",
+    "migrate": "Importar/Exportar"
+  },
+  "sidebar": {
+    "subtitle": "Encurtador de links",
+    "platform": "Plataforma",
+    "settings": "Configurações",
+    "import": "Importar",
+    "export": "Exportar",
+    "coffee": "Pague-me um café",
+    "github": "GitHub",
+    "stars": "Estrelas",
+    "update": "Nova versão {version} disponível (atual: {current})"
+  },
+  "home": {
+    "hero": {
+      "github_repo": "Repositório GitHub"
+    },
+    "features": {
+      "title": "Funcionalidades",
+      "subtitle": "Funcionalidade simples e suficiente",
+      "url_shortening": {
+        "title": "Encurtamento de URL",
+        "description": "Comprima suas URLs ao tamanho mínimo"
+      },
+      "analytics": {
+        "title": "Analytics",
+        "description": "Monitore a análise de links e obtenha estatísticas detalhadas"
+      },
+      "serverless": {
+        "title": "Serverless",
+        "description": "Implante sem a necessidade de servidores tradicionais"
+      },
+      "customizable_slug": {
+        "title": "Slug Personalizável",
+        "description": "Suporte para slugs personalizados e sensibilidade a maiúsculas/minúsculas"
+      },
+      "ai_slug": {
+        "title": "Slug via IA",
+        "description": "Use IA para gerar slugs automaticamente"
+      },
+      "link_expiration": {
+        "title": "Expiração de Link",
+        "description": "Defina datas de expiração para seus links"
+      },
+      "device_routing": {
+        "title": "Roteamento por aparelho",
+        "description": "Redirecione usuários iOS/Android para links da App Store"
+      },
+      "og_preview": {
+        "title": "Prévia Social",
+        "description": "Prévias OpenGraph personalizadas para redes sociais"
+      },
+      "realtime_analytics": {
+        "title": "Analytics em Tempo Real",
+        "description": "Globo 3D ao vivo e logs de eventos em tempo real"
+      },
+      "qr_code": {
+        "title": "QR Code",
+        "description": "Gere códigos QR para seus links curtos"
+      },
+      "import_export": {
+        "title": "Importar/Exportar",
+        "description": "Migração em massa via arquivos JSON"
+      },
+      "multi_language": {
+        "title": "Multi-idioma",
+        "description": "Suporte completo de i18n para o painel"
+      }
+    },
+    "cta": {
+      "title": "Implantação imediata",
+      "description": "Com apenas alguns cliques simples, você pode começar a implantar sem custos",
+      "button": "Iniciar implantação"
+    },
+    "logos": {
+      "title": "Construído com tecnologias incríveis"
+    },
+    "twitter": {
+      "follow": "Siga no X (Twitter)"
+    },
+    "stats": {
+      "title": "Mergulhe nos números",
+      "subtitle": "Confiado por desenvolvedores ao redor do mundo",
+      "stars": "Estrelas no GitHub",
+      "forks": "Forks"
+    },
+    "testimonials": {
+      "title": "Amado pelos usuários",
+      "subtitle": "Veja o que os desenvolvedores estão dizendo sobre o Sink"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "visits": "Visitas",
+    "views": "Visualizações",
+    "visitors": "Visitantes",
+    "referers": "Origens",
+    "stats": " - Estatísticas",
+    "trend": "Tendência",
+    "weekly_trend": "Tendência semanal",
+    "custom_date": "Data personalizada",
+    "date": "Data",
+    "date_range": "Intervalo de datas",
+    "locations": "Localizações",
+    "details": "Detalhes",
+    "name": "Nome",
+    "count": "Contagem",
+    "loading": "Carregando",
+    "no_data": "Sem dados",
+    "none": "(Nenhum)",
+    "filter_placeholder": "Filtrar links...",
+    "date_picker": {
+      "today": "Hoje",
+      "last_24h": "Últimas 24 horas",
+      "this_week": "Esta semana",
+      "last_7d": "Últimos 7 dias",
+      "this_month": "Este mês",
+      "last_30d": "Últimos 30 dias",
+      "last_90d": "Últimos 90 dias",
+      "custom": "Personalizado",
+      "custom_title": "Data personalizada",
+      "single_date": "Data",
+      "date_range": "Intervalo"
+    },
+    "metrics": {
+      "country": "País",
+      "region": "Região",
+      "city": "Cidade",
+      "referer": "Referência",
+      "slug": "Slug",
+      "language": "Idioma",
+      "timezone": "Fuso horário",
+      "device": "Aparelho",
+      "deviceType": "Tipo de aparelho",
+      "os": "SO",
+      "browser": "Navegador",
+      "browserType": "Tipo de navegador"
+    },
+    "time_picker": {
+      "today": "Hoje",
+      "last_5m": "Últimos 5 minutos",
+      "last_10m": "Últimos 10 minutos",
+      "last_30m": "Últimos 30 minutos",
+      "last_1h": "Última 1 hora",
+      "last_6h": "Últimas 6 horas",
+      "last_12h": "Últimas 12 horas",
+      "last_24h": "Últimas 24 horas"
+    }
+  },
+  "links": {
+    "create": "Criar Link",
+    "edit": "Editar Link",
+    "delete_confirm_title": "Você tem certeza absoluta?",
+    "delete_confirm_desc": "Esta ação não pode ser desfeita. Isso excluirá permanentemente seu link dos servidores.",
+    "delete_success": "Excluído com sucesso!",
+    "delete_failed": "Falha ao excluir!",
+    "update_success": "Link atualizado com sucesso",
+    "create_success": "Link gerado com sucesso",
+    "preview_mode_tip": "O link do modo de visualização é válido por até 5 minutos.",
+    "search_placeholder": "Buscar links...",
+    "no_results": "Nenhum link encontrado.",
+    "group_title": "Links",
+    "copy_success": "Copiado com sucesso!",
+    "created_at": "Criado em",
+    "updated_at": "Atualizado em",
+    "expires_at": "Expira em",
+    "no_more": "Não há mais links",
+    "load_failed": "Falha ao carregar links,",
+    "download_qr_code": "Baixar QR Code",
+    "change_qr_color": "Alterar cor do QR code",
+    "form": {
+      "url": "URL",
+      "slug": "Slug",
+      "comment": "Comentário",
+      "expiration": "Expiração",
+      "pick_date": "Escolha uma data",
+      "device_redirect": "Redirecionamento de aparelho",
+      "google_play": "URL do Google Play",
+      "app_store": "URL da App Store",
+      "link_settings": "Configurações do link",
+      "redirect_with_query_label": "Redirecionar com parâmetros de consulta",
+      "redirect_with_query_description": "Anexar parâmetros de consulta do link curto à URL de destino. Substitui a configuração global.",
+      "cloaking_label": "Habilitar mascaramento de link",
+      "cloaking_description": "Mostrar seu link curto na barra de endereço do navegador em vez da URL de destino. Pode não funcionar em sites que bloqueiam incorporação de iframe.",
+      "password_label": "Proteção por senha",
+      "password_description": "Exigir uma senha para acessar este link curto.",
+      "password_placeholder": "Deixe vazio para desativar",
+      "og_settings": "Configurações OpenGraph",
+      "og_title": "Título",
+      "og_title_placeholder": "Deixe vazio para usar o nome do host da URL",
+      "og_description": "Descrição",
+      "og_description_placeholder": "Descrição do link",
+      "og_image": "Imagem",
+      "advanced": "Avançado",
+      "more_options": "Mais opções",
+      "image_invalid_type": "Por favor, envie um arquivo de imagem",
+      "image_size_limit": "O tamanho da imagem não pode exceder 5MB",
+      "image_upload_success": "Imagem enviada com sucesso",
+      "image_upload_failed": "Falha ao enviar imagem",
+      "image_upload_hint": "Clique ou arraste para enviar a imagem",
+      "image_ratio_hint": "Recomendado: 1200×630",
+      "slug_required": "Por favor, insira um slug primeiro"
+    },
+    "sort": {
+      "newest": "Mais recentes primeiro",
+      "oldest": "Mais antigos primeiro",
+      "az": "Slug A-Z",
+      "za": "Slug Z-A",
+      "tip": "Experiência: Apenas para links carregados"
+    },
+    "update_failed": "Falha ao atualizar link",
+    "create_failed": "Falha ao criar link",
+    "ai_slug_failed": "Falha ao gerar slug via IA"
+  },
+  "migrate": {
+    "export": {
+      "title": "Exportar links",
+      "description": "Baixe todos os seus links como um arquivo JSON",
+      "button": "Exportar tudo",
+      "total_links": "Total de links",
+      "success": "Exportação bem-sucedida",
+      "failed": "Falha na exportação"
+    },
+    "import": {
+      "title": "Importar links",
+      "description": "Envie um arquivo JSON para importar links",
+      "dropzone": "Arraste o arquivo JSON aqui ou clique para enviar",
+      "links_found": "links encontrados",
+      "button": "Iniciar importação",
+      "importing": "Importando...",
+      "import_more": "Importar mais",
+      "download_success": "Baixar itens com sucesso",
+      "download_skipped": "Baixar itens ignorados",
+      "download_failed": "Baixar itens com falha",
+      "result": {
+        "title": "Resultado da importação",
+        "success": "Importado com sucesso",
+        "skipped": "Ignorado (já existe)",
+        "failed": "Falhou",
+        "success_message": "{count} links importados com sucesso"
+      },
+      "errors": {
+        "invalid_json": "Arquivo JSON inválido",
+        "invalid_format": "Formato de arquivo inválido. Por favor, use um arquivo exportado do Sink.",
+        "no_links": "Nenhum link encontrado no arquivo",
+        "parse_error": "Falha ao analisar o arquivo"
+      }
+    }
+  }
+}
