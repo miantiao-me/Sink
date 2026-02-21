@@ -10,5 +10,6 @@
   >
     <DashboardMigrateExport />
     <DashboardMigrateImport />
+    <DashboardMigrateBackup />
   </div>
 </template>

@@ -269,6 +269,14 @@
     "ai_slug_failed": "Failed to generate AI slug"
   },
   "migrate": {
+    "backup": {
+      "title": "Manual Backup",
+      "description": "Trigger a manual backup of all links to the configured R2 bucket",
+      "button": "Start Backup",
+      "backing_up": "Backing up...",
+      "success": "Backup successful",
+      "failed": "Backup failed"
+    },
     "export": {
       "title": "Export Links",
       "description": "Download all your links as a JSON file",

@@ -269,6 +269,14 @@
     "ai_slug_failed": "KI-Slug konnte nicht generiert werden"
   },
   "migrate": {
+    "backup": {
+      "title": "Manuelles Backup",
+      "description": "Löse eine manuelle Sicherung aller Links auf dem konfigurierten R2-Bucket aus",
+      "button": "Sicherung starten",
+      "backing_up": "Sichere...",
+      "success": "Sicherung erfolgreich",
+      "failed": "Sicherung fehlgeschlagen"
+    },
     "export": {
       "title": "Links exportieren",
       "description": "Laden Sie alle Links als JSON-Datei herunter",

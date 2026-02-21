@@ -269,6 +269,14 @@
     "ai_slug_failed": "Tạo slug AI thất bại"
   },
   "migrate": {
+    "backup": {
+      "title": "Sao lưu thủ công",
+      "description": "Kích hoạt sao lưu thủ công tất cả liên kết sang bộ chứa R2 đã được cấu hình",
+      "button": "Bắt đầu sao lưu",
+      "backing_up": "Đang sao lưu...",
+      "success": "Sao lưu thành công",
+      "failed": "Sao lưu thất bại"
+    },
     "export": {
       "title": "Xuất liên kết",
       "description": "Tải xuống tất cả liên kết dưới dạng tệp JSON",

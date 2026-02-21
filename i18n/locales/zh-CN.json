@@ -269,6 +269,14 @@
     "ai_slug_failed": "AI 生成短链失败"
   },
   "migrate": {
+    "backup": {
+      "title": "手动备份",
+      "description": "手动触发所有链接到已配置 R2 存储桶的备份",
+      "button": "开始备份",
+      "backing_up": "备份中...",
+      "success": "备份成功",
+      "failed": "备份失败"
+    },
     "export": {
       "title": "导出链接",
       "description": "将所有链接下载为 JSON 文件",

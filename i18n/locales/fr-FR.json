@@ -269,6 +269,14 @@
     "ai_slug_failed": "Échec de la génération du slug IA"
   },
   "migrate": {
+    "backup": {
+      "title": "Sauvegarde manuelle",
+      "description": "Déclenchez une sauvegarde manuelle de tous les liens vers le bucket R2 configuré",
+      "button": "Démarrer la sauvegarde",
+      "backing_up": "Sauvegarde en cours...",
+      "success": "Sauvegarde réussie",
+      "failed": "Échec de la sauvegarde"
+    },
     "export": {
       "title": "Exporter les liens",
       "description": "Téléchargez tous vos liens au format JSON",

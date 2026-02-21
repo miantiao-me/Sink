@@ -269,6 +269,14 @@
     "ai_slug_failed": "AI 生成短連結失敗"
   },
   "migrate": {
+    "backup": {
+      "title": "手動備份",
+      "description": "手動觸發所有連結到已配置 R2 儲存桶的備份",
+      "button": "開始備份",
+      "backing_up": "備份中...",
+      "success": "備份成功",
+      "failed": "備份失敗"
+    },
     "export": {
       "title": "匯出連結",
       "description": "將所有連結下載為 JSON 檔案",
