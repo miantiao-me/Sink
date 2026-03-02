@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "sink",
+  "name": "sink-cool",
   "main": ".output/server/index.mjs",
   "assets": {
     "binding": "ASSETS",
