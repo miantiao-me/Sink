@@ -238,6 +238,8 @@
       "redirect_with_query_description": "Query-Parameter des Kurzlinks an die Ziel-URL anhängen. Überschreibt die globale Einstellung.",
       "cloaking_label": "Link-Cloaking aktivieren",
       "cloaking_description": "Zeigt Ihren Kurzlink in der Adressleiste des Browsers anstelle der Ziel-URL an. Funktioniert möglicherweise nicht bei Websites, die iframe-Einbettung blockieren.",
+      "unsafe_label": "Als unsicher markieren",
+      "unsafe_description": "Vor der Weiterleitung eine Warnseite anzeigen. Besucher müssen bestätigen, um fortzufahren.",
       "password_label": "Passwortschutz",
       "password_description": "Passwort zum Zugriff auf diesen Kurzlink erforderlich.",
       "password_placeholder": "Leer lassen zum Deaktivieren",
@@ -269,6 +271,14 @@
     "ai_slug_failed": "KI-Slug konnte nicht generiert werden"
   },
   "migrate": {
+    "backup": {
+      "title": "Manuelles Backup",
+      "description": "Löse eine manuelle Sicherung aller Links auf dem konfigurierten R2-Bucket aus",
+      "button": "Sicherung starten",
+      "backing_up": "Sichere...",
+      "success": "Sicherung erfolgreich",
+      "failed": "Sicherung fehlgeschlagen"
+    },
     "export": {
       "title": "Links exportieren",
       "description": "Laden Sie alle Links als JSON-Datei herunter",

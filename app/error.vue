@@ -1,5 +1,10 @@
 <script setup lang="ts">
+import type { NuxtError } from '#app'
 import errorImage from './assets/images/404.svg?raw'
+
+defineProps<{
+  error: NuxtError
+}>()
 </script>
 
 <template>

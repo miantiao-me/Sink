@@ -175,6 +175,50 @@ describe.sequential('/api/link/edit', () => {
     expect(data).toHaveProperty('shortLink')
   })
 
+  it('removes password when not provided in edit', async () => {
+    const slug = testLinkPayload.slug
+
+    // Set a password on the link
+    const setPasswordResponse = await putJson('/api/link/edit', { ...testLinkPayload, password: 'secret123' })
+    expect(setPasswordResponse.status).toBe(201)
+    const setData = await setPasswordResponse.json() as { link: { password?: string } }
+    expect(setData.link.password).toBe('secret123')
+
+    // Edit the link without providing a password (user cleared the field)
+    const removePasswordResponse = await putJson('/api/link/edit', { url: testLinkPayload.url, slug })
+    expect(removePasswordResponse.status).toBe(201)
+    const removeData = await removePasswordResponse.json() as { link: { password?: string } }
+    expect(removeData.link.password).toBeUndefined()
+  })
+
+  it('removes optional fields when not provided in edit', async () => {
+    const slug = testLinkPayload.slug
+
+    // Set optional fields
+    const setResponse = await putJson('/api/link/edit', {
+      ...testLinkPayload,
+      comment: 'test comment',
+      title: 'test title',
+      cloaking: true,
+      redirectWithQuery: true,
+    })
+    expect(setResponse.status).toBe(201)
+    const setData = await setResponse.json() as { link: { comment?: string, title?: string, cloaking?: boolean, redirectWithQuery?: boolean } }
+    expect(setData.link.comment).toBe('test comment')
+    expect(setData.link.title).toBe('test title')
+    expect(setData.link.cloaking).toBe(true)
+    expect(setData.link.redirectWithQuery).toBe(true)
+
+    // Edit without optional fields (user cleared them)
+    const removeResponse = await putJson('/api/link/edit', { url: testLinkPayload.url, slug })
+    expect(removeResponse.status).toBe(201)
+    const removeData = await removeResponse.json() as { link: { comment?: string, title?: string, cloaking?: boolean, redirectWithQuery?: boolean } }
+    expect(removeData.link.comment).toBeUndefined()
+    expect(removeData.link.title).toBeUndefined()
+    expect(removeData.link.cloaking).toBeUndefined()
+    expect(removeData.link.redirectWithQuery).toBeUndefined()
+  })
+
   it('returns 404 when editing non-existent link', async () => {
     const payload = { url: 'https://example.com', slug: 'non-existent-slug-for-edit-12345' }
     const response = await putJson('/api/link/edit', payload)
@@ -189,6 +233,47 @@ describe.sequential('/api/link/edit', () => {
   it('returns 401 when accessing without auth', async () => {
     const response = await putJson('/api/link/edit', {}, false)
     expect(response.status).toBe(401)
+  })
+})
+
+describe.sequential('/api/link/edit unsafe', () => {
+  const unsafePayload = { ...testLinkPayload, url: 'https://example.com', slug: 'unsafe-test-link' }
+
+  it('creates link with unsafe flag', async () => {
+    const response = await postJson('/api/link/create', { ...unsafePayload, unsafe: true })
+    expect(response.status).toBe(201)
+
+    const data = await response.json() as { link: { unsafe?: boolean } }
+    expect(data.link.unsafe).toBe(true)
+  })
+
+  it('queries link with unsafe flag', async () => {
+    const response = await fetchWithAuth(`/api/link/query?slug=${unsafePayload.slug}`)
+    expect(response.status).toBe(200)
+
+    const data = await response.json() as { unsafe?: boolean }
+    expect(data.unsafe).toBe(true)
+  })
+
+  it('removes unsafe flag when not provided in edit', async () => {
+    const response = await putJson('/api/link/edit', { url: unsafePayload.url, slug: unsafePayload.slug })
+    expect(response.status).toBe(201)
+
+    const data = await response.json() as { link: { unsafe?: boolean } }
+    expect(data.link.unsafe).toBeUndefined()
+  })
+
+  it('sets unsafe flag via edit', async () => {
+    const response = await putJson('/api/link/edit', { ...unsafePayload, unsafe: true })
+    expect(response.status).toBe(201)
+
+    const data = await response.json() as { link: { unsafe?: boolean } }
+    expect(data.link.unsafe).toBe(true)
+  })
+
+  it('deletes unsafe test link', async () => {
+    const response = await postJson('/api/link/delete', { slug: unsafePayload.slug })
+    expect(response.status).toBe(204)
   })
 })
 

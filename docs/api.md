@@ -92,6 +92,8 @@ Content-Type: application/json
 | `ogImage`           | `string`  | ❌       | OpenGraph image URL                                                   |
 | `cloaking`          | `boolean` | ❌       | Enable link cloaking (mask destination URL with short link)           |
 | `redirectWithQuery` | `boolean` | ❌       | Append query parameters to destination URL (overrides global setting) |
+| `password`          | `string`  | ❌       | Password protection for the link                                      |
+| `unsafe`            | `boolean` | ❌       | Mark link as unsafe (shows warning page before redirect)              |
 
 ## CORS
 

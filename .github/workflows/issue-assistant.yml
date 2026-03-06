@@ -1,0 +1,54 @@
+name: issue-assistant
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  issue-assistant:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install opencode
+        run: curl -fsSL https://opencode.ai/install | bash
+
+      - name: Analyze issue
+        env:
+          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          OPENCODE_PERMISSION: |
+            {
+              "bash": {
+                "*": "deny",
+                "gh issue*": "allow"
+              },
+              "webfetch": "deny"
+            }
+        run: |
+          opencode run -m ${{ secrets.OPENCODE_MODEL }} "A new issue #${{ github.event.issue.number }} has been created. Lookup this issue, then do the following:
+
+          1. Read README.md and all files under docs/ directory to see if any documentation answers the issue.
+          2. Search existing issues (excluding #${{ github.event.issue.number }}) for potential duplicates by similarity in title, description, error messages, or functionality.
+
+          Based on your findings, post AT MOST ONE comment on #${{ github.event.issue.number }}. Combine all relevant info into a single comment. If nothing relevant found, do not comment at all.
+
+          Comment format example:
+          '👋 Here are some resources that may help:
+
+          **📖 From docs:** [brief explanation with relevant docs content]
+
+          **🔗 Related issues:**
+
+          - #123: [brief similarity]
+
+          Hope this helps! Feel free to provide more details if these don't address your case.'"
