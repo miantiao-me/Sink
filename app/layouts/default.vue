@@ -141,16 +141,8 @@ const { stats } = useGithubStats()
               </div>
             </NuxtLink>
 
-            <small class="block text-center text-sm text-muted-foreground">
-              &copy; {{ new Date().getFullYear() }}
-              <a
-                href="https://html.zone"
-                target="_blank"
-                title="HTML.ZONE"
-                class="hover:text-primary"
-              >
-                {{ $t('layouts.footer.copyright') }}
-              </a>
+            <small class="block text-right text-sm text-muted-foreground">
+              &copy; {{ new Date().getFullYear() }} {{ $t('layouts.footer.copyright') }}
             </small>
           </div>
 
