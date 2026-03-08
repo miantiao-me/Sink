@@ -9,4 +9,5 @@ export default defineAppConfig({
   previewTTL: 300,
   slugRegex: /^[a-zA-Z0-9_-]+$/,
   reserveSlug: ['dashboard'],
+  siteURL: 'https://ony.st',
 })
