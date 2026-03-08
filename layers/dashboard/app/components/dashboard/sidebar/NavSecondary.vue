@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowUpCircle, Coffee, Languages, Laptop, Moon, Sun } from 'lucide-vue-next'
+import { ArrowUpCircle, Languages, Laptop, Moon, Sun } from 'lucide-vue-next'
 import { useSidebar } from '@/components/ui/sidebar'
 
 const { coffee } = useAppConfig()
@@ -22,7 +22,7 @@ const { hasUpdate, currentVersion, latestVersion } = useVersionCheck()
             ]"
           >
             <div class="flex items-center">
-              <TooltipProvider>
+              <!-- <TooltipProvider>
                 <Tooltip :delay-duration="100">
                   <TooltipTrigger as-child>
                     <a
@@ -42,7 +42,7 @@ const { hasUpdate, currentVersion, latestVersion } = useVersionCheck()
                     <p>{{ $t('sidebar.coffee') }}</p>
                   </TooltipContent>
                 </Tooltip>
-              </TooltipProvider>
+              </TooltipProvider> //-->
 
               <TooltipProvider v-if="hasUpdate">
                 <Tooltip :delay-duration="100">
