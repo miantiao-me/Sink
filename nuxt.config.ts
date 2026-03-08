@@ -29,7 +29,7 @@ export default defineNuxtConfig({
     dataset: 'sink',
     aiModel: '@cf/qwen/qwen3-30b-a3b-fp8',
     aiPrompt: `You are a URL shortening assistant, please shorten the URL provided by the user into a SLUG. The SLUG information should be derived from the URL and page content (if provided). Do not make any assumptions beyond the given information. A SLUG is human-readable and should not exceed three words and can be validated using regular expressions {slugRegex} . Only the best one is returned, the format must be JSON reference {"slug": "example-slug"}`,
-    caseSensitive: false,
+    caseSensitive: true,
     listQueryLimit: 500,
     disableBotAccessLog: false,
     disableAutoBackup: false,
