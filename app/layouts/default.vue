@@ -92,23 +92,6 @@ const { stats } = useGithubStats()
                   md:w-fit
                 "
               >
-                <Button
-                  as-child
-                  variant="outline"
-                  size="sm"
-                >
-                  <a
-                    :href="github"
-                    target="_blank"
-                    :title="$t('layouts.footer.social.github')"
-                    class="flex items-center gap-1.5"
-                  >
-                    <GitHubIcon class="size-4" />
-                    <Star class="size-3" />
-                    <span class="tabular-nums">{{ stats.stars }}</span>
-                  </a>
-                </Button>
-
                 <SwitchLanguage />
                 <SwitchTheme />
               </div>
