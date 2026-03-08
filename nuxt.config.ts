@@ -13,7 +13,7 @@ export default defineNuxtConfig({
     '@vueuse/motion/nuxt',
     'shadcn-nuxt',
   ],
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   css: ['@/assets/css/tailwind.css'],
   colorMode: {
     classSuffix: '',
@@ -43,7 +43,7 @@ export default defineNuxtConfig({
   },
   routeRules: {
     '/': {
-      prerender: true,
+      prerender: false,
     },
     '/api/**': {
       cors: process.env.NUXT_API_CORS === 'true',
@@ -74,7 +74,7 @@ export default defineNuxtConfig({
     experimental: {
       openAPI: true,
     },
-    timing: true,
+    timing: false,
     openAPI: {
       production: 'runtime',
       meta: {
