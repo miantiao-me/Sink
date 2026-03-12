@@ -1,10 +1,9 @@
 <script setup lang="ts">
-import { Menu, Star, X } from 'lucide-vue-next'
+import { Menu, X } from 'lucide-vue-next'
 import { GitHubIcon, TelegramIcon, XIcon } from 'vue3-simple-icons'
 
 const showMenu = ref(false)
 const { title, telegram, twitter, github } = useAppConfig()
-const { stats } = useGithubStats()
 </script>
 
 <template>

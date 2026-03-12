@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { ArrowUpCircle, Coffee, Languages, Laptop, Moon, Sun } from 'lucide-vue-next'
+import { ArrowUpCircle, Languages, Laptop, Moon, Sun } from 'lucide-vue-next'
 import { useSidebar } from '@/components/ui/sidebar'
 
-const { coffee } = useAppConfig()
 const colorMode = useColorMode()
 const { setLocale, locales } = useI18n()
 const { state } = useSidebar()

@@ -9,8 +9,12 @@ const event = useRequestEvent()
 
 if (event) {
   await sendRedirect(event, `https://onyst.it/${slug}`, 301)
-} else {
+}
+else {
   window.location.replace(`https://onyst.it/${slug}`)
 }
 </script>
-<template><div></div></template>
+
+<template>
+  <div />
+</template>
