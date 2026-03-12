@@ -10,17 +10,15 @@ interface User {
 
 const { isMobile } = useSidebar()
 
+const { siteURL } = useAppConfig()
 const hostname = computed<string>(() => {
-  if (import.meta.client) {
-    return window.location.hostname
-  }
-  return 'localhost'
+  return siteURL ? new URL(siteURL).hostname : (import.meta.client ? window.location.hostname : 'localhost')
 })
 
 const user = computed<User>(() => ({
-  name: 'Root',
+  name: 'Google Workspace Authenticated',
   email: `root@${hostname.value}`,
-  avatar: '/sink.png',
+  avatar: 'https://gravatar.com/avatar/fcf18f6327cd6b5f2be9262e95820e1c05859b9002967569f7da6026832fc89f',
 }))
 
 function logOut() {

@@ -15,9 +15,9 @@ const editPopoverOpen = ref(false)
 const countersMap = inject<Ref<Record<string, CounterData>> | undefined>('linksCountersMap', undefined)
 const counters = computed(() => countersMap?.value?.[props.link.id])
 
-const requestUrl = useRequestURL()
-const host = requestUrl.host
-const origin = requestUrl.origin
+const { siteURL } = useAppConfig()
+const origin = siteURL || useRequestURL().origin
+const host = new URL(origin).host
 
 function getLinkHost(url: string): string | undefined {
   const { host } = parseURL(url)
