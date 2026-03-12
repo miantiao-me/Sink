@@ -25,7 +25,9 @@
     "tips": "Tipps",
     "preview_token": "Der Site-Token für den Vorschaumodus ist",
     "submit": "Anmelden",
-    "failed": "Anmeldung fehlgeschlagen, bitte versuche es erneut"
+    "failed": "Anmeldung fehlgeschlagen, bitte versuche es erneut",
+    "token_label": "Site-Token",
+    "token_required": "Token ist erforderlich"
   },
   "logout": {
     "title": "Abmelden?",
@@ -51,9 +53,24 @@
   "nav": {
     "links": "Links",
     "analysis": "Analyse",
-    "realtime": "Echtzeit"
+    "realtime": "Echtzeit",
+    "migrate": "Import/Export"
+  },
+  "sidebar": {
+    "subtitle": "Link-Verkürzer",
+    "platform": "Plattform",
+    "settings": "Einstellungen",
+    "import": "Importieren",
+    "export": "Exportieren",
+    "coffee": "Kauf mir einen Kaffee",
+    "github": "GitHub",
+    "stars": "Stars",
+    "update": "Neue Version {version} verfügbar (aktuell: {current})"
   },
   "home": {
+    "hero": {
+      "github_repo": "GitHub-Repository"
+    },
     "features": {
       "title": "Funktionen",
       "subtitle": "Einfache und effektive Funktionalität.",
@@ -80,6 +97,30 @@
       "link_expiration": {
         "title": "Link-Ablaufdatum",
         "description": "Lege Ablaufdaten für deine Links fest"
+      },
+      "device_routing": {
+        "title": "Geräte-Routing",
+        "description": "iOS/Android-Nutzer zu App-Store-Links weiterleiten"
+      },
+      "og_preview": {
+        "title": "Social Preview",
+        "description": "Benutzerdefinierte OpenGraph-Vorschauen für soziale Medien"
+      },
+      "realtime_analytics": {
+        "title": "Echtzeit-Analysen",
+        "description": "Live-3D-Globus und Echtzeit-Ereignisprotokolle"
+      },
+      "qr_code": {
+        "title": "QR-Code",
+        "description": "Generiere QR-Codes für deine Kurzlinks"
+      },
+      "import_export": {
+        "title": "Import/Export",
+        "description": "Massenmigration über JSON-Dateien"
+      },
+      "multi_language": {
+        "title": "Mehrsprachig",
+        "description": "Vollständige i18n-Unterstützung für das Dashboard"
       }
     },
     "cta": {
@@ -92,6 +133,16 @@
     },
     "twitter": {
       "follow": "Folge mir auf X (Twitter)"
+    },
+    "stats": {
+      "title": "Sink in Zahlen",
+      "subtitle": "Von Entwicklern weltweit vertraut",
+      "stars": "Stars auf GitHub",
+      "forks": "Forks"
+    },
+    "testimonials": {
+      "title": "Von Nutzern geliebt",
+      "subtitle": "Erfahre, was Entwickler über Sink sagen"
     }
   },
   "dashboard": {
@@ -101,6 +152,8 @@
     "visitors": "Besucher",
     "referers": "Referrer",
     "stats": "'s Statistiken",
+    "trend": "Trend",
+    "weekly_trend": "Wochentrend",
     "custom_date": "Benutzerdefiniertes Datum",
     "date": "Datum",
     "date_range": "Datumsbereich",
@@ -156,6 +209,7 @@
     "delete_confirm_title": "Bist du dir absolut sicher?",
     "delete_confirm_desc": "Diese Aktion kann nicht rückgängig gemacht werden. Dadurch wird dein Link wirklich von den Servern gelöscht.",
     "delete_success": "Erfolgreich gelöscht!",
+    "delete_failed": "Löschen fehlgeschlagen!",
     "update_success": "Link erfolgreich aktualisiert",
     "create_success": "Link erfolgreich erstellt",
     "preview_mode_tip": "Der Link im Vorschaumodus ist bis zu 5 Minuten gültig.",
@@ -169,12 +223,94 @@
     "no_more": "Keine weiteren Links",
     "load_failed": "Laden der Links fehlgeschlagen,",
     "download_qr_code": "QR-Code herunterladen",
+    "change_qr_color": "QR-Code-Farbe ändern",
+    "form": {
+      "url": "URL",
+      "slug": "Slug",
+      "comment": "Kommentar",
+      "expiration": "Ablaufdatum",
+      "pick_date": "Datum auswählen",
+      "device_redirect": "Geräteweiterleitung",
+      "google_play": "Google Play URL",
+      "app_store": "App Store URL",
+      "link_settings": "Link-Einstellungen",
+      "redirect_with_query_label": "Mit Query-Parametern weiterleiten",
+      "redirect_with_query_description": "Query-Parameter des Kurzlinks an die Ziel-URL anhängen. Überschreibt die globale Einstellung.",
+      "cloaking_label": "Link-Cloaking aktivieren",
+      "cloaking_description": "Zeigt Ihren Kurzlink in der Adressleiste des Browsers anstelle der Ziel-URL an. Funktioniert möglicherweise nicht bei Websites, die iframe-Einbettung blockieren.",
+      "unsafe_label": "Als unsicher markieren",
+      "unsafe_description": "Vor der Weiterleitung eine Warnseite anzeigen. Besucher müssen bestätigen, um fortzufahren.",
+      "password_label": "Passwortschutz",
+      "password_description": "Passwort zum Zugriff auf diesen Kurzlink erforderlich.",
+      "password_placeholder": "Leer lassen zum Deaktivieren",
+      "og_settings": "OpenGraph-Einstellungen",
+      "og_title": "Titel",
+      "og_title_placeholder": "Leer lassen, um den URL-Hostnamen zu verwenden",
+      "og_description": "Beschreibung",
+      "og_description_placeholder": "Link-Beschreibung",
+      "og_image": "Bild",
+      "advanced": "Erweitert",
+      "more_options": "Weitere Optionen",
+      "image_invalid_type": "Bitte lade eine Bilddatei hoch",
+      "image_size_limit": "Bildgröße darf 5 MB nicht überschreiten",
+      "image_upload_success": "Bild erfolgreich hochgeladen",
+      "image_upload_failed": "Bild konnte nicht hochgeladen werden",
+      "image_upload_hint": "Klicken oder ziehen zum Hochladen",
+      "image_ratio_hint": "Empfohlen: 1200×630",
+      "slug_required": "Bitte zuerst einen Slug eingeben"
+    },
     "sort": {
       "newest": "Neueste zuerst",
       "oldest": "Älteste zuerst",
       "az": "Slug A-Z",
       "za": "Slug Z-A",
       "tip": "Hinweis: Nur für geladene Links"
+    },
+    "update_failed": "Link konnte nicht aktualisiert werden",
+    "create_failed": "Link konnte nicht erstellt werden",
+    "ai_slug_failed": "KI-Slug konnte nicht generiert werden"
+  },
+  "migrate": {
+    "backup": {
+      "title": "Manuelles Backup",
+      "description": "Löse eine manuelle Sicherung aller Links auf dem konfigurierten R2-Bucket aus",
+      "button": "Sicherung starten",
+      "backing_up": "Sichere...",
+      "success": "Sicherung erfolgreich",
+      "failed": "Sicherung fehlgeschlagen"
+    },
+    "export": {
+      "title": "Links exportieren",
+      "description": "Laden Sie alle Links als JSON-Datei herunter",
+      "button": "Alle exportieren",
+      "total_links": "Gesamtlinks",
+      "success": "Export erfolgreich",
+      "failed": "Export fehlgeschlagen"
+    },
+    "import": {
+      "title": "Links importieren",
+      "description": "Laden Sie eine JSON-Datei hoch, um Links zu importieren",
+      "dropzone": "JSON-Datei hierher ziehen oder klicken zum Hochladen",
+      "links_found": "Links gefunden",
+      "button": "Import starten",
+      "importing": "Importiere...",
+      "import_more": "Weitere importieren",
+      "download_success": "Erfolgreiche herunterladen",
+      "download_skipped": "Übersprungene herunterladen",
+      "download_failed": "Fehlgeschlagene herunterladen",
+      "result": {
+        "title": "Importergebnis",
+        "success": "Erfolgreich importiert",
+        "skipped": "Übersprungen (bereits vorhanden)",
+        "failed": "Fehlgeschlagen",
+        "success_message": "{count} Links erfolgreich importiert"
+      },
+      "errors": {
+        "invalid_json": "Ungültige JSON-Datei",
+        "invalid_format": "Ungültiges Dateiformat. Bitte verwenden Sie eine von Sink exportierte Datei.",
+        "no_links": "Keine Links in der Datei gefunden",
+        "parse_error": "Datei konnte nicht analysiert werden"
+      }
     }
   }
 }

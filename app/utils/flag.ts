@@ -1,6 +1,6 @@
 const EMOJI_FLAG_UNICODE_STARTING_POSITION = 127397
 
-export function getFlag(countryCode: string) {
+export function getFlag(countryCode: string = '') {
   const regex = /^[A-Z]{2}$/.test(countryCode)
   if (!countryCode || !regex)
     return void 0

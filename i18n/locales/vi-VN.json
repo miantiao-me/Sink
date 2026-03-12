@@ -25,7 +25,9 @@
     "tips": "Mẹo",
     "preview_token": "Token của chế độ xem trước là",
     "submit": "Đăng nhập",
-    "failed": "Đăng nhập thất bại, vui lòng thử lại"
+    "failed": "Đăng nhập thất bại, vui lòng thử lại",
+    "token_label": "Token trang",
+    "token_required": "Vui lòng nhập token"
   },
   "logout": {
     "title": "Đăng xuất?",
@@ -51,9 +53,24 @@
   "nav": {
     "links": "Liên kết",
     "analysis": "Phân tích",
-    "realtime": "Thời gian thực"
+    "realtime": "Thời gian thực",
+    "migrate": "Nhập/Xuất"
+  },
+  "sidebar": {
+    "subtitle": "Rút gọn liên kết",
+    "platform": "Nền tảng",
+    "settings": "Cài đặt",
+    "import": "Nhập",
+    "export": "Xuất",
+    "coffee": "Mua cho tôi một ly cà phê",
+    "github": "GitHub",
+    "stars": "Stars",
+    "update": "Phiên bản mới {version} có sẵn (hiện tại: {current})"
   },
   "home": {
+    "hero": {
+      "github_repo": "Kho GitHub"
+    },
     "features": {
       "title": "Tính năng",
       "subtitle": "Đơn giản và đủ dùng",
@@ -80,6 +97,30 @@
       "link_expiration": {
         "title": "Hết hạn liên kết",
         "description": "Đặt ngày hết hạn cho liên kết"
+      },
+      "device_routing": {
+        "title": "Điều hướng thiết bị",
+        "description": "Chuyển hướng người dùng iOS/Android đến App Store"
+      },
+      "og_preview": {
+        "title": "Xem trước mạng xã hội",
+        "description": "Tùy chỉnh OpenGraph cho mạng xã hội"
+      },
+      "realtime_analytics": {
+        "title": "Phân tích thời gian thực",
+        "description": "Địa cầu 3D trực tiếp và nhật ký sự kiện"
+      },
+      "qr_code": {
+        "title": "Mã QR",
+        "description": "Tạo mã QR cho liên kết rút gọn"
+      },
+      "import_export": {
+        "title": "Nhập/Xuất",
+        "description": "Di chuyển hàng loạt qua tệp JSON"
+      },
+      "multi_language": {
+        "title": "Đa ngôn ngữ",
+        "description": "Hỗ trợ i18n đầy đủ cho bảng điều khiển"
       }
     },
     "cta": {
@@ -92,6 +133,16 @@
     },
     "twitter": {
       "follow": "Theo dõi tôi trên X (Twitter)"
+    },
+    "stats": {
+      "title": "Số liệu Sink",
+      "subtitle": "Được tin dùng bởi các nhà phát triển trên toàn thế giới",
+      "stars": "Stars trên GitHub",
+      "forks": "Forks"
+    },
+    "testimonials": {
+      "title": "Người dùng yêu thích",
+      "subtitle": "Xem các nhà phát triển nói gì về Sink"
     }
   },
   "dashboard": {
@@ -101,6 +152,8 @@
     "visitors": "Khách truy cập",
     "referers": "Nguồn giới thiệu",
     "stats": "Thống kê của",
+    "trend": "Xu hướng",
+    "weekly_trend": "Xu hướng tuần",
     "custom_date": "Ngày tùy chỉnh",
     "date": "Ngày",
     "date_range": "Khoảng ngày",
@@ -156,6 +209,7 @@
     "delete_confirm_title": "Bạn có chắc chắn không?",
     "delete_confirm_desc": "Hành động này không thể hoàn tác. Điều này sẽ xóa hoàn toàn liên kết khỏi máy chủ.",
     "delete_success": "Xóa thành công!",
+    "delete_failed": "Xóa thất bại!",
     "update_success": "Cập nhật liên kết thành công",
     "create_success": "Tạo liên kết thành công",
     "preview_mode_tip": "Liên kết ở chế độ xem trước có hiệu lực trong 5 phút.",
@@ -169,12 +223,94 @@
     "no_more": "Không còn liên kết nào",
     "load_failed": "Tải liên kết thất bại,",
     "download_qr_code": "Tải mã QR",
+    "change_qr_color": "Thay đổi màu mã QR",
+    "form": {
+      "url": "URL",
+      "slug": "Slug",
+      "comment": "Ghi chú",
+      "expiration": "Hết hạn",
+      "pick_date": "Chọn ngày",
+      "device_redirect": "Chuyển hướng theo thiết bị",
+      "google_play": "URL Google Play",
+      "app_store": "URL App Store",
+      "link_settings": "Cài đặt liên kết",
+      "redirect_with_query_label": "Chuyển hướng kèm tham số truy vấn",
+      "redirect_with_query_description": "Thêm tham số truy vấn từ liên kết rút gọn vào URL đích. Ghi đè cài đặt toàn cục.",
+      "cloaking_label": "Bật che giấu liên kết",
+      "cloaking_description": "Hiển thị liên kết rút gọn trên thanh địa chỉ trình duyệt thay vì URL đích. Có thể không hoạt động với các trang web chặn nhúng iframe.",
+      "unsafe_label": "Đánh dấu là không an toàn",
+      "unsafe_description": "Hiển thị trang cảnh báo trước khi chuyển hướng. Khách truy cập phải xác nhận để tiếp tục.",
+      "password_label": "Bảo vệ bằng mật khẩu",
+      "password_description": "Yêu cầu mật khẩu để truy cập liên kết rút gọn này.",
+      "password_placeholder": "Để trống để tắt",
+      "og_settings": "Cài đặt OpenGraph",
+      "og_title": "Tiêu đề",
+      "og_title_placeholder": "Để trống sẽ sử dụng tên miền URL",
+      "og_description": "Mô tả",
+      "og_description_placeholder": "Mô tả liên kết",
+      "og_image": "Hình ảnh",
+      "advanced": "Nâng cao",
+      "more_options": "Thêm tùy chọn",
+      "image_invalid_type": "Vui lòng tải lên tệp hình ảnh",
+      "image_size_limit": "Kích thước hình ảnh không được vượt quá 5MB",
+      "image_upload_success": "Tải lên hình ảnh thành công",
+      "image_upload_failed": "Tải lên hình ảnh thất bại",
+      "image_upload_hint": "Nhấp hoặc kéo thả để tải lên hình ảnh",
+      "image_ratio_hint": "Khuyến nghị: 1200×630",
+      "slug_required": "Vui lòng nhập slug trước"
+    },
     "sort": {
       "newest": "Mới nhất trước",
       "oldest": "Cũ nhất trước",
       "az": "Slug A-Z",
       "za": "Slug Z-A",
       "tip": "Trải nghiệm: Chỉ áp dụng với các liên kết đã tải"
+    },
+    "update_failed": "Cập nhật liên kết thất bại",
+    "create_failed": "Tạo liên kết thất bại",
+    "ai_slug_failed": "Tạo slug AI thất bại"
+  },
+  "migrate": {
+    "backup": {
+      "title": "Sao lưu thủ công",
+      "description": "Kích hoạt sao lưu thủ công tất cả liên kết sang bộ chứa R2 đã được cấu hình",
+      "button": "Bắt đầu sao lưu",
+      "backing_up": "Đang sao lưu...",
+      "success": "Sao lưu thành công",
+      "failed": "Sao lưu thất bại"
+    },
+    "export": {
+      "title": "Xuất liên kết",
+      "description": "Tải xuống tất cả liên kết dưới dạng tệp JSON",
+      "button": "Xuất tất cả",
+      "total_links": "Tổng liên kết",
+      "success": "Xuất thành công",
+      "failed": "Xuất thất bại"
+    },
+    "import": {
+      "title": "Nhập liên kết",
+      "description": "Tải lên tệp JSON để nhập liên kết",
+      "dropzone": "Kéo thả tệp JSON vào đây hoặc nhấp để tải lên",
+      "links_found": "liên kết được tìm thấy",
+      "button": "Bắt đầu nhập",
+      "importing": "Đang nhập...",
+      "import_more": "Nhập thêm",
+      "download_success": "Tải về các mục thành công",
+      "download_skipped": "Tải về các mục đã bỏ qua",
+      "download_failed": "Tải về các mục thất bại",
+      "result": {
+        "title": "Kết quả nhập",
+        "success": "Nhập thành công",
+        "skipped": "Đã bỏ qua (đã tồn tại)",
+        "failed": "Thất bại",
+        "success_message": "Đã nhập thành công {count} liên kết"
+      },
+      "errors": {
+        "invalid_json": "Tệp JSON không hợp lệ",
+        "invalid_format": "Định dạng tệp không hợp lệ. Vui lòng sử dụng tệp được xuất từ Sink.",
+        "no_links": "Không tìm thấy liên kết trong tệp",
+        "parse_error": "Không thể phân tích tệp"
+      }
     }
   }
 }

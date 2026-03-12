@@ -1,14 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import { Languages } from 'lucide-vue-next'
 
-const nuxtApp = useNuxtApp()
-const i18n = nuxtApp.$i18n
 const { setLocale, locales } = useI18n()
-const currentLocale = ref(i18n.locale.value)
-
-watch(currentLocale, (newLocale) => {
-  setLocale(newLocale)
-})
 </script>
 
 <template>

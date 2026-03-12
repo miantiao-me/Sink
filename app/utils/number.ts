@@ -1,6 +1,6 @@
-export function formatNumber(number: number) {
+export function formatNumber(number: number): string {
   if (!number || typeof Intl === 'undefined')
-    return number
+    return String(number)
 
   return new Intl.NumberFormat('en').format(number)
 }

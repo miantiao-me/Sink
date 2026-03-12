@@ -1,0 +1,9 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "types": ["@cloudflare/vitest-pool-workers", "vite/client"]
+  },
+  "include": ["./**/*.ts", "../worker-configuration.d.ts"]
+}

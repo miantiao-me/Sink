@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import { Laptop, Moon, Sun } from 'lucide-vue-next'
 
 const colorMode = useColorMode()
@@ -9,14 +9,16 @@ const colorMode = useColorMode()
     <DropdownMenuTrigger as-child>
       <Button variant="ghost">
         <Sun
+          aria-hidden="true"
           class="
-            absolute h-5 w-5 scale-100 transition-all
+            absolute h-5 w-5 scale-100 transition-[transform,opacity]
             dark:scale-0
           "
         />
         <Moon
+          aria-hidden="true"
           class="
-            h-5 w-5 scale-0 transition-all
+            h-5 w-5 scale-0 transition-[transform,opacity]
             dark:scale-100
           "
         />
@@ -31,21 +33,21 @@ const colorMode = useColorMode()
         class="cursor-pointer"
         @click="colorMode.preference = 'light'"
       >
-        <Sun class="mr-1 h-4 w-4" />
+        <Sun aria-hidden="true" class="mr-1 h-4 w-4" />
         {{ $t('theme.light') }}
       </DropdownMenuItem>
       <DropdownMenuItem
         class="cursor-pointer"
         @click="colorMode.preference = 'dark'"
       >
-        <Moon class="mr-1 h-4 w-4" />
+        <Moon aria-hidden="true" class="mr-1 h-4 w-4" />
         {{ $t('theme.dark') }}
       </DropdownMenuItem>
       <DropdownMenuItem
         class="cursor-pointer"
         @click="colorMode.preference = 'system'"
       >
-        <Laptop class="mr-1 h-4 w-4" />
+        <Laptop aria-hidden="true" class="mr-1 h-4 w-4" />
         {{ $t('theme.system') }}
       </DropdownMenuItem>
     </DropdownMenuContent>

@@ -25,7 +25,9 @@
     "tips": "Tips",
     "preview_token": "The site token for preview mode is",
     "submit": "Login",
-    "failed": "Login failed, please try again"
+    "failed": "Login failed, please try again",
+    "token_label": "Site Token",
+    "token_required": "Token is required"
   },
   "logout": {
     "title": "LogOut?",
@@ -51,9 +53,24 @@
   "nav": {
     "links": "Links",
     "analysis": "Analysis",
-    "realtime": "Realtime"
+    "realtime": "Realtime",
+    "migrate": "Import/Export"
+  },
+  "sidebar": {
+    "subtitle": "Link Shortener",
+    "platform": "Platform",
+    "settings": "Settings",
+    "import": "Import",
+    "export": "Export",
+    "coffee": "Buy me a coffee",
+    "github": "GitHub",
+    "stars": "Stars",
+    "update": "New version {version} available (current: {current})"
   },
   "home": {
+    "hero": {
+      "github_repo": "GitHub Repo"
+    },
     "features": {
       "title": "Features",
       "subtitle": "Simple and sufficient functionality",
@@ -80,6 +97,30 @@
       "link_expiration": {
         "title": "Link Expiration",
         "description": "Set expiration dates for your links"
+      },
+      "device_routing": {
+        "title": "Device Routing",
+        "description": "Redirect iOS/Android users to App Store links"
+      },
+      "og_preview": {
+        "title": "Social Preview",
+        "description": "Custom OpenGraph previews for social media"
+      },
+      "realtime_analytics": {
+        "title": "Real-time Analytics",
+        "description": "Live 3D globe and real-time event logs"
+      },
+      "qr_code": {
+        "title": "QR Code",
+        "description": "Generate QR codes for your short links"
+      },
+      "import_export": {
+        "title": "Import/Export",
+        "description": "Bulk migration via JSON files"
+      },
+      "multi_language": {
+        "title": "Multi-language",
+        "description": "Full i18n support for the dashboard"
       }
     },
     "cta": {
@@ -91,7 +132,17 @@
       "title": "Built with awesome technologies"
     },
     "twitter": {
-      "follow": "Follow me on X(Twitter)"
+      "follow": "Follow on X(Twitter)"
+    },
+    "stats": {
+      "title": "Sink in Numbers",
+      "subtitle": "Trusted by developers around the world",
+      "stars": "Stars on GitHub",
+      "forks": "Forks"
+    },
+    "testimonials": {
+      "title": "Loved by Users",
+      "subtitle": "See what developers are saying about Sink"
     }
   },
   "dashboard": {
@@ -101,6 +152,8 @@
     "visitors": "Visitors",
     "referers": "Referers",
     "stats": "'s Stats",
+    "trend": "Trend",
+    "weekly_trend": "Weekly Trend",
     "custom_date": "Custom Date",
     "date": "Date",
     "date_range": "Date Range",
@@ -156,6 +209,7 @@
     "delete_confirm_title": "Are you absolutely sure?",
     "delete_confirm_desc": "This action cannot be undone. This will really delete your link from servers.",
     "delete_success": "Delete successful!",
+    "delete_failed": "Delete failed!",
     "update_success": "Link updated successfully",
     "create_success": "Link created successfully",
     "preview_mode_tip": "The preview mode link is valid for up to 5 minutes.",
@@ -169,12 +223,94 @@
     "no_more": "No more links",
     "load_failed": "Loading links failed,",
     "download_qr_code": "Download QR Code",
+    "change_qr_color": "Change QR code color",
+    "form": {
+      "url": "URL",
+      "slug": "Slug",
+      "comment": "Comment",
+      "expiration": "Expiration",
+      "pick_date": "Pick a date",
+      "device_redirect": "Device Redirect",
+      "google_play": "Google Play URL",
+      "app_store": "App Store URL",
+      "link_settings": "Link Settings",
+      "redirect_with_query_label": "Redirect with Query Parameters",
+      "redirect_with_query_description": "Append query parameters from the short link to the destination URL. Overrides global setting.",
+      "cloaking_label": "Enable Link Cloaking",
+      "cloaking_description": "Show your short link in the browser address bar instead of the destination URL. May not work for sites that block iframe embedding.",
+      "unsafe_label": "Mark as Unsafe",
+      "unsafe_description": "Show a warning page before redirecting. Visitors must confirm to continue.",
+      "password_label": "Password Protection",
+      "password_description": "Require a password to access this short link.",
+      "password_placeholder": "Leave empty to disable",
+      "og_settings": "OpenGraph Settings",
+      "og_title": "Title",
+      "og_title_placeholder": "Leave empty to use URL hostname",
+      "og_description": "Description",
+      "og_description_placeholder": "Link description",
+      "og_image": "Image",
+      "advanced": "Advanced",
+      "more_options": "More Options",
+      "image_invalid_type": "Please upload an image file",
+      "image_size_limit": "Image size cannot exceed 5MB",
+      "image_upload_success": "Image uploaded successfully",
+      "image_upload_failed": "Failed to upload image",
+      "image_upload_hint": "Click or drag to upload image",
+      "image_ratio_hint": "Recommended: 1200×630",
+      "slug_required": "Please enter a slug first"
+    },
     "sort": {
       "newest": "Newest First",
       "oldest": "Oldest First",
       "az": "Slug A-Z",
       "za": "Slug Z-A",
       "tip": "Experience: Only for loaded links"
+    },
+    "update_failed": "Failed to update link",
+    "create_failed": "Failed to create link",
+    "ai_slug_failed": "Failed to generate AI slug"
+  },
+  "migrate": {
+    "backup": {
+      "title": "Manual Backup",
+      "description": "Trigger a manual backup of all links to the configured R2 bucket",
+      "button": "Start Backup",
+      "backing_up": "Backing up...",
+      "success": "Backup successful",
+      "failed": "Backup failed"
+    },
+    "export": {
+      "title": "Export Links",
+      "description": "Download all your links as a JSON file",
+      "button": "Export All",
+      "total_links": "Total links",
+      "success": "Export successful",
+      "failed": "Export failed"
+    },
+    "import": {
+      "title": "Import Links",
+      "description": "Upload a JSON file to import links",
+      "dropzone": "Drop JSON file here or click to upload",
+      "links_found": "links found",
+      "button": "Start Import",
+      "importing": "Importing...",
+      "import_more": "Import More",
+      "download_success": "Download Success Items",
+      "download_skipped": "Download Skipped Items",
+      "download_failed": "Download Failed Items",
+      "result": {
+        "title": "Import Result",
+        "success": "Successfully imported",
+        "skipped": "Skipped (already exists)",
+        "failed": "Failed",
+        "success_message": "{count} links imported successfully"
+      },
+      "errors": {
+        "invalid_json": "Invalid JSON file",
+        "invalid_format": "Invalid file format. Please use a file exported from Sink.",
+        "no_links": "No links found in file",
+        "parse_error": "Failed to parse file"
+      }
     }
   }
 }

@@ -25,7 +25,9 @@
     "tips": "提示",
     "preview_token": "预览模式的站点令牌是",
     "submit": "登录",
-    "failed": "登录失败，请重试"
+    "failed": "登录失败，请重试",
+    "token_label": "站点令牌",
+    "token_required": "请输入令牌"
   },
   "logout": {
     "title": "退出登录？",
@@ -51,9 +53,24 @@
   "nav": {
     "links": "链接",
     "analysis": "分析",
-    "realtime": "实时"
+    "realtime": "实时",
+    "migrate": "导入/导出"
+  },
+  "sidebar": {
+    "subtitle": "短链接服务",
+    "platform": "平台",
+    "settings": "设置",
+    "import": "导入",
+    "export": "导出",
+    "coffee": "请我喝杯咖啡",
+    "github": "GitHub",
+    "stars": "Stars",
+    "update": "新版本 {version} 可用（当前: {current}）"
   },
   "home": {
+    "hero": {
+      "github_repo": "GitHub 仓库"
+    },
     "features": {
       "title": "功能特点",
       "subtitle": "简单而实用的功能",
@@ -80,6 +97,30 @@
       "link_expiration": {
         "title": "链接过期",
         "description": "为您的链接设置过期日期"
+      },
+      "device_routing": {
+        "title": "设备路由",
+        "description": "iOS/Android 用户自动跳转应用商店"
+      },
+      "og_preview": {
+        "title": "社交预览",
+        "description": "自定义社交媒体 OpenGraph 预览"
+      },
+      "realtime_analytics": {
+        "title": "实时分析",
+        "description": "3D 地球可视化和实时事件日志"
+      },
+      "qr_code": {
+        "title": "二维码",
+        "description": "为短链生成二维码"
+      },
+      "import_export": {
+        "title": "导入/导出",
+        "description": "通过 JSON 文件批量迁移"
+      },
+      "multi_language": {
+        "title": "多语言",
+        "description": "仪表盘完整的国际化支持"
       }
     },
     "cta": {
@@ -92,6 +133,16 @@
     },
     "twitter": {
       "follow": "在 X(Twitter) 上关注我"
+    },
+    "stats": {
+      "title": "Sink 数据",
+      "subtitle": "受到全球开发者的信赖",
+      "stars": "GitHub Stars",
+      "forks": "Forks"
+    },
+    "testimonials": {
+      "title": "用户好评",
+      "subtitle": "看看开发者们怎么说"
     }
   },
   "dashboard": {
@@ -101,6 +152,8 @@
     "visitors": "访客数",
     "referers": "引荐来源",
     "stats": "的统计",
+    "trend": "趋势",
+    "weekly_trend": "周度趋势",
     "custom_date": "自定义日期",
     "date": "日期",
     "date_range": "日期范围",
@@ -156,6 +209,7 @@
     "delete_confirm_title": "确定要删除吗？",
     "delete_confirm_desc": "此操作无法撤销。这将从服务器中永久删除您的链接。",
     "delete_success": "删除成功！",
+    "delete_failed": "删除失败！",
     "update_success": "链接更新成功",
     "create_success": "链接创建成功",
     "preview_mode_tip": "预览模式下的链接最多有效5分钟。",
@@ -169,12 +223,94 @@
     "no_more": "没有更多链接",
     "load_failed": "加载链接失败,",
     "download_qr_code": "下载二维码",
+    "change_qr_color": "更改二维码颜色",
+    "form": {
+      "url": "链接地址",
+      "slug": "短链",
+      "comment": "备注",
+      "expiration": "过期时间",
+      "pick_date": "选择日期",
+      "device_redirect": "设备跳转",
+      "google_play": "Google Play 链接",
+      "app_store": "App Store 链接",
+      "link_settings": "链接设置",
+      "redirect_with_query_label": "携带查询参数跳转",
+      "redirect_with_query_description": "将短链接的查询参数追加到目标 URL。优先级高于全局设置。",
+      "cloaking_label": "启用链接伪装",
+      "cloaking_description": "在浏览器地址栏中显示短链接而非目标 URL。部分禁止 iframe 嵌入的网站可能无法生效。",
+      "unsafe_label": "标记为不安全",
+      "unsafe_description": "跳转前显示警告页面，访客需确认后才能继续。",
+      "password_label": "密码保护",
+      "password_description": "访问此短链接时需要输入密码。",
+      "password_placeholder": "留空则不启用",
+      "og_settings": "OpenGraph 设置",
+      "og_title": "标题",
+      "og_title_placeholder": "留空则使用 URL 域名",
+      "og_description": "描述",
+      "og_description_placeholder": "链接描述",
+      "og_image": "图片",
+      "advanced": "高级设置",
+      "more_options": "更多选项",
+      "image_invalid_type": "请上传图片文件",
+      "image_size_limit": "图片大小不能超过 5MB",
+      "image_upload_success": "图片上传成功",
+      "image_upload_failed": "图片上传失败",
+      "image_upload_hint": "点击或拖拽上传图片",
+      "image_ratio_hint": "推荐尺寸：1200×630",
+      "slug_required": "请先输入短链"
+    },
     "sort": {
       "newest": "最新",
       "oldest": "最旧",
       "az": "短链(A-Z)",
       "za": "短链(Z-A)",
       "tip": "体验功能: 仅对已经加载的链接有效"
+    },
+    "update_failed": "更新链接失败",
+    "create_failed": "创建链接失败",
+    "ai_slug_failed": "AI 生成短链失败"
+  },
+  "migrate": {
+    "backup": {
+      "title": "手动备份",
+      "description": "手动触发所有链接到已配置 R2 存储桶的备份",
+      "button": "开始备份",
+      "backing_up": "备份中...",
+      "success": "备份成功",
+      "failed": "备份失败"
+    },
+    "export": {
+      "title": "导出链接",
+      "description": "将所有链接下载为 JSON 文件",
+      "button": "导出全部",
+      "total_links": "链接总数",
+      "success": "导出成功",
+      "failed": "导出失败"
+    },
+    "import": {
+      "title": "导入链接",
+      "description": "上传 JSON 文件以导入链接",
+      "dropzone": "拖拽 JSON 文件到此处或点击上传",
+      "links_found": "条链接",
+      "button": "开始导入",
+      "importing": "导入中...",
+      "import_more": "继续导入",
+      "download_success": "下载成功项",
+      "download_skipped": "下载跳过项",
+      "download_failed": "下载失败项",
+      "result": {
+        "title": "导入结果",
+        "success": "成功导入",
+        "skipped": "已跳过（已存在）",
+        "failed": "失败",
+        "success_message": "成功导入 {count} 条链接"
+      },
+      "errors": {
+        "invalid_json": "无效的 JSON 文件",
+        "invalid_format": "文件格式无效，请使用从 Sink 导出的文件",
+        "no_links": "文件中未找到链接",
+        "parse_error": "文件解析失败"
+      }
     }
   }
 }

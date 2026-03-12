@@ -4,7 +4,6 @@ import { loadEnv } from 'vite'
 export default defineWorkersConfig(({ mode }) => ({
   test: {
     env: loadEnv(mode, process.cwd(), ''),
-    globalSetup: './tests/setup.ts',
     poolOptions: {
       workers: {
         singleWorker: true,
