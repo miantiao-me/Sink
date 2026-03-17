@@ -25,7 +25,7 @@ function getLinkHost(url: string): string | undefined {
 }
 
 const shortLink = computed(() => `${origin}/${props.link.slug}`)
-const linkIcon = computed(() => `https://unavatar.webp.se/${getLinkHost(props.link.url)}?fallback=https://sink.cool/icon.png`)
+const linkIcon = computed(() => `https://unavatar.webp.se/${getLinkHost(props.link.url)}?fallback=https://xpertl.io/icon.png`)
 
 const { copy, copied } = useClipboard({ source: shortLink.value, copiedDuring: 400 })
 
@@ -126,6 +126,9 @@ function copyLink() {
               <DashboardLinksQRCode
                 :data="shortLink"
                 :image="linkIcon"
+                :color="link.qr?.color"
+                :error-correction="link.qr?.errorCorrection"
+                :logo="link.qr?.logo"
               />
             </PopoverContent>
           </Popover>

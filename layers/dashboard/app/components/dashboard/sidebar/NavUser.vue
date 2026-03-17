@@ -20,11 +20,11 @@ const hostname = computed<string>(() => {
 const user = computed<User>(() => ({
   name: 'Root',
   email: `root@${hostname.value}`,
-  avatar: '/sink.png',
+  avatar: '/xpertl.png',
 }))
 
 function logOut() {
-  localStorage.removeItem('SinkSiteToken')
+  localStorage.removeItem('XpertlSiteToken')
   navigateTo('/dashboard/login')
 }
 </script>

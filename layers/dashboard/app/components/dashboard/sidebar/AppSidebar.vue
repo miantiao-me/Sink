@@ -54,7 +54,7 @@ const settingsItems = computed<NavItem[]>(() => [
                 "
               >
                 <img
-                  src="/sink.png"
+                  src="/xpertl.png"
                   :alt="title"
                   class="size-8 rounded-full"
                 >

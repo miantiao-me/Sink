@@ -135,7 +135,7 @@
       "follow": "Follow on X(Twitter)"
     },
     "stats": {
-      "title": "Sink in Numbers",
+      "title": "Xpertl in Numbers",
       "subtitle": "Trusted by developers around the world",
       "stars": "Stars on GitHub",
       "forks": "Forks"
@@ -257,7 +257,12 @@
       "image_upload_failed": "Failed to upload image",
       "image_upload_hint": "Click or drag to upload image",
       "image_ratio_hint": "Recommended: 1200×630",
-      "slug_required": "Please enter a slug first"
+      "qr_logo_hint": "Recommended: 200×200",
+      "slug_required": "Please enter a slug first",
+      "qr_settings": "QR Settings",
+      "qr_color": "QR Color",
+      "qr_error_correction": "Error Correction",
+      "qr_logo": "Logo"
     },
     "sort": {
       "newest": "Newest First",

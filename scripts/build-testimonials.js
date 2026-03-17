@@ -63,7 +63,7 @@ async function main() {
   console.log('Fetching testimonials from Twitter...')
 
   // Shuffle TWEET_IDS for random order
-  const shuffledIds = [...TWEET_IDS].sort(() => Math.random() - 0.5)
+  const shuffledIds = TWEET_IDS.toSorted(() => Math.random() - 0.5)
 
   const results = await Promise.all(shuffledIds.map(fetchTweet))
   const testimonials = results.filter(Boolean)

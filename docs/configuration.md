@@ -1,6 +1,6 @@
-# Sink Configuration
+# Xpertl Configuration
 
-Sink provides some configuration options, which can be referred to in [.env.example](../.env.example).
+Xpertl provides some configuration options, which can be referred to in [.env.example](../.env.example).
 
 > When using Worker deployment, please note that variables with the `NUXT_PUBLIC_` prefix need to be configured in Workers' **Settings** -> **Build** -> **Variables and Secrets** and **Settings** -> **Variables and Secrets**.
 
@@ -38,7 +38,7 @@ URL parameters are not carried during link redirection by default and it is not 
 
 > If you are using Worker deployment, this variable needs to be configured in **Settings** -> **Build** -> **Variables and Secrets** and **Settings** -> **Variables and Secrets**.
 
-The default Sink homepage is the introduction page, you can replace it with your own website.
+The default Xpertl homepage is the introduction page, you can replace it with your own website.
 
 ## `NUXT_DATASET`
 
@@ -81,13 +81,13 @@ Set to `true` to disable the automatic daily KV backup to R2 storage. Default is
 This feature requires:
 
 1. R2 bucket binding configured in `wrangler.jsonc`
-2. Create R2 bucket: `wrangler r2 bucket create sink`
+2. Create R2 bucket: `wrangler r2 bucket create xpertl`
 
 Backups are stored in R2 with the path `backups/links-{timestamp}.json` and run daily at 00:00 UTC.
 
 ## `NUXT_SAFE_BROWSING_DOH`
 
-Set to a DNS over HTTPS (DoH) endpoint URL to enable automatic unsafe link detection when creating or editing links. When enabled, Sink queries the DoH service to check if the destination domain is flagged as malicious. If the domain resolves to `0.0.0.0`, the link is automatically marked as unsafe and visitors will see a warning page before being redirected.
+Set to a DNS over HTTPS (DoH) endpoint URL to enable automatic unsafe link detection when creating or editing links. When enabled, Xpertl queries the DoH service to check if the destination domain is flagged as malicious. If the domain resolves to `0.0.0.0`, the link is automatically marked as unsafe and visitors will see a warning page before being redirected.
 
 Recommended values:
 
@@ -99,4 +99,4 @@ Default is empty (disabled). Users can still manually mark links as unsafe in th
 ## `NUXT_NOT_FOUND_REDIRECT`
 
 Optional custom redirect target when a slug is not found.
-If this is not set, Sink will fall back to its default 404 page.
+If this is not set, Xpertl will fall back to its default 404 page.

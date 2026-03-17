@@ -12,7 +12,7 @@ const testLinkPayload = generateMock(linkSchema)
 
 describe('/api/link/ai', () => {
   it('generates AI slug for valid URL', async () => {
-    const response = await fetchWithAuth(`/api/link/ai?url=${encodeURIComponent('https://sink.cool')}`)
+    const response = await fetchWithAuth(`/api/link/ai?url=${encodeURIComponent('https://xpertl.io')}`)
 
     // AI binding may not be enabled (501) or request may timeout
     expect([200, 501]).toContain(response.status)
@@ -73,6 +73,23 @@ describe.sequential('/api/link/create', () => {
   it('returns 401 when accessing without auth', async () => {
     const response = await postJson('/api/link/create', {}, false)
     expect(response.status).toBe(401)
+  })
+
+  it('creates link with QR settings', async () => {
+    const payload = {
+      url: 'https://example.com',
+      slug: 'test-qr-link',
+      qr: { color: '#ff0000', errorCorrection: 'H', logo: 'https://example.com/logo.png' },
+    }
+
+    const response = await postJson('/api/link/create', payload)
+    expect(response.status).toBe(201)
+
+    const data = await response.json() as { link: typeof payload }
+    expect(data.link.qr).toBeDefined()
+    expect(data.link.qr?.color).toBe('#ff0000')
+    expect(data.link.qr?.errorCorrection).toBe('H')
+    expect(data.link.qr?.logo).toBe('https://example.com/logo.png')
   })
 })
 

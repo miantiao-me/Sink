@@ -1,6 +1,6 @@
-# Sink API
+# Xpertl API
 
-Sink provides a complete RESTful API for managing short links. Full API documentation is available via OpenAPI.
+Xpertl provides a complete RESTful API for managing short links. Full API documentation is available via OpenAPI.
 
 ## OpenAPI Documentation
 
@@ -8,7 +8,7 @@ Sink provides a complete RESTful API for managing short links. Full API document
 - **Scalar UI**: `/_docs/scalar`
 - **Swagger UI**: `/_docs/swagger`
 
-Visit your Sink instance at `https://your-domain/_docs/scalar` for interactive API documentation.
+Visit your Xpertl instance at `https://your-domain/_docs/scalar` for interactive API documentation.
 
 ## Authentication
 
@@ -46,17 +46,17 @@ The token is the same as `NUXT_SITE_TOKEN` configured in your environment variab
 
 ```http
 POST /api/link/create
-Authorization: Bearer SinkCool
+Authorization: Bearer XpertlToken
 Content-Type: application/json
 
 {
-  "url": "https://github.com/miantiao-me/Sink",
-  "slug": "sink",
+  "url": "https://github.com/SManriqueDev/Xpertl",
+  "slug": "xpertl",
   "comment": "GitHub repo",
   "expiration": "2025-12-31T23:59:59Z",
   "ios": "https://apps.apple.com/app/id6745417598",
   "android": "https://play.google.com/store/apps/details?id=com.example",
-  "ogTitle": "Sink - Link Shortener",
+  "ogTitle": "Xpertl - Link Shortener",
   "ogDescription": "A simple, speedy, secure link shortener",
   "ogImage": "https://example.com/image.png"
 }
@@ -68,8 +68,8 @@ Content-Type: application/json
 {
   "link": {
     "id": "01jxyz...",
-    "url": "https://github.com/miantiao-me/Sink",
-    "slug": "sink",
+    "url": "https://github.com/SManriqueDev/Xpertl",
+    "slug": "xpertl",
     "comment": "GitHub repo",
     "createdAt": 1718119809,
     "updatedAt": 1718119809

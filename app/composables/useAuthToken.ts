@@ -1,4 +1,4 @@
-const TOKEN_KEY = 'SinkSiteToken'
+const TOKEN_KEY = 'XpertlSiteToken'
 
 export function useAuthToken() {
   function getToken() {

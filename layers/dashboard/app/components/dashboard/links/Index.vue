@@ -76,7 +76,7 @@ async function getLinks() {
       },
     })
     const newLinks = data.links.filter(Boolean)
-    links.value = links.value.concat(newLinks)
+    links.value = [...links.value, ...newLinks]
     cursor = data.cursor
     listComplete.value = data.list_complete
     listError.value = false

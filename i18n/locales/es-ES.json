@@ -1,0 +1,321 @@
+{
+  "common": {
+    "i18n": "Multi Idioma",
+    "abbreviations": "Es",
+    "current_language": "Español",
+    "try_again": "Intentar de nuevo",
+    "cancel": "Cancelar",
+    "continue": "Continuar",
+    "close": "Cerrar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "delete_success": "¡Eliminado correctamente!",
+    "search": "Buscar"
+  },
+  "theme": {
+    "toggle": "Cambiar tema",
+    "light": "Claro",
+    "dark": "Oscuro",
+    "system": "Sistema"
+  },
+  "login": {
+    "title": "Iniciar sesión",
+    "description": "Ingresa tu token del sitio para iniciar sesión",
+    "tips": "Consejos",
+    "preview_token": "El token para modo vista previa es",
+    "submit": "Iniciar sesión",
+    "failed": "Error al iniciar sesión, por favor intenta de nuevo",
+    "token_label": "Token del sitio",
+    "token_required": "El token es requerido"
+  },
+  "logout": {
+    "title": "¿Cerrar sesión?",
+    "confirm": "¿Estás seguro de que quieres cerrar sesión?",
+    "action": "Cerrar sesión"
+  },
+  "layouts": {
+    "footer": {
+      "copyright": "Productos de HTML.ZONE",
+      "social": {
+        "email": "Correo",
+        "telegram": "Telegram",
+        "blog": "Blog",
+        "twitter": "Twitter",
+        "mastodon": "Mastodon",
+        "github": "GitHub"
+      }
+    },
+    "header": {
+      "select_language": "Seleccionar idioma"
+    }
+  },
+  "nav": {
+    "links": "Enlaces",
+    "analysis": "Análisis",
+    "realtime": "Tiempo real",
+    "migrate": "Importar/Exportar"
+  },
+  "sidebar": {
+    "subtitle": "Acortador de URL",
+    "platform": "Plataforma",
+    "settings": "Configuración",
+    "import": "Importar",
+    "export": "Exportar",
+    "coffee": "Invítame un café",
+    "github": "GitHub",
+    "stars": "Estrellas",
+    "update": "Nueva versión {version} disponible (actual: {current})"
+  },
+  "home": {
+    "hero": {
+      "github_repo": "Repositorio GitHub"
+    },
+    "features": {
+      "title": "Características",
+      "subtitle": "Funcionalidad simple y suficiente",
+      "url_shortening": {
+        "title": "Acortamiento de URL",
+        "description": "Comprime tus URLs a su mínima longitud"
+      },
+      "analytics": {
+        "title": "Analíticas",
+        "description": "Monitorea las analíticas de tus enlaces y obtén estadísticas detalladas"
+      },
+      "serverless": {
+        "title": "Sin servidor",
+        "description": "Despliega sin necesidad de servidores tradicionales"
+      },
+      "customizable_slug": {
+        "title": "Slug Personalizable",
+        "description": "Soporte para slugs personalizados y distinción de mayúsculas"
+      },
+      "ai_slug": {
+        "title": "Slug con IA",
+        "description": "Utiliza IA para generar slugs"
+      },
+      "link_expiration": {
+        "title": "Vencimiento de Enlaces",
+        "description": "Establece fechas de vencimiento para tus enlaces"
+      },
+      "device_routing": {
+        "title": "Redirección por Dispositivo",
+        "description": "Redirige usuarios de iOS/Android a enlaces de tienda de apps"
+      },
+      "og_preview": {
+        "title": "Vista Previa Social",
+        "description": "Vistas previas personalizadas de OpenGraph para redes sociales"
+      },
+      "realtime_analytics": {
+        "title": "Analíticas en Tiempo Real",
+        "description": "Globo 3D en tiempo real y registros de eventos en vivo"
+      },
+      "qr_code": {
+        "title": "Código QR",
+        "description": "Genera códigos QR para tus enlaces cortos"
+      },
+      "import_export": {
+        "title": "Importar/Exportar",
+        "description": "Migración masiva mediante archivos JSON"
+      },
+      "multi_language": {
+        "title": "Multiidioma",
+        "description": "Soporte completo de i18n para el panel"
+      }
+    },
+    "cta": {
+      "title": "Despliegue inmediato",
+      "description": "Con solo unos simples clics, puedes comenzar a desplegar sin ningún costo",
+      "button": "Comenzar despliegue"
+    },
+    "logos": {
+      "title": "Construido con tecnologías increíbles"
+    },
+    "twitter": {
+      "follow": "Seguir en X(Twitter)"
+    },
+    "stats": {
+      "title": "Xpertl en Números",
+      "subtitle": "Desarrolladores de todo el mundo confían en nosotros",
+      "stars": "Estrellas en GitHub",
+      "forks": "Forks"
+    },
+    "testimonials": {
+      "title": "Amado por los Usuarios",
+      "subtitle": "Mira lo que dicen los desarrolladores sobre Sink"
+    }
+  },
+  "dashboard": {
+    "title": "Panel",
+    "visits": "Visitas",
+    "views": "Vistas",
+    "visitors": "Visitantes",
+    "referers": "Referentes",
+    "stats": "Estadísticas de {name}",
+    "trend": "Tendencia",
+    "weekly_trend": "Tendencia semanal",
+    "custom_date": "Fecha personalizada",
+    "date": "Fecha",
+    "date_range": "Rango de fechas",
+    "locations": "Ubicaciones",
+    "details": "Detalles",
+    "name": "Nombre",
+    "count": "Cantidad",
+    "loading": "Cargando",
+    "no_data": "Sin datos",
+    "none": "(Ninguno)",
+    "filter_placeholder": "Filtrar enlaces...",
+    "date_picker": {
+      "today": "Hoy",
+      "last_24h": "Últimas 24 horas",
+      "this_week": "Esta semana",
+      "last_7d": "Últimos 7 días",
+      "this_month": "Este mes",
+      "last_30d": "Últimos 30 días",
+      "last_90d": "Últimos 90 días",
+      "custom": "Personalizado",
+      "custom_title": "Fecha personalizada",
+      "single_date": "Fecha",
+      "date_range": "Rango de fechas"
+    },
+    "metrics": {
+      "country": "País",
+      "region": "Región",
+      "city": "Ciudad",
+      "referer": "Referente",
+      "slug": "Slug",
+      "language": "Idioma",
+      "timezone": "Zona horaria",
+      "device": "Dispositivo",
+      "deviceType": "Tipo de dispositivo",
+      "os": "SO",
+      "browser": "Navegador",
+      "browserType": "Tipo de navegador"
+    },
+    "time_picker": {
+      "today": "Hoy",
+      "last_5m": "Últimos 5 minutos",
+      "last_10m": "Últimos 10 minutos",
+      "last_30m": "Últimos 30 minutos",
+      "last_1h": "Última 1 hora",
+      "last_6h": "Últimas 6 horas",
+      "last_12h": "Últimas 12 horas",
+      "last_24h": "Últimas 24 horas"
+    }
+  },
+  "links": {
+    "create": "Crear enlace",
+    "edit": "Editar enlace",
+    "delete_confirm_title": "¿Estás absolutamente seguro?",
+    "delete_confirm_desc": "Esta acción no se puede deshacer. Esto eliminará realmente tu enlace de los servidores.",
+    "delete_success": "¡Eliminado correctamente!",
+    "delete_failed": "¡Error al eliminar!",
+    "update_success": "Enlace actualizado correctamente",
+    "create_success": "Enlace creado correctamente",
+    "preview_mode_tip": "El enlace de vista previa es válido por hasta 5 minutos.",
+    "search_placeholder": "Buscar enlaces...",
+    "no_results": "No se encontraron enlaces.",
+    "group_title": "Enlaces",
+    "copy_success": "¡Copiado correctamente!",
+    "created_at": "Creado el",
+    "updated_at": "Actualizado el",
+    "expires_at": "Expira el",
+    "no_more": "No más enlaces",
+    "load_failed": "Error al cargar los enlaces,",
+    "download_qr_code": "Descargar código QR",
+    "change_qr_color": "Cambiar color del código QR",
+    "form": {
+      "url": "URL",
+      "slug": "Slug",
+      "comment": "Comentario",
+      "expiration": "Vencimiento",
+      "pick_date": "Seleccionar fecha",
+      "device_redirect": "Redirección por dispositivo",
+      "google_play": "URL de Google Play",
+      "app_store": "URL de App Store",
+      "link_settings": "Configuración del enlace",
+      "redirect_with_query_label": "Redireccionar con parámetros de consulta",
+      "redirect_with_query_description": "Agregar parámetros de consulta del enlace corto a la URL de destino. Anula la configuración global.",
+      "cloaking_label": "Habilitar enmascaramiento de enlace",
+      "cloaking_description": "Muestra tu enlace corto en la barra de direcciones del navegador en lugar de la URL de destino. Puede no funcionar para sitios que bloqueen la incrustación de iframe.",
+      "unsafe_label": "Marcar como no seguro",
+      "unsafe_description": "Mostrar una página de advertencia antes de redirigir. Los visitantes deben confirmar para continuar.",
+      "password_label": "Protección con contraseña",
+      "password_description": "Requerir una contraseña para acceder a este enlace corto.",
+      "password_placeholder": "Dejar vacío para desactivar",
+      "og_settings": "Configuración de OpenGraph",
+      "og_title": "Título",
+      "og_title_placeholder": "Dejar vacío para usar el hostname de la URL",
+      "og_description": "Descripción",
+      "og_description_placeholder": "Descripción del enlace",
+      "og_image": "Imagen",
+      "advanced": "Avanzado",
+      "more_options": "Más opciones",
+      "image_invalid_type": "Por favor sube un archivo de imagen",
+      "image_size_limit": "El tamaño de la imagen no puede exceder 5MB",
+      "image_upload_success": "Imagen subida correctamente",
+      "image_upload_failed": "Error al subir la imagen",
+      "image_upload_hint": "Clic o arrastrar para subir imagen",
+      "image_ratio_hint": "Recomendado: 1200×630",
+      "qr_logo_hint": "Recomendado: 200×200",
+      "slug_required": "Por favor ingresa un slug primero",
+      "qr_settings": "Configuración de QR",
+      "qr_color": "Color del QR",
+      "qr_error_correction": "Corrección de errores",
+      "qr_logo": "Logo"
+    },
+    "sort": {
+      "newest": "Más recientes primero",
+      "oldest": "Más antiguos primero",
+      "az": "Slug A-Z",
+      "za": "Slug Z-A",
+      "tip": "Experiencia: Solo para enlaces cargados"
+    },
+    "update_failed": "Error al actualizar el enlace",
+    "create_failed": "Error al crear el enlace",
+    "ai_slug_failed": "Error al generar slug con IA"
+  },
+  "migrate": {
+    "backup": {
+      "title": "Respaldo manual",
+      "description": "Inicia un respaldo manual de todos los enlaces al bucket R2 configurado",
+      "button": "Iniciar respaldo",
+      "backing_up": "Respaldando...",
+      "success": "Respaldo exitoso",
+      "failed": "Error en el respaldo"
+    },
+    "export": {
+      "title": "Exportar enlaces",
+      "description": "Descarga todos tus enlaces como un archivo JSON",
+      "button": "Exportar todo",
+      "total_links": "Total de enlaces",
+      "success": "Exportación exitosa",
+      "failed": "Error en la exportación"
+    },
+    "import": {
+      "title": "Importar enlaces",
+      "description": "Sube un archivo JSON para importar enlaces",
+      "dropzone": "Arrastra el archivo JSON aquí o haz clic para subir",
+      "links_found": "enlaces encontrados",
+      "button": "Iniciar importación",
+      "importing": "Importando...",
+      "import_more": "Importar más",
+      "download_success": "Descargar elementos exitosos",
+      "download_skipped": "Descargar elementos omitidos",
+      "download_failed": "Descargar elementos fallidos",
+      "result": {
+        "title": "Resultado de importación",
+        "success": "Importados correctamente",
+        "skipped": "Omitidos (ya existen)",
+        "failed": "Fallidos",
+        "success_message": "{count} enlaces importados correctamente"
+      },
+      "errors": {
+        "invalid_json": "Archivo JSON inválido",
+        "invalid_format": "Formato de archivo inválido. Por favor usa un archivo exportado de Sink.",
+        "no_links": "No se encontraron enlaces en el archivo",
+        "parse_error": "Error al analizar el archivo"
+      }
+    }
+  }
+}

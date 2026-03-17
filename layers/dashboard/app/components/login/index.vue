@@ -84,7 +84,7 @@ async function handleSubmit() {
           <AlertTitle>{{ $t('login.tips') }}</AlertTitle>
           <AlertDescription>
             {{ $t('login.preview_token') }}
-            <code class="font-mono text-green-500">SinkCool</code>
+            <code class="font-mono text-green-500">XpertlToken</code>
           </AlertDescription>
         </Alert>
 

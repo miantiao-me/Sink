@@ -5,21 +5,28 @@ import QRCodeStyling from 'qr-code-styling'
 const props = withDefaults(defineProps<{
   data: string
   image?: string
+  color?: string
+  errorCorrection?: 'L' | 'M' | 'Q' | 'H'
+  logo?: string
 }>(), {
   image: '',
+  color: '#000000',
+  errorCorrection: 'Q',
+  logo: '',
 })
-const color = ref('#000000')
-const options = {
+
+const color = ref(props.color)
+const options = computed(() => ({
   width: 256,
   height: 256,
   data: props.data,
   type: 'svg' as const,
   margin: 10,
-  qrOptions: { typeNumber: 0 as const, mode: 'Byte' as const, errorCorrectionLevel: 'Q' as const },
+  qrOptions: { typeNumber: 0 as const, mode: 'Byte' as const, errorCorrectionLevel: props.errorCorrection },
   imageOptions: { hideBackgroundDots: true, imageSize: 0.4, margin: 2 },
-  dotsOptions: { type: 'dots' as const, color: '#000000' },
+  dotsOptions: { type: 'dots' as const, color: props.color },
   backgroundOptions: { color: '#ffffff' },
-  image: props.image,
+  image: props.logo || props.image,
   dotsOptionsHelper: {
     colorType: { single: true, gradient: false },
     gradient: {
@@ -30,7 +37,7 @@ const options = {
       rotation: '0',
     },
   },
-  cornersSquareOptions: { type: 'extra-rounded' as const, color: '#000000' },
+  cornersSquareOptions: { type: 'extra-rounded' as const, color: props.color },
   cornersSquareOptionsHelper: {
     colorType: { single: true, gradient: false },
     gradient: {
@@ -41,7 +48,7 @@ const options = {
       rotation: '0',
     },
   },
-  cornersDotOptions: { type: 'dot' as const, color: '#000000' },
+  cornersDotOptions: { type: 'dot' as const, color: props.color },
   cornersDotOptionsHelper: {
     colorType: { single: true, gradient: false },
     gradient: {
@@ -62,9 +69,9 @@ const options = {
       rotation: '0',
     },
   },
-}
+}))
 
-const qrCode = new QRCodeStyling(options)
+const qrCode = new QRCodeStyling(options.value)
 const qrCodeEl = useTemplateRef<HTMLElement>('qrCodeEl')
 
 function updateColor(newColor: string) {
@@ -77,6 +84,10 @@ function updateColor(newColor: string) {
 
 watch(color, (newColor) => {
   updateColor(newColor)
+})
+
+watch(() => [props.color, props.errorCorrection, props.logo], () => {
+  qrCode.update(options.value)
 })
 
 function downloadQRCode() {

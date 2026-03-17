@@ -37,11 +37,11 @@ const { stats } = useGithubStats()
                 <span
                   class="flex size-8 items-center justify-center rounded-full"
                 >
-                  <img
+                  <!-- <img
                     src="/sink.png"
                     :alt="`${title} Logo`"
                     class="size-full rounded-full"
-                  >
+                  > -->
                 </span>
                 <span class="text-xl font-black">{{ title }}</span>
               </NuxtLink>
@@ -148,11 +148,11 @@ const { stats } = useGithubStats()
                 <span
                   class="flex size-8 items-center justify-center rounded-full"
                 >
-                  <img
+                  <!-- <img
                     src="/sink.png"
                     :alt="`${title} Logo`"
                     class="size-full rounded-full"
-                  >
+                  > -->
                 </span>
                 <span class="text-xl font-black">{{ title }}</span>
               </div>

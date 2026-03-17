@@ -1,10 +1,10 @@
 # Repository Guidelines
 
-Guidelines for agentic coding agents operating in the Sink codebase.
+Guidelines for agentic coding agents operating in the Xpertl codebase.
 
 ## Project Overview
 
-Sink is a link shortener with analytics, running 100% on Cloudflare. Uses Nuxt 4 frontend and Cloudflare Workers backend.
+Xpertl is a link shortener with analytics, running 100% on Cloudflare. Uses Nuxt 4 frontend and Cloudflare Workers backend.
 
 **All documentation and comments must be in English.**
 

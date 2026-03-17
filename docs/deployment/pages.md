@@ -1,8 +1,8 @@
 # Deployment on Cloudflare Pages
 
-1. [Fork](https://github.com/miantiao-me/Sink/fork) the repository to your GitHub account.
+1. [Fork](https://github.com/SManriqueDev/Xpertl/fork) the repository to your GitHub account.
 2. Create a project in [Cloudflare Pages](https://developers.cloudflare.com/pages/).
-3. Select the `Sink` repository and choose the `Nuxt.js` preset.
+3. Select the `Xpertl` repository and choose the `Nuxt.js` preset.
 4. Configure the following environment variables:
    - `NUXT_SITE_TOKEN`: Must be at least **8** characters long. This token grants access to your dashboard.
    - `NUXT_CF_ACCOUNT_ID`: Find your [account ID](https://developers.cloudflare.com/fundamentals/setup/find-account-and-zone-ids/).
@@ -16,7 +16,7 @@
    - **Analytics Engine**:
      - In **Workers & Pages**, go to **Account details** in the right panel, locate `Analytics Engine`, and click `Set up` to enable the free tier.
      - Return to **Settings** -> **Bindings** -> **Add** and select **Analytics engine**.
-     - Bind the variable name `ANALYTICS` to the `sink` dataset.
+     - Bind the variable name `ANALYTICS` to the `xpertl` dataset.
 
 7. Add Compatibility flags
    - Go to **Settings** -> **Runtime** -> **Compatibility flags** and set the following flags `nodejs_compat`.

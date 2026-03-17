@@ -16,6 +16,7 @@ export default withNuxt(antfu(
       'no-console': 'off',
       'node/prefer-global/process': 'off',
       'vue/no-v-html': 'off',
+      'e18e/prefer-static-regex': 'off',
     },
   },
   {

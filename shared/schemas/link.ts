@@ -27,6 +27,11 @@ export const LinkSchema = z.object({
   redirectWithQuery: z.boolean().optional(),
   password: z.string().trim().min(1).max(128).optional(),
   unsafe: z.boolean().optional(),
+  qr: z.object({
+    color: z.string().trim().max(7).default('#000000'),
+    errorCorrection: z.enum(['L', 'M', 'Q', 'H']).default('Q'),
+    logo: z.string().trim().max(128).optional(),
+  }).optional(),
 })
 
 export type Link = z.infer<typeof LinkSchema>

@@ -3,7 +3,7 @@ import { version as currentVersion } from '@@/package.json'
 import { computed } from 'vue'
 
 export function useVersionCheck() {
-  const { data } = useFetch<{ version: string }>('https://cdn.jsdelivr.net/gh/miantiao-me/Sink@master/package.json')
+  const { data } = useFetch<{ version: string }>('https://cdn.jsdelivr.net/gh/SManriqueDev/Xpertl@main/package.json')
 
   const latestVersion = computed(() => data.value?.version)
   const hasUpdate = computed(() => latestVersion.value ? compareVersion(latestVersion.value, currentVersion) > 0 : false)

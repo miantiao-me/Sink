@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { DateValue } from '@internationalized/date'
 import type { Component } from 'vue'
-import type { AnyFieldApi, LinkFormData } from '@/types'
+import type { AnyFieldApi } from '@/types'
 import { today } from '@internationalized/date'
 import { CalendarIcon } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
@@ -9,7 +9,8 @@ import { cn } from '@/lib/utils'
 const props = defineProps<{
   form: {
     Field: Component
-    getFieldValue: (name: keyof LinkFormData) => LinkFormData[keyof LinkFormData]
+    getFieldValue: (name: string) => unknown
+    setFieldValue: (name: string, value: unknown) => void
   }
   validateOptionalUrl: (ctx: { value: string }) => string | undefined
   isInvalid: (field: AnyFieldApi) => boolean
@@ -34,6 +35,10 @@ const defaultOpenItems = computed(() => {
   }
   if (props.form.getFieldValue('cloaking') || props.form.getFieldValue('redirectWithQuery') || props.form.getFieldValue('password') || props.form.getFieldValue('unsafe')) {
     items.push('link_settings')
+  }
+  const qrValue = props.form.getFieldValue('qr') as { color?: string, errorCorrection?: string, logo?: string } | undefined
+  if (qrValue?.color || qrValue?.errorCorrection || qrValue?.logo) {
+    items.push('qr')
   }
   return items
 })
@@ -278,6 +283,85 @@ const defaultOpenItems = computed(() => {
               <FieldError
                 v-if="isInvalid(field)"
                 :errors="formatErrors(field.state.meta.errors)"
+              />
+            </Field>
+          </props.form.Field>
+        </FieldGroup>
+      </AccordionContent>
+    </AccordionItem>
+
+    <AccordionItem value="qr">
+      <AccordionTrigger>{{ $t('links.form.qr_settings') }}</AccordionTrigger>
+      <AccordionContent class="px-1">
+        <FieldGroup>
+          <props.form.Field v-slot="{ field }" name="qr">
+            <Field>
+              <FieldLabel>{{ $t('links.form.qr_color') }}</FieldLabel>
+              <div class="flex items-center gap-2">
+                <div
+                  class="
+                    h-10 w-10 cursor-pointer overflow-hidden rounded-md border-2
+                    border-muted-foreground/25
+                  "
+                  :style="{ backgroundColor: field.state.value?.color || '#000000' }"
+                >
+                  <input
+                    :model-value="field.state.value?.color || '#000000'"
+                    type="color"
+                    class="h-full w-full cursor-pointer opacity-0"
+                    @input="field.handleChange({ ...field.state.value, color: ($event.target as HTMLInputElement).value })"
+                  >
+                </div>
+                <Input
+                  :model-value="field.state.value?.color || '#000000'"
+                  type="text"
+                  class="max-w-[120px] font-mono uppercase"
+                  maxlength="7"
+                  @input="field.handleChange({ ...field.state.value, color: ($event.target as HTMLInputElement).value })"
+                />
+              </div>
+            </Field>
+          </props.form.Field>
+
+          <props.form.Field v-slot="{ field }" name="qr">
+            <Field>
+              <FieldLabel>{{ $t('links.form.qr_error_correction') }}</FieldLabel>
+              <Select
+                :model-value="field.state.value?.errorCorrection || 'Q'"
+                @update:model-value="field.handleChange({ ...field.state.value, errorCorrection: $event })"
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="L">
+                    Low (7%)
+                  </SelectItem>
+                  <SelectItem value="M">
+                    Medium (15%)
+                  </SelectItem>
+                  <SelectItem value="Q">
+                    Quartile (25%)
+                  </SelectItem>
+                  <SelectItem value="H">
+                    High (30%)
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </Field>
+          </props.form.Field>
+
+          <props.form.Field v-slot="{ field }" name="qr">
+            <Field>
+              <FieldLabel>{{ $t('links.form.qr_logo') }}</FieldLabel>
+              <DashboardLinksEditorImageUploader
+                :slug="currentSlug"
+                prefix="qr-"
+                aspect-ratio="1/1"
+                object-fit="contain"
+                hint-key="links.form.qr_logo_hint"
+                :model-value="field.state.value?.logo"
+                @update:model-value="field.handleChange({ ...field.state.value, logo: $event || undefined })"
               />
             </Field>
           </props.form.Field>

@@ -26,7 +26,7 @@ export default defineNuxtConfig({
     homeURL: '',
     cfAccountId: '',
     cfApiToken: '',
-    dataset: 'sink',
+    dataset: 'xpertl',
     aiModel: '@cf/qwen/qwen3-30b-a3b-fp8',
     aiPrompt: `You are a URL shortening assistant, please shorten the URL provided by the user into a SLUG. The SLUG information should be derived from the URL and page content (if provided). Do not make any assumptions beyond the given information. A SLUG is human-readable and should not exceed three words and can be validated using regular expressions {slugRegex} . Only the best one is returned, the format must be JSON reference {"slug": "example-slug"}`,
     caseSensitive: false,
@@ -78,7 +78,7 @@ export default defineNuxtConfig({
     openAPI: {
       production: 'runtime',
       meta: {
-        title: 'Sink API',
+        title: 'Xpertl API',
         description: 'A Simple / Speedy / Secure Link Shortener with Analytics, 100% run on Cloudflare.',
       },
       route: '/_docs/openapi.json',
@@ -114,7 +114,7 @@ export default defineNuxtConfig({
     strategy: 'no_prefix',
     detectBrowserLanguage: {
       useCookie: true,
-      cookieKey: 'sink_i18n_redirected',
+      cookieKey: 'xpertl_i18n_redirected',
       redirectOn: 'root',
     },
     baseUrl: '/',

@@ -41,6 +41,7 @@ const form = useForm({
     redirectWithQuery: props.link.redirectWithQuery ?? false,
     password: props.link.password ?? '',
     unsafe: props.link.unsafe ?? false,
+    qr: props.link.qr ?? { color: '#000000', errorCorrection: 'Q' },
   } satisfies LinkFormData,
   onSubmit: async ({ value }) => {
     try {
@@ -60,6 +61,9 @@ const form = useForm({
         redirectWithQuery: value.redirectWithQuery,
         password: value.password || undefined,
         unsafe: value.unsafe || undefined,
+        qr: value.qr?.color || value.qr?.errorCorrection || value.qr?.logo
+          ? value.qr
+          : undefined,
       }
       const { link: newLink } = await useAPI<{ link: Link }>(
         props.isEdit ? '/api/link/edit' : '/api/link/create',
@@ -266,7 +270,7 @@ defineExpose({ randomSlug })
     </FieldGroup>
 
     <DashboardLinksEditorAdvanced
-      :form="form"
+      :form="form as any"
       :validate-optional-url="validateOptionalUrl"
       :is-invalid="isInvalid"
       :get-aria-invalid="getAriaInvalid"

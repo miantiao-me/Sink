@@ -257,6 +257,7 @@
       "image_upload_failed": "图片上传失败",
       "image_upload_hint": "点击或拖拽上传图片",
       "image_ratio_hint": "推荐尺寸：1200×630",
+      "qr_logo_hint": "推荐尺寸：200×200",
       "slug_required": "请先输入短链"
     },
     "sort": {

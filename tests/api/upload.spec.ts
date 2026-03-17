@@ -93,4 +93,20 @@ describe('/api/upload/image', () => {
     })
     expect(response.status).toBe(401)
   })
+
+  it('uploads QR logo with qr-{slug} format', async () => {
+    const formData = new FormData()
+    const file = new File([TEST_PNG_BYTES], 'qr-logo.png', { type: 'image/png' })
+    formData.append('file', file)
+    formData.append('slug', 'qr-test-slug')
+
+    const response = await fetchWithAuth('/api/upload/image', {
+      method: 'POST',
+      body: formData,
+    })
+    expect(response.status).toBe(200)
+
+    const data = await response.json() as { url: string, key: string }
+    expect(data.key).toContain('images/qr-test-slug/')
+  })
 })

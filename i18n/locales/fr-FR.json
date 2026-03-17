@@ -257,6 +257,7 @@
       "image_upload_failed": "Échec du téléchargement de l'image",
       "image_upload_hint": "Cliquez ou glissez pour télécharger une image",
       "image_ratio_hint": "Recommandé : 1200×630",
+      "qr_logo_hint": "Recommandé : 200×200",
       "slug_required": "Veuillez d'abord entrer un slug"
     },
     "sort": {

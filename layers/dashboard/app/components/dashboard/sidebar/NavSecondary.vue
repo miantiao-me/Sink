@@ -48,7 +48,7 @@ const { hasUpdate, currentVersion, latestVersion } = useVersionCheck()
                 <Tooltip :delay-duration="100">
                   <TooltipTrigger as-child>
                     <a
-                      href="https://github.com/ccbikai/Sink/releases"
+                      href="https://github.com/SManriqueDev/Xpertl/releases"
                       target="_blank"
                       class="
                         relative flex h-8 items-center justify-center rounded-md

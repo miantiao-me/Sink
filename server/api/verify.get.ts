@@ -14,7 +14,7 @@ defineRouteMeta({
 
 export default eventHandler(() => {
   return {
-    name: 'Sink',
-    url: 'https://sink.cool',
+    name: 'Xpertl',
+    url: 'https://xpertl.io',
   }
 })

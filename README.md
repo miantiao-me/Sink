@@ -1,4 +1,4 @@
-# ⚡ Sink
+# ⚡ Xpertl
 
 **A Simple / Speedy / Secure Link Shortener with Analytics, 100% run on Cloudflare.**
 
@@ -63,10 +63,10 @@
 
 ## 🪧 Demo
 
-Experience the demo at [Sink.Cool](https://sink.cool/dashboard). Log in using the Site Token below:
+Experience the demo at [Xpertl.io](https://xpertl.io/dashboard). Log in using the Site Token below:
 
 ```txt
-Site Token: SinkCool
+Site Token: XpertlToken
 ```
 
 <details>
@@ -115,10 +115,10 @@ We currently support deployment to [Cloudflare Workers](./docs/deployment/worker
 
 ## 🤖 AI Skills
 
-Install Sink AI Skills for enhanced coding assistance:
+Install Xpertl AI Skills for enhanced coding assistance:
 
 ```bash
-npx skills add miantiao-me/sink
+npx skills add SManriqueDev/xpertl
 ```
 
 ## 🧰 MCP
@@ -132,14 +132,14 @@ We currently do not support native MCP Server, but we have OpenAPI documentation
 ```json
 {
   "mcpServers": {
-    "sink": {
+    "xpertl": {
       "command": "uvx",
       "args": [
         "mcp-openapi-proxy"
       ],
       "env": {
-        "OPENAPI_SPEC_URL": "https://sink.cool/_docs/openapi.json",
-        "API_KEY": "SinkCool",
+        "OPENAPI_SPEC_URL": "https://xpertl.io/_docs/openapi.json",
+        "API_KEY": "XpertlToken",
         "TOOL_WHITELIST": "/api/link"
       }
     }

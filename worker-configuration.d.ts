@@ -2058,7 +2058,7 @@ interface QueuingStrategy<T = any> {
     highWaterMark?: (number | bigint);
     size?: (chunk: T) => number | bigint;
 }
-interface UnderlyingSink<W = any> {
+interface UnderlyingXpertl<W = any> {
     type?: string;
     start?: (controller: WritableStreamDefaultController) => void | Promise<void>;
     write?: (chunk: W, controller: WritableStreamDefaultController) => void | Promise<void>;
@@ -2397,7 +2397,7 @@ interface ReadableWritablePair<R = any, W = any> {
  * [MDN Reference](https://developer.mozilla.org/docs/Web/API/WritableStream)
  */
 declare class WritableStream<W = any> {
-    constructor(underlyingSink?: UnderlyingSink, queuingStrategy?: QueuingStrategy);
+    constructor(underlyingSink?: UnderlyingXpertl, queuingStrategy?: QueuingStrategy);
     /**
      * The **`locked`** read-only property of the WritableStream interface returns a boolean indicating whether the `WritableStream` is locked to a writer.
      *

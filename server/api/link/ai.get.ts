@@ -50,11 +50,11 @@ export default eventHandler(async (event) => {
     { role: 'user', content: 'https://github.com/nuxt/' },
     { role: 'assistant', content: '{"slug": "nuxt"}' },
 
-    { role: 'user', content: 'https://sink.cool/' },
-    { role: 'assistant', content: '{"slug": "sink-cool"}' },
+    { role: 'user', content: 'https://xpertl.io/' },
+    { role: 'assistant', content: '{"slug": "xpertl"}' },
 
-    { role: 'user', content: 'https://github.com/miantiao-me/sink' },
-    { role: 'assistant', content: '{"slug": "sink"}' },
+    { role: 'user', content: 'https://github.com/SManriqueDev/xpertl' },
+    { role: 'assistant', content: '{"slug": "xpertl"}' },
 
     { role: 'user', content: userContent },
   ]

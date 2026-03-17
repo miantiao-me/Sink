@@ -11,7 +11,7 @@ Please check the Cloudflare KV bindings, the KV environment variable name should
 
 ## 2. Why can't I log in?
 
-Please check if `NUXT_SITE_TOKEN` is set to pure numbers, Sink does not support pure number Tokens, we consider this to be unsafe.
+Please check if `NUXT_SITE_TOKEN` is set to pure numbers, Xpertl does not support pure number Tokens, we consider this to be unsafe.
 
 ## 3. Why can't I see the analytics data?
 
@@ -35,7 +35,7 @@ NuxtHub's ANALYTICS points to its dataset, you need to set the `NUXT_DATASET` en
 
 ## 6. Why are links always case-insensitive?
 
-This is a feature of Sink. By default, we automatically convert all links to lowercase to avoid case-sensitive issues and improve usability. This ensures users don’t encounter errors due to accidental capitalization differences.
+This is a feature of Xpertl. By default, we automatically convert all links to lowercase to avoid case-sensitive issues and improve usability. This ensures users don’t encounter errors due to accidental capitalization differences.
 
 However, you can disable this feature by setting the `NUXT_CASE_SENSITIVE` environment variable to `true`.
 

@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "sink",
+  "name": "xpertl",
   "main": ".output/server/index.mjs",
   "assets": {
     "binding": "ASSETS",
@@ -28,7 +28,7 @@
   "analytics_engine_datasets": [
     {
       "binding": "ANALYTICS",
-      "dataset": "sink"
+      "dataset": "xpertl"
     }
   ],
   "kv_namespaces": [
@@ -41,8 +41,8 @@
   "r2_buckets": [
     {
       "binding": "R2",
-      "preview_bucket_name": "sink",
-      "bucket_name": "sink" // IMPORTANT: Change this to your R2 bucket name, or create one with `wrangler r2 bucket create sink`
+      "preview_bucket_name": "xpertl",
+      "bucket_name": "xpertl" // IMPORTANT: Change this to your R2 bucket name, or create one with `wrangler r2 bucket create xpertl`
     }
   ],
   "triggers": {

@@ -257,6 +257,7 @@
       "image_upload_failed": "Falha ao carregar imagem",
       "image_upload_hint": "Clica ou arrasta para carregar a imagem",
       "image_ratio_hint": "Recomendado: 1200×630",
+      "qr_logo_hint": "Recomendado: 200×200",
       "slug_required": "Por favor, insere um slug primeiro"
     },
     "sort": {
