@@ -8,12 +8,12 @@ defineRouteMeta({
           bearerAuth: {
             type: 'http',
             scheme: 'bearer',
-            description: 'Use NUXT_SITE_TOKEN as the bearer token',
+            description: '使用 NUXT_SITE_TOKEN 作为 bearer token',
           },
         },
       },
     },
-    description: 'Create a new short link',
+    description: '创建新的短链接',
     security: [{ bearerAuth: [] }],
     requestBody: {
       required: true,
@@ -23,19 +23,19 @@ defineRouteMeta({
             type: 'object',
             required: ['url'],
             properties: {
-              url: { type: 'string', description: 'The target URL' },
-              slug: { type: 'string', description: 'Custom slug (auto-generated if not provided)' },
-              comment: { type: 'string', description: 'Optional comment' },
-              expiration: { type: 'integer', description: 'Expiration timestamp (unix seconds)' },
-              title: { type: 'string', description: 'Custom title for link preview' },
-              description: { type: 'string', description: 'Custom description for link preview' },
-              image: { type: 'string', description: 'Custom image for link preview' },
-              apple: { type: 'string', description: 'Apple App Store redirect URL' },
-              google: { type: 'string', description: 'Google Play Store redirect URL' },
-              cloaking: { type: 'boolean', description: 'Enable link cloaking (mask destination URL)' },
-              redirectWithQuery: { type: 'boolean', description: 'Append query parameters to destination URL' },
-              password: { type: 'string', description: 'Password protection for the link' },
-              unsafe: { type: 'boolean', description: 'Mark link as unsafe, showing a warning page before redirect' },
+              url: { type: 'string', description: '目标 URL' },
+              slug: { type: 'string', description: '自定义 slug（未提供则自动生成）' },
+              comment: { type: 'string', description: '可选注释' },
+              expiration: { type: 'integer', description: '过期时间戳（Unix 秒）' },
+              title: { type: 'string', description: '链接预览的自定义标题' },
+              description: { type: 'string', description: '链接预览的自定义描述' },
+              image: { type: 'string', description: '链接预览的自定义图片' },
+              apple: { type: 'string', description: 'Apple App Store 重定向 URL' },
+              google: { type: 'string', description: 'Google Play Store 重定向 URL' },
+              cloaking: { type: 'boolean', description: '启用链接伪装（掩盖目标 URL）' },
+              redirectWithQuery: { type: 'boolean', description: '将查询参数附加到目标 URL' },
+              password: { type: 'string', description: '链接的密码保护' },
+              unsafe: { type: 'boolean', description: '标记链接为不安全，在重定向前显示警告页面' },
             },
           },
         },
@@ -49,7 +49,7 @@ export default eventHandler(async (event) => {
 
   link.slug = normalizeSlug(event, link.slug)
 
-  // Auto-detect unsafe URL via Safe Browsing DoH
+  // 通过 Safe Browsing DoH 自动检测不安全的 URL
   if (link.unsafe === undefined) {
     const safe = await isSafeUrl(event, link.url)
     if (!safe) {

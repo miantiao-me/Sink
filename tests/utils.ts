@@ -32,7 +32,7 @@ export function putJson(path: string, body: unknown, withAuth = true): Promise<R
   })
 }
 
-// 1x1 transparent PNG for testing
+// 用于测试的1x1透明PNG
 export const TEST_PNG_BYTES = new Uint8Array([
   0x89,
   0x50,

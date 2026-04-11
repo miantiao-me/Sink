@@ -1,6 +1,6 @@
 # ⚡ Sink
 
-**A Simple / Speedy / Secure Link Shortener with Analytics, 100% run on Cloudflare.**
+**一个简单/快速/安全的链接缩短器，带有分析功能，100% 运行在 Cloudflare 上。**
 
 <a href="https://trendshift.io/repositories/10421" target="_blank">
   <img
@@ -45,77 +45,77 @@
 
 ---
 
-## ✨ Features
+## ✨ 特性
 
-- **🔗 URL Shortening:** Compress your URLs to their minimal length.
-- **📈 Analytics:** Monitor link analytics and gather insightful statistics.
-- **☁️ Serverless:** Deploy without the need for traditional servers.
-- **🎨 Customizable Slug:** Support for personalized slugs and case sensitivity.
-- **🪄 AI Slug:** Leverage AI to generate slugs.
-- **⏰ Link Expiration:** Set expiration dates for your links.
-- **📱 Device Routing:** Redirect iOS/Android users to different URLs (App Store links).
-- **🖼️ OpenGraph Preview:** Custom social media previews with title, description, and image.
-- **📊 Real-time Analytics:** Live 3D globe visualization and real-time event logs.
-- **🔲 QR Code:** Generate QR codes for your short links.
-- **📦 Import/Export:** Bulk migration via JSON/CSV files.
-- **🌍 Multi-language:** Full i18n support for the dashboard.
-- **🌙 Dark Mode:** Light, dark, and system theme support.
+- **🔗 URL 缩短：** 将您的 URL 压缩到最短长度。
+- **📈 分析：** 监控链接分析并收集有洞察力的统计数据。
+- **☁️ 无服务器：** 无需传统服务器即可部署。
+- **🎨 可自定义 Slug：** 支持个性化 slug 和大小写敏感性。
+- **🪄 AI Slug：** 利用 AI 生成 slug。
+- **⏰ 链接过期：** 为您的链接设置过期日期。
+- **📱 设备路由：** 将 iOS/Android 用户重定向到不同的 URL（App Store 链接）。
+- **🖼️ OpenGraph 预览：** 带有标题、描述和图片的自定义社交媒体预览。
+- **📊 实时分析：** 实时 3D 地球可视化和实时事件日志。
+- **🔲 QR 码：** 为您的短链接生成 QR 码。
+- **📦 导入/导出：** 通过 JSON/CSV 文件进行批量迁移。
+- **🌍 多语言：** 仪表板的完整 i18n 支持。
+- **🌙 深色模式：** 支持浅色、深色和系统主题。
 
-## 🪧 Demo
+## 🪧 演示
 
-Experience the demo at [Sink.Cool](https://sink.cool/dashboard). Log in using the Site Token below:
+在 [Sink.Cool](https://sink.cool/dashboard) 体验演示。使用以下站点令牌登录：
 
 ```txt
-Site Token: SinkCool
+站点令牌: SinkCool
 ```
 
 <details>
-  <summary><b>Screenshots</b></summary>
+  <summary><b>截图</b></summary>
   <img alt="Analytics" src="./docs/images/sink.cool_dashboard.png"/>
   <img alt="Links" src="./docs/images/sink.cool_dashboard_links.png"/>
   <img alt="Link Analytics" src="./docs/images/sink.cool_dashboard_link_slug.png"/>
 </details>
 
-## 🧱 Technologies Used
+## 🧱 使用的技术
 
-- **Framework**: [Nuxt](https://nuxt.com/)
-- **Database**: [Cloudflare Workers KV](https://developers.cloudflare.com/kv/)
-- **Analytics Engine**: [Cloudflare Workers Analytics Engine](https://developers.cloudflare.com/analytics/)
-- **UI Components**: [shadcn-vue](https://www.shadcn-vue.com/)
-- **Styling:** [Tailwind CSS](https://tailwindcss.com/)
-- **Deployment**: [Cloudflare](https://www.cloudflare.com/)
+- **框架**: [Nuxt](https://nuxt.com/)
+- **数据库**: [Cloudflare Workers KV](https://developers.cloudflare.com/kv/)
+- **分析引擎**: [Cloudflare Workers Analytics Engine](https://developers.cloudflare.com/analytics/)
+- **UI 组件**: [shadcn-vue](https://www.shadcn-vue.com/)
+- **样式**: [Tailwind CSS](https://tailwindcss.com/)
+- **部署**: [Cloudflare](https://www.cloudflare.com/)
 
-## 🚗 Roadmap [WIP]
+## 🚗 路线图 [进行中]
 
-We welcome your contributions and PRs.
+我们欢迎您的贡献和 PR。
 
-- [x] Browser Extension - [Sink Tool](https://github.com/zhuzhuyule/sink-extension)
-- [x] Chrome Extension - [Sink Quick Shorten](https://chromewebstore.google.com/detail/sink-quick-shorten/emlojomjpenjgkaphajcokijobpkejih)
-- [x] Raycast Extension - [Raycast-Sink](https://github.com/foru17/raycast-sink)
-- [x] Apple Shortcuts - [Sink Shortcuts](https://s.search1api.com/sink001)
-- [x] iOS App - [Sink](https://apps.apple.com/app/id6745417598)
-- [ ] Enhanced Link Management (with Cloudflare D1)
-- [ ] Analytics Enhancements (Support for merging filter conditions)
-- [ ] Dashboard Performance Optimization (Infinite loading)
-- [ ] Units Test
+- [x] 浏览器扩展 - [Sink Tool](https://github.com/zhuzhuyule/sink-extension)
+- [x] Chrome 扩展 - [Sink Quick Shorten](https://chromewebstore.google.com/detail/sink-quick-shorten/emlojomjpenjgkaphajcokijobpkejih)
+- [x] Raycast 扩展 - [Raycast-Sink](https://github.com/foru17/raycast-sink)
+- [x] Apple 快捷指令 - [Sink Shortcuts](https://s.search1api.com/sink001)
+- [x] iOS 应用 - [Sink](https://apps.apple.com/app/id6745417598)
+- [ ] 增强的链接管理（使用 Cloudflare D1）
+- [ ] 分析增强（支持合并过滤条件）
+- [ ] 仪表板性能优化（无限加载）
+- [ ] 单元测试
 
-## 🏗️ Deployment
+## 🏗️ 部署
 
-> Video tutorial: [Watch here](https://www.youtube.com/watch?v=MkU23U2VE9E)
+> 视频教程：[点击观看](https://www.youtube.com/watch?v=MkU23U2VE9E)
 
-We currently support deployment to [Cloudflare Workers](./docs/deployment/workers.md) (recommended) and [Cloudflare Pages](./docs/deployment/pages.md).
+我们目前支持部署到 [Cloudflare Workers](./docs/deployment/workers.md)（推荐）和 [Cloudflare Pages](./docs/deployment/pages.md)。
 
-## ⚒️ Configuration
+## ⚒️ 配置
 
-[Configuration Docs](./docs/configuration.md)
+[配置文档](./docs/configuration.md)
 
 ## 🔌 API
 
-[API Docs](./docs/api.md)
+[API 文档](./docs/api.md)
 
-## 🤖 AI Skills
+## 🤖 AI 技能
 
-Install Sink AI Skills for enhanced coding assistance:
+安装 Sink AI 技能以获得增强的编码辅助：
 
 ```bash
 npx skills add miantiao-me/sink
@@ -123,11 +123,11 @@ npx skills add miantiao-me/sink
 
 ## 🧰 MCP
 
-We currently do not support native MCP Server, but we have OpenAPI documentation, and you can use the following method to support MCP.
+我们目前不支持原生 MCP 服务器，但我们有 OpenAPI 文档，您可以使用以下方法来支持 MCP。
 
-> Replace the domain name in `OPENAPI_SPEC_URL` with your own domain name.
+> 将 `OPENAPI_SPEC_URL` 中的域名替换为您自己的域名。
 >
-> The `API_KEY` is the same as the `NUXT_SITE_TOKEN` in the environment variables.
+> `API_KEY` 与环境变量中的 `NUXT_SITE_TOKEN` 相同。
 
 ```json
 {
@@ -147,18 +147,18 @@ We currently do not support native MCP Server, but we have OpenAPI documentation
 }
 ```
 
-## 🙋🏻 FAQs
+## 🙋🏻 常见问题
 
-[FAQs](./docs/faqs.md)
+[常见问题](./docs/faqs.md)
 
-## 💖 Credits
+## 💖 致谢
 
 1. [**Cloudflare**](https://www.cloudflare.com/)
 2. [**NuxtHub**](https://hub.nuxt.com/)
 3. [**Astroship**](https://astroship.web3templates.com/)
 4. [**Tailark**](https://tailark.com/)
 
-## ☕ Sponsor
+## ☕ 赞助
 
-1. [Follow Me on X(Twitter)](https://404.li/x).
-2. [Become a sponsor to on GitHub](https://github.com/sponsors/miantiao-me).
+1. [在 X(Twitter) 上关注我](https://404.li/x)。
+2. [成为 GitHub 上的赞助者](https://github.com/sponsors/miantiao-me)。

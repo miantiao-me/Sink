@@ -35,17 +35,17 @@
     {
       "binding": "KV",
       "preview_id": "ef93d42dc4b34969bab404d2e80f8dd3",
-      "id": "ced4c6cafdca43fd9355cfc24ed81f02" // IMPORTANT: Change this to your KV namespace ID
+      "id": "ced4c6cafdca43fd9355cfc24ed81f02" // 重要提示：请将此值更改为您的 Kv 命名空间 ID
     }
   ],
   "r2_buckets": [
     {
       "binding": "R2",
       "preview_bucket_name": "sink",
-      "bucket_name": "sink" // IMPORTANT: Change this to your R2 bucket name, or create one with `wrangler r2 bucket create sink`
+      "bucket_name": "sink" // 重要提示：请将此值更改为您的 R2 存储桶名称，或者使用 `wrangler r2 bucket create sink` 命令创建一个新的存储桶
     }
   ],
   "triggers": {
-    "crons": ["0 0 * * *"] // Run backup task daily at 00:00 UTC
+    "crons": ["0 0 * * *"] // 每日在 UTC 时间 00:00 执行备份任务
   }
 }
