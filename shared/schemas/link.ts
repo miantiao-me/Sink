@@ -16,10 +16,19 @@ export const LinkSchema = z.object({
   comment: z.string().trim().max(2048).optional(), // 注释
   createdAt: z.number().int().safe().default(() => Math.floor(Date.now() / 1000)), // 创建时间
   updatedAt: z.number().int().safe().default(() => Math.floor(Date.now() / 1000)), // 更新时间
-  expiration: z.number().int().safe().refine(expiration => expiration > Math.floor(Date.now() / 1000), {
-    message: '过期时间必须大于当前时间',
-    path: ['expiration'],
-  }).optional(), // 过期时间
+  expiration: z.union([
+  z.number().int().safe().refine(
+    exp => exp > Math.floor(Date.now() / 1000),
+    { message: '过期时间必须大于当前时间', path: ['expiration'] }
+  ),
+  z.string().refine(
+    exp => {
+      const num = Number(exp);
+      return !isNaN(num) && Number.isInteger(num) && num > Math.floor(Date.now() / 1000);
+    },
+    { message: '过期时间必须为有效整数且大于当前时间', path: ['expiration'] }
+  )
+]).optional(),
   title: z.string().trim().max(256).optional(), // 链接预览标题
   description: z.string().trim().max(2048).optional(), // 链接预览描述
   image: z.string().trim().max(128).optional(), // 链接预览图片
