@@ -28,12 +28,13 @@ export default defineNuxtConfig({
     cfApiToken: '',
     dataset: 'sink',
     aiModel: '@cf/qwen/qwen3-30b-a3b-fp8',
-    aiPrompt: `You are a URL shortening assistant, please shorten the URL provided by the user into a SLUG. The SLUG information must come from the URL itself, do not make any assumptions. A SLUG is human-readable and should not exceed three words and can be validated using regular expressions {slugRegex} . Only the best one is returned, the format must be JSON reference {"slug": "example-slug"}`,
+    aiPrompt: `You are a URL shortening assistant, please shorten the URL provided by the user into a SLUG. The SLUG information should be derived from the URL and page content (if provided). Do not make any assumptions beyond the given information. A SLUG is human-readable and should not exceed three words and can be validated using regular expressions {slugRegex} . Only the best one is returned, the format must be JSON reference {"slug": "example-slug"}`,
     caseSensitive: false,
     listQueryLimit: 500,
     disableBotAccessLog: false,
     disableAutoBackup: false,
     notFoundRedirect: '',
+    safeBrowsingDoh: '', // Set to DoH URL to enable auto-detection, e.g. https://family.cloudflare-dns.com/dns-query
     public: {
       previewMode: '',
       slugDefaultLength: '6',

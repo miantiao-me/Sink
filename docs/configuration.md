@@ -85,6 +85,17 @@ This feature requires:
 
 Backups are stored in R2 with the path `backups/links-{timestamp}.json` and run daily at 00:00 UTC.
 
+## `NUXT_SAFE_BROWSING_DOH`
+
+Set to a DNS over HTTPS (DoH) endpoint URL to enable automatic unsafe link detection when creating or editing links. When enabled, Sink queries the DoH service to check if the destination domain is flagged as malicious. If the domain resolves to `0.0.0.0`, the link is automatically marked as unsafe and visitors will see a warning page before being redirected.
+
+Recommended values:
+
+- `https://family.cloudflare-dns.com/dns-query` — Cloudflare Family DNS (blocks malware and adult content)
+- Custom [Cloudflare Zero Trust Gateway](https://developers.cloudflare.com/cloudflare-one/policies/gateway/) DoH URL — supports custom block lists, domain risk categories, and more granular control
+
+Default is empty (disabled). Users can still manually mark links as unsafe in the dashboard regardless of this setting.
+
 ## `NUXT_NOT_FOUND_REDIRECT`
 
 Optional custom redirect target when a slug is not found.

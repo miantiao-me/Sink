@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { CounterData, Link } from '@/types'
 import { useClipboard } from '@vueuse/core'
-import { CalendarPlus2, Copy, CopyCheck, Eraser, Flame, Hourglass, Link as LinkIcon, MousePointerClick, QrCode, SquareChevronDown, SquarePen, Users } from 'lucide-vue-next'
+import { CalendarPlus2, Copy, CopyCheck, Eraser, Flame, Hourglass, Link as LinkIcon, MousePointerClick, QrCode, ShieldAlert, SquareChevronDown, SquarePen, Users } from 'lucide-vue-next'
 import { parseURL } from 'ufo'
 import { toast } from 'vue-sonner'
 
@@ -63,6 +63,11 @@ function copyLink() {
               <div class="truncate leading-5 font-bold">
                 {{ host }}/{{ link.slug }}
               </div>
+              <Badge
+                v-if="link.unsafe" variant="destructive" class="ml-1 shrink-0"
+              >
+                <ShieldAlert class="h-3 w-3" />
+              </Badge>
 
               <Button
                 v-if="copied"

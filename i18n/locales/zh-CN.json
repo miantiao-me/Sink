@@ -238,6 +238,8 @@
       "redirect_with_query_description": "将短链接的查询参数追加到目标 URL。优先级高于全局设置。",
       "cloaking_label": "启用链接伪装",
       "cloaking_description": "在浏览器地址栏中显示短链接而非目标 URL。部分禁止 iframe 嵌入的网站可能无法生效。",
+      "unsafe_label": "标记为不安全",
+      "unsafe_description": "跳转前显示警告页面，访客需确认后才能继续。",
       "password_label": "密码保护",
       "password_description": "访问此短链接时需要输入密码。",
       "password_placeholder": "留空则不启用",
@@ -269,6 +271,14 @@
     "ai_slug_failed": "AI 生成短链失败"
   },
   "migrate": {
+    "backup": {
+      "title": "手动备份",
+      "description": "手动触发所有链接到已配置 R2 存储桶的备份",
+      "button": "开始备份",
+      "backing_up": "备份中...",
+      "success": "备份成功",
+      "failed": "备份失败"
+    },
     "export": {
       "title": "导出链接",
       "description": "将所有链接下载为 JSON 文件",

@@ -44,7 +44,9 @@ Content-Type: application/json
 ```
 
 **Required**: `url`
-**Optional**: `slug` (auto-generated if omitted), `comment`, `expiration` (unix timestamp), `apple` (iOS redirect), `google` (Android redirect)
+**Optional**: `slug` (auto-generated if omitted), `comment`, `expiration` (unix timestamp), `apple` (iOS redirect), `google` (Android redirect), `password`, `unsafe`, `title`, `description`, `image`, `cloaking`, `redirectWithQuery`
+
+> If `NUXT_SAFE_BROWSING_DOH` is configured and `unsafe` is not explicitly set, the server auto-detects via DoH and marks unsafe links automatically.
 
 **Response** (201):
 
@@ -219,6 +221,8 @@ Verify if the site token is valid.
 | `image`             | string  | No       | Custom image path                                                                    |
 | `cloaking`          | boolean | No       | Enable link cloaking                                                                 |
 | `redirectWithQuery` | boolean | No       | Append query params to destination URL (overrides global `NUXT_REDIRECT_WITH_QUERY`) |
+| `password`          | string  | No       | Password protection for the link                                                     |
+| `unsafe`            | boolean | No       | Mark as unsafe (shows warning page before redirect)                                  |
 
 ## Analytics Endpoints
 

@@ -238,6 +238,8 @@
       "redirect_with_query_description": "Thêm tham số truy vấn từ liên kết rút gọn vào URL đích. Ghi đè cài đặt toàn cục.",
       "cloaking_label": "Bật che giấu liên kết",
       "cloaking_description": "Hiển thị liên kết rút gọn trên thanh địa chỉ trình duyệt thay vì URL đích. Có thể không hoạt động với các trang web chặn nhúng iframe.",
+      "unsafe_label": "Đánh dấu là không an toàn",
+      "unsafe_description": "Hiển thị trang cảnh báo trước khi chuyển hướng. Khách truy cập phải xác nhận để tiếp tục.",
       "password_label": "Bảo vệ bằng mật khẩu",
       "password_description": "Yêu cầu mật khẩu để truy cập liên kết rút gọn này.",
       "password_placeholder": "Để trống để tắt",
@@ -269,6 +271,14 @@
     "ai_slug_failed": "Tạo slug AI thất bại"
   },
   "migrate": {
+    "backup": {
+      "title": "Sao lưu thủ công",
+      "description": "Kích hoạt sao lưu thủ công tất cả liên kết sang bộ chứa R2 đã được cấu hình",
+      "button": "Bắt đầu sao lưu",
+      "backing_up": "Đang sao lưu...",
+      "success": "Sao lưu thành công",
+      "failed": "Sao lưu thất bại"
+    },
     "export": {
       "title": "Xuất liên kết",
       "description": "Tải xuống tất cả liên kết dưới dạng tệp JSON",

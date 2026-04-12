@@ -36,6 +36,11 @@ export default eventHandler(async (event) => {
   const { aiPrompt, aiModel } = useRuntimeConfig(event)
   const { slugRegex } = useAppConfig()
 
+  const markdown = await fetchPageMarkdown(event, url, AI)
+  const userContent = markdown
+    ? `URL: ${url}\n\nPage content:\n${markdown}`
+    : url
+
   const messages = [
     { role: 'system', content: aiPrompt.replace('{slugRegex}', slugRegex.toString()) },
 
@@ -51,10 +56,17 @@ export default eventHandler(async (event) => {
     { role: 'user', content: 'https://github.com/miantiao-me/sink' },
     { role: 'assistant', content: '{"slug": "sink"}' },
 
-    { role: 'user', content: url },
+    { role: 'user', content: userContent },
   ]
 
   const response = await AI.run(aiModel as keyof AiModels, { messages }) as AiChatResponse
 
-  return destr(response.response ?? response.choices?.[0]?.message?.content)
+  let content = response.response ?? response.choices?.[0]?.message?.content ?? ''
+  // Strip markdown code block wrapper (e.g. ```json\n{...}\n```)
+  const codeBlockMatch = content.match(/```\w*\n([^`]+)```/)
+  if (codeBlockMatch?.[1]) {
+    content = codeBlockMatch[1].trim()
+  }
+
+  return destr(content)
 })

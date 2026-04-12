@@ -21,6 +21,7 @@ defineRouteMeta({
               image: { type: 'string', description: 'Custom image for link preview' },
               apple: { type: 'string', description: 'Apple App Store redirect URL' },
               google: { type: 'string', description: 'Google Play Store redirect URL' },
+              unsafe: { type: 'boolean', description: 'Mark link as unsafe, showing a warning page before redirect' },
             },
           },
         },
@@ -33,6 +34,14 @@ export default eventHandler(async (event) => {
   const link = await readValidatedBody(event, LinkSchema.parse)
 
   link.slug = normalizeSlug(event, link.slug)
+
+  // Auto-detect unsafe URL via Safe Browsing DoH
+  if (link.unsafe === undefined) {
+    const safe = await isSafeUrl(event, link.url)
+    if (!safe) {
+      link.unsafe = true
+    }
+  }
 
   const existingLink = await getLink(event, link.slug)
   if (existingLink) {

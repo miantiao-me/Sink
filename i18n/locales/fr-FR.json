@@ -238,6 +238,8 @@
       "redirect_with_query_description": "Ajouter les paramètres de requête du lien court à l'URL de destination. Remplace le paramètre global.",
       "cloaking_label": "Activer le masquage de lien",
       "cloaking_description": "Affiche votre lien court dans la barre d'adresse du navigateur au lieu de l'URL de destination. Peut ne pas fonctionner pour les sites qui bloquent l'intégration iframe.",
+      "unsafe_label": "Marquer comme dangereux",
+      "unsafe_description": "Afficher une page d'avertissement avant la redirection. Les visiteurs doivent confirmer pour continuer.",
       "password_label": "Protection par mot de passe",
       "password_description": "Exiger un mot de passe pour accéder à ce lien court.",
       "password_placeholder": "Laisser vide pour désactiver",
@@ -269,6 +271,14 @@
     "ai_slug_failed": "Échec de la génération du slug IA"
   },
   "migrate": {
+    "backup": {
+      "title": "Sauvegarde manuelle",
+      "description": "Déclenchez une sauvegarde manuelle de tous les liens vers le bucket R2 configuré",
+      "button": "Démarrer la sauvegarde",
+      "backing_up": "Sauvegarde en cours...",
+      "success": "Sauvegarde réussie",
+      "failed": "Échec de la sauvegarde"
+    },
     "export": {
       "title": "Exporter les liens",
       "description": "Téléchargez tous vos liens au format JSON",
