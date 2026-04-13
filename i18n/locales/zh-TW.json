@@ -257,7 +257,18 @@
       "image_upload_failed": "圖片上傳失敗",
       "image_upload_hint": "點擊或拖曳上傳圖片",
       "image_ratio_hint": "建議尺寸：1200×630",
-      "slug_required": "請先輸入短連結"
+      "slug_required": "請先輸入短連結",
+      "utm_builder": "UTM 建構器",
+      "utm_description": "在本機建構 UTM 參數並附加到目標 URL。",
+      "utm_preview": "預覽",
+      "utm_source": "UTM 來源",
+      "utm_medium": "UTM 媒介",
+      "utm_campaign": "UTM 活動",
+      "utm_term": "UTM 關鍵字",
+      "utm_content": "UTM 內容",
+      "utm_apply": "套用",
+      "utm_clear": "清除",
+      "utm_invalid_url": "請輸入有效的 URL 以預覽並套用 UTM 參數。"
     },
     "sort": {
       "newest": "最新",

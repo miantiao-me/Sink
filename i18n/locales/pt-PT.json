@@ -257,7 +257,18 @@
       "image_upload_failed": "Falha ao carregar imagem",
       "image_upload_hint": "Clica ou arrasta para carregar a imagem",
       "image_ratio_hint": "Recomendado: 1200×630",
-      "slug_required": "Por favor, insere um slug primeiro"
+      "slug_required": "Por favor, insere um slug primeiro",
+      "utm_builder": "Construtor UTM",
+      "utm_description": "Crie parâmetros UTM localmente e anexe-os ao URL de destino.",
+      "utm_preview": "Pré-visualização",
+      "utm_source": "Origem UTM",
+      "utm_medium": "Meio UTM",
+      "utm_campaign": "Campanha UTM",
+      "utm_term": "Termo UTM",
+      "utm_content": "Conteúdo UTM",
+      "utm_apply": "Aplicar",
+      "utm_clear": "Limpar",
+      "utm_invalid_url": "Introduza um URL válido para pré-visualizar e aplicar os parâmetros UTM."
     },
     "sort": {
       "newest": "Mais recentes primeiro",

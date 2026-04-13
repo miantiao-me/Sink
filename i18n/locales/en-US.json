@@ -257,7 +257,18 @@
       "image_upload_failed": "Failed to upload image",
       "image_upload_hint": "Click or drag to upload image",
       "image_ratio_hint": "Recommended: 1200×630",
-      "slug_required": "Please enter a slug first"
+      "slug_required": "Please enter a slug first",
+      "utm_builder": "UTM Builder",
+      "utm_description": "Build UTM parameters locally and append them to the destination URL.",
+      "utm_preview": "Preview",
+      "utm_source": "UTM Source",
+      "utm_medium": "UTM Medium",
+      "utm_campaign": "UTM Campaign",
+      "utm_term": "UTM Term",
+      "utm_content": "UTM Content",
+      "utm_apply": "Apply",
+      "utm_clear": "Clear",
+      "utm_invalid_url": "Enter a valid URL to preview and apply UTM parameters."
     },
     "sort": {
       "newest": "Newest First",
