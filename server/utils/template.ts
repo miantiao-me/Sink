@@ -34,6 +34,7 @@ export function generateCloakingHtml(link: Link, targetUrl: string, baseUrl: str
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>${escape(title)}</title>
     ${tags}
 </head>
