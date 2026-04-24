@@ -16,6 +16,7 @@ const props = defineProps<{
   getAriaInvalid: (field: AnyFieldApi) => string | undefined
   formatErrors: (errors: unknown[]) => string[]
   currentSlug: string
+  cloakingEnabled: boolean
 }>()
 
 const datePickerOpen = ref(false)
@@ -32,7 +33,7 @@ const defaultOpenItems = computed(() => {
   if (props.form.getFieldValue('google') || props.form.getFieldValue('apple')) {
     items.push('device')
   }
-  if (props.form.getFieldValue('cloaking') || props.form.getFieldValue('redirectWithQuery') || props.form.getFieldValue('password') || props.form.getFieldValue('unsafe')) {
+  if (props.form.getFieldValue('cloaking') || props.form.getFieldValue('cloakingAllowTopNavigation') || props.form.getFieldValue('redirectWithQuery') || props.form.getFieldValue('password') || props.form.getFieldValue('unsafe')) {
     items.push('link_settings')
   }
   return items
@@ -171,6 +172,26 @@ const defaultOpenItems = computed(() => {
                   </FieldLabel>
                   <p class="text-xs text-muted-foreground">
                     {{ $t('links.form.cloaking_description') }}
+                  </p>
+                </div>
+                <Switch
+                  :id="field.name"
+                  :model-value="field.state.value"
+                  @update:model-value="field.handleChange"
+                />
+              </div>
+            </Field>
+          </props.form.Field>
+
+          <props.form.Field v-if="cloakingEnabled" v-slot="{ field }" name="cloakingAllowTopNavigation">
+            <Field class="pl-4 border-l-2 border-muted">
+              <div class="flex items-center justify-between">
+                <div class="space-y-0.5">
+                  <FieldLabel :for="field.name">
+                    {{ $t('links.form.cloaking_allow_top_navigation_label') }}
+                  </FieldLabel>
+                  <p class="text-xs text-muted-foreground">
+                    {{ $t('links.form.cloaking_allow_top_navigation_description') }}
                   </p>
                 </div>
                 <Switch

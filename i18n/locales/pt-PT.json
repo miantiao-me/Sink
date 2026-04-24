@@ -238,6 +238,8 @@
       "redirect_with_query_description": "Anexar parâmetros de consulta do link curto ao URL de destino. Substitui a definição global.",
       "cloaking_label": "Ativar ocultação de link",
       "cloaking_description": "Mostrar o teu link curto na barra de endereço do navegador em vez do URL de destino. Isto pode não funcionar em sites que bloqueiam a incorporação de iframes.",
+      "cloaking_allow_top_navigation_label": "Permitir checkout e redirecionamentos externos",
+      "cloaking_allow_top_navigation_description": "Permite que botões dentro da página mascarada redirecionem para outros sites (como Stripe Checkout). Necessário para processadores de pagamento que bloqueiam a incorporação de iframes.",
       "unsafe_label": "Marcar como inseguro",
       "unsafe_description": "Mostrar uma página de aviso antes do redirecionamento. Os visitantes devem confirmar para continuar.",
       "password_label": "Proteção por palavra-passe",

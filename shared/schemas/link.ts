@@ -24,6 +24,7 @@ export const LinkSchema = z.object({
   apple: z.string().trim().url().max(2048).optional(),
   google: z.string().trim().url().max(2048).optional(),
   cloaking: z.boolean().optional(),
+  cloakingAllowTopNavigation: z.boolean().optional(),
   redirectWithQuery: z.boolean().optional(),
   password: z.string().trim().min(1).max(128).optional(),
   unsafe: z.boolean().optional(),

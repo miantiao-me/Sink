@@ -238,6 +238,8 @@
       "redirect_with_query_description": "Append query parameters from the short link to the destination URL. Overrides global setting.",
       "cloaking_label": "Enable Link Cloaking",
       "cloaking_description": "Show your short link in the browser address bar instead of the destination URL. May not work for sites that block iframe embedding.",
+      "cloaking_allow_top_navigation_label": "Allow Checkout & External Redirects",
+      "cloaking_allow_top_navigation_description": "Let buttons inside the cloaked page redirect to other sites (like Stripe Checkout). Required for payment processors that block iframe embedding.",
       "unsafe_label": "Mark as Unsafe",
       "unsafe_description": "Show a warning page before redirecting. Visitors must confirm to continue.",
       "password_label": "Password Protection",

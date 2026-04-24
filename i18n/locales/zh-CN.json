@@ -238,6 +238,8 @@
       "redirect_with_query_description": "将短链接的查询参数追加到目标 URL。优先级高于全局设置。",
       "cloaking_label": "启用链接伪装",
       "cloaking_description": "在浏览器地址栏中显示短链接而非目标 URL。部分禁止 iframe 嵌入的网站可能无法生效。",
+      "cloaking_allow_top_navigation_label": "允许结账及外部跳转",
+      "cloaking_allow_top_navigation_description": "允许遮蔽页面内的按钮跳转到其他网站（如 Stripe Checkout）。对于禁止 iframe 嵌入的支付处理器是必需的。",
       "unsafe_label": "标记为不安全",
       "unsafe_description": "跳转前显示警告页面，访客需确认后才能继续。",
       "password_label": "密码保护",

@@ -38,6 +38,7 @@ const form = useForm({
     description: props.link.description ?? '',
     image: props.link.image ?? '',
     cloaking: props.link.cloaking ?? false,
+    cloakingAllowTopNavigation: props.link.cloakingAllowTopNavigation ?? false,
     redirectWithQuery: props.link.redirectWithQuery ?? false,
     password: props.link.password ?? '',
     unsafe: props.link.unsafe ?? false,
@@ -57,6 +58,7 @@ const form = useForm({
         description: value.description || undefined,
         image: value.image || undefined,
         cloaking: value.cloaking,
+        cloakingAllowTopNavigation: value.cloaking ? value.cloakingAllowTopNavigation : undefined,
         redirectWithQuery: value.redirectWithQuery,
         password: value.password || undefined,
         unsafe: value.unsafe || undefined,
@@ -144,6 +146,7 @@ async function aiSlug() {
 
 const currentSlug = form.useStore(state => state.values.slug || '')
 const currentUrl = form.useStore(state => state.values.url || '')
+const cloakingEnabled = form.useStore(state => !!state.values.cloaking)
 
 const { previewMode } = useRuntimeConfig().public
 
@@ -294,6 +297,7 @@ defineExpose({ randomSlug })
       :get-aria-invalid="getAriaInvalid"
       :format-errors="formatErrors"
       :current-slug="currentSlug"
+      :cloaking-enabled="cloakingEnabled"
     />
   </form>
 

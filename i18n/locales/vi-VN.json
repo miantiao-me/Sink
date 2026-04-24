@@ -238,6 +238,8 @@
       "redirect_with_query_description": "Thêm tham số truy vấn từ liên kết rút gọn vào URL đích. Ghi đè cài đặt toàn cục.",
       "cloaking_label": "Bật che giấu liên kết",
       "cloaking_description": "Hiển thị liên kết rút gọn trên thanh địa chỉ trình duyệt thay vì URL đích. Có thể không hoạt động với các trang web chặn nhúng iframe.",
+      "cloaking_allow_top_navigation_label": "Cho phép thanh toán & chuyển hướng ngoài",
+      "cloaking_allow_top_navigation_description": "Cho phép các nút bên trong trang ẩn chuyển hướng đến các trang khác (như Stripe Checkout). Bắt buộc với các cổng thanh toán chặn nhúng iframe.",
       "unsafe_label": "Đánh dấu là không an toàn",
       "unsafe_description": "Hiển thị trang cảnh báo trước khi chuyển hướng. Khách truy cập phải xác nhận để tiếp tục.",
       "password_label": "Bảo vệ bằng mật khẩu",

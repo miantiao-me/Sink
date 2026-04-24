@@ -30,6 +30,18 @@ function buildMetaTags(link: Link, baseUrl: string) {
 export function generateCloakingHtml(link: Link, targetUrl: string, baseUrl: string): string {
   const { title, tags } = buildMetaTags(link, baseUrl)
 
+  const sandboxFlags = [
+    'allow-scripts',
+    'allow-same-origin',
+    'allow-forms',
+    'allow-popups',
+    'allow-popups-to-escape-sandbox',
+  ]
+  if (link.cloakingAllowTopNavigation) {
+    sandboxFlags.push('allow-top-navigation-by-user-activation')
+  }
+  const sandbox = sandboxFlags.join(' ')
+
   return `<!DOCTYPE html>
 <html>
 <head>
@@ -39,7 +51,7 @@ export function generateCloakingHtml(link: Link, targetUrl: string, baseUrl: str
     ${tags}
 </head>
 <body style="margin:0;overflow:hidden">
-    <iframe src="${escape(targetUrl)}" style="width:100vw;height:100vh;border:none" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox" allowfullscreen referrerpolicy="no-referrer"></iframe>
+    <iframe src="${escape(targetUrl)}" style="width:100vw;height:100vh;border:none" sandbox="${sandbox}" allowfullscreen referrerpolicy="no-referrer"></iframe>
     <noscript><meta http-equiv="refresh" content="0;url=${escape(targetUrl)}"></noscript>
 </body>
 </html>`
