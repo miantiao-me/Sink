@@ -1,19 +1,20 @@
+import process from 'node:process'
 import tailwindcss from '@tailwindcss/vite'
-import { provider } from 'std-env'
 import { currentLocales } from './i18n/i18n'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  extends: ['./layers/dashboard'],
   modules: [
-    '@nuxthub/core',
     '@nuxtjs/color-mode',
     '@nuxtjs/i18n',
     '@nuxt/eslint',
+    '@pinia/nuxt',
     '@vueuse/motion/nuxt',
     'shadcn-nuxt',
   ],
   devtools: { enabled: true },
-  css: ['~/assets/css/tailwind.css'],
+  css: ['@/assets/css/tailwind.css'],
   colorMode: {
     classSuffix: '',
   },
@@ -26,37 +27,50 @@ export default defineNuxtConfig({
     cfAccountId: '',
     cfApiToken: '',
     dataset: 'sink',
-    aiModel: '@cf/meta/llama-3.1-8b-instruct',
-    aiPrompt: `You are a URL shortening assistant, please shorten the URL provided by the user into a SLUG. The SLUG information must come from the URL itself, do not make any assumptions. A SLUG is human-readable and should not exceed three words and can be validated using regular expressions {slugRegex} . Only the best one is returned, the format must be JSON reference {"slug": "example-slug"}`,
+    aiModel: '@cf/qwen/qwen3-30b-a3b-fp8',
+    aiPrompt: `You are a URL shortening assistant, please shorten the URL provided by the user into a SLUG. The SLUG information should be derived from the URL and page content (if provided). Do not make any assumptions beyond the given information. A SLUG is human-readable and should not exceed three words and can be validated using regular expressions {slugRegex} . Only the best one is returned, the format must be JSON reference {"slug": "example-slug"}`,
     caseSensitive: false,
     listQueryLimit: 500,
     disableBotAccessLog: false,
+    disableAutoBackup: false,
+    notFoundRedirect: '',
+    safeBrowsingDoh: '', // Set to DoH URL to enable auto-detection, e.g. https://family.cloudflare-dns.com/dns-query
     public: {
       previewMode: '',
       slugDefaultLength: '6',
+      kvBatchLimit: '50',
     },
   },
   routeRules: {
     '/': {
       prerender: true,
     },
-    '/dashboard/**': {
-      prerender: true,
-      ssr: false,
-    },
-    '/dashboard': {
-      redirect: '/dashboard/links',
-    },
     '/api/**': {
       cors: process.env.NUXT_API_CORS === 'true',
+    },
+    '/sphere.bin': {
+      headers: { 'Cache-Control': 'public, max-age=2592000, immutable' },
+    },
+    '/*.json': {
+      headers: { 'Cache-Control': 'public, max-age=2592000, immutable' },
+    },
+    '/*.geojson': {
+      headers: { 'Cache-Control': 'public, max-age=2592000, immutable' },
     },
   },
   experimental: {
     enforceModuleCompatibility: true,
   },
+  typescript: {
+    tsConfig: {
+      compilerOptions: {
+        types: ['vite/client'],
+      },
+    },
+  },
   compatibilityDate: 'latest',
   nitro: {
-    preset: import.meta.env.DEV ? 'cloudflare-module' : undefined,
+    preset: !import.meta.env.CI ? 'cloudflare-module' : undefined,
     experimental: {
       openAPI: true,
     },
@@ -78,23 +92,16 @@ export default defineNuxtConfig({
       },
     },
   },
-  hub: {
-    ai: true,
-    analytics: true,
-    blob: false,
-    cache: false,
-    database: false,
-    kv: true,
-    workers: provider !== 'cloudflare_pages',
-  },
   vite: {
     plugins: [
       tailwindcss(),
     ],
+    worker: {
+      format: 'es',
+    },
   },
   eslint: {
     config: {
-      stylistic: true,
       standalone: false,
     },
   },

@@ -50,3 +50,47 @@ To improve query performance, we have limited the amount of data. If you need to
 ## 8. I don't want to count bot or crawler traffic
 
 Set `NUXT_DISABLE_BOT_ACCESS_LOG` to `true`.
+
+## 9. What is Link Cloaking?
+
+Link cloaking masks your destination URL by showing your short link domain in the browser address bar instead of redirecting to the target URL. The destination page loads inside a full-screen iframe.
+
+### How to enable it
+
+Toggle **Enable Link Cloaking** in the **Link Settings** section when creating or editing a link.
+
+### Limitations
+
+- **Sites that block iframes**: Websites with `X-Frame-Options: DENY` or `Content-Security-Policy: frame-ancestors 'none'` will not load inside the iframe. Most major sites (Google, GitHub, Twitter, etc.) block iframe embedding.
+- **HTTPS required**: The destination URL must use HTTPS. Mixed content (HTTPS short link → HTTP destination) will be blocked by browsers.
+- **Limited interaction**: Some features like OAuth login flows, `window.top` navigation, and certain payment forms may not work correctly inside the iframe.
+- **Device redirects take priority**: If both cloaking and device redirects (iOS/Android) are configured, device redirects will take precedence on matching devices.
+
+### If the destination site blocks iframes
+
+If you control the destination site, you can whitelist your short link domain by adding this response header:
+
+```
+Content-Security-Policy: frame-ancestors 'self' your-short-domain.com
+```
+
+## 10. What is Redirect with Query Parameters?
+
+When enabled, query parameters from the short link URL are appended to the destination URL. For example, visiting `https://s.ink/my-link?ref=twitter` would redirect to `https://example.com/page?ref=twitter`.
+
+### Per-link vs Global
+
+- **Global setting**: Set `NUXT_REDIRECT_WITH_QUERY=true` to enable for all links by default.
+- **Per-link override**: Toggle **Redirect with Query Parameters** in the **Link Settings** section when creating or editing a link. This overrides the global setting for that specific link.
+
+If a link has no per-link setting, it falls back to the global configuration.
+
+## 11. How does the Import/Export feature work?
+
+Import and Export are designed to work within Cloudflare Workers' KV operation limits (50 per request by default).
+
+- **Export**: Downloads links in batches, automatically paginating until complete.
+- **Import**: Uploads links in batches (half of `NUXT_PUBLIC_KV_BATCH_LIMIT`, default 25) since each link requires 2 KV operations (check existence + write).
+- **Expired links**: Imported as-is to support migration scenarios.
+- **Duplicate slugs**: Skipped during import (existing links are preserved).
+- **Validation**: All links are validated against the schema before import starts.

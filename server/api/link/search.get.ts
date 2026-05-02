@@ -1,5 +1,23 @@
+defineRouteMeta({
+  openAPI: {
+    description: 'Search all links (returns slug, url, comment for each link)',
+    security: [{ bearerAuth: [] }],
+  },
+})
+
 interface Link {
   slug: string
+  url: string
+  comment?: string
+}
+
+interface LinkMetadata {
+  url?: string
+  comment?: string
+  expiration?: number
+}
+
+interface LinkData {
   url: string
   comment?: string
 }
@@ -12,16 +30,16 @@ export default eventHandler(async (event) => {
 
   try {
     while (true) {
-      const { keys, list_complete, cursor } = await KV.list({
+      const result = await KV.list({
         prefix: `link:`,
         limit: 1000,
         cursor: finalCursor,
-      })
+      }) as { keys: Array<{ name: string, metadata?: LinkMetadata }>, list_complete: boolean, cursor?: string }
 
-      finalCursor = cursor
+      finalCursor = result.cursor
 
-      if (Array.isArray(keys)) {
-        for (const key of keys) {
+      if (Array.isArray(result.keys)) {
+        for (const key of result.keys) {
           try {
             if (key.metadata?.url) {
               list.push({
@@ -32,7 +50,7 @@ export default eventHandler(async (event) => {
             }
             else {
               // Forward compatible with links without metadata
-              const { metadata, value: link } = await KV.getWithMetadata(key.name, { type: 'json' })
+              const { metadata, value: link } = await KV.getWithMetadata(key.name, { type: 'json' }) as { metadata: LinkMetadata | null, value: LinkData | null }
               if (link) {
                 list.push({
                   slug: key.name.replace('link:', ''),
@@ -42,8 +60,8 @@ export default eventHandler(async (event) => {
                 await KV.put(key.name, JSON.stringify(link), {
                   expiration: metadata?.expiration,
                   metadata: {
-                    ...metadata,
-                    url: link.url,
+                    ...(metadata ?? {}),
+                    url: withoutQuery(link.url),
                     comment: link.comment,
                   },
                 })
@@ -57,7 +75,7 @@ export default eventHandler(async (event) => {
         }
       }
 
-      if (!keys || list_complete) {
+      if (!result.keys || result.list_complete) {
         break
       }
     }
@@ -66,8 +84,8 @@ export default eventHandler(async (event) => {
   catch (err) {
     console.error('Error fetching link list:', err)
     throw createError({
-      statusCode: 500,
-      message: 'Failed to fetch link list',
+      status: 500,
+      statusText: 'Failed to fetch link list',
     })
   }
 })

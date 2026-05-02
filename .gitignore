@@ -28,3 +28,8 @@ cache
 public/world.json
 .dev.*
 .kiro/steering/locale.md
+
+.claude
+.opencode
+.agents
+opencode.json

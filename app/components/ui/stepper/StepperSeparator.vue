@@ -18,9 +18,9 @@ const forwarded = useForwardProps(delegatedProps)
     :class="cn(
       'bg-muted',
       // Disabled
-      'group-data-disabled:bg-muted group-data-disabled:opacity-50',
+      'group-data-[disabled]:bg-muted group-data-[disabled]:opacity-50',
       // Completed
-      'group-data-[state=completed]:bg-accent-foreground',
+      'group-data-[state=completed]:bg-accent',
       props.class,
     )"
   />

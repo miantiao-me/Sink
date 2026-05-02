@@ -26,6 +26,18 @@ const locales: LocaleObject[] = [
     emoji: '🇫🇷',
   },
   {
+    code: 'id-ID',
+    file: 'id-ID.json',
+    name: 'Bahasa Indonesia',
+    emoji: '🇮🇩',
+  },
+  {
+    code: 'it-IT',
+    file: 'it-IT.json',
+    name: 'Italiano',
+    emoji: '🇮🇹',
+  },
+  {
     code: 'vi-VN',
     file: 'vi-VN.json',
     name: 'Tiếng Việt',
@@ -36,6 +48,18 @@ const locales: LocaleObject[] = [
     file: 'de-DE.json',
     name: 'Deutsch',
     emoji: '🇩🇪',
+  },
+  {
+    code: 'pt-PT',
+    file: 'pt-PT.json',
+    name: 'Português (PT)',
+    emoji: '🇵🇹',
+  },
+  {
+    code: 'pt-BR',
+    file: 'pt-BR.json',
+    name: 'Português (BR)',
+    emoji: '🇧🇷',
   },
 ]
 

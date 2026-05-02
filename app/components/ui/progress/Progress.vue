@@ -5,12 +5,11 @@ import { reactiveOmit } from "@vueuse/core"
 import {
   ProgressIndicator,
   ProgressRoot,
-
 } from "reka-ui"
 import { cn } from "@/lib/utils"
 
 const props = withDefaults(
-  defineProps<ProgressRootProps & { class?: HTMLAttributes['class'], color?: string }>(),
+  defineProps<ProgressRootProps & { class?: HTMLAttributes["class"] }>(),
   {
     modelValue: 0,
   },
@@ -33,7 +32,7 @@ const delegatedProps = reactiveOmit(props, "class")
     <ProgressIndicator
       data-slot="progress-indicator"
       class="bg-primary h-full w-full flex-1 transition-all"
-      :style="[`transform: translateX(-${100 - (props.modelValue ?? 0)}%);`, `background-color: ${props.color}`]"
+      :style="`transform: translateX(-${100 - (props.modelValue ?? 0)}%);`"
     />
   </ProgressRoot>
 </template>

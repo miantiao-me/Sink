@@ -12,6 +12,7 @@
 6. Cancel the deployment, then go to **Settings** -> **Bindings** -> **Add**:
    - **KV Namespace**: Bind the variable name `KV` to a [KV namespace](https://developers.cloudflare.com/kv/) (create a new one under **Storage & Databases** -> **KV**).
    - **Workers AI** (_Optional_): Bind the variable name `AI` to the Workers AI Catalog.
+   - **R2 Bucket** (_Optional, for OpenGraph image upload_): Create an R2 bucket under **Storage & Databases** -> **R2**, then bind the variable name `R2` to the bucket.
    - **Analytics Engine**:
      - In **Workers & Pages**, go to **Account details** in the right panel, locate `Analytics Engine`, and click `Set up` to enable the free tier.
      - Return to **Settings** -> **Bindings** -> **Add** and select **Analytics engine**.

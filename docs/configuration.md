@@ -16,6 +16,12 @@ Sets the site to demo mode, the generated links will expire after 5 minutes, and
 
 Sets the default length of the generated SLUG.
 
+## `NUXT_PUBLIC_KV_BATCH_LIMIT`
+
+> If you are using Worker deployment, this variable needs to be configured in **Settings** -> **Build** -> **Variables and Secrets** and **Settings** -> **Variables and Secrets**.
+
+Sets the maximum number of KV operations per request for import/export. Default is 50 (Cloudflare Workers limit per request). Import operations use half of this value since each link requires 2 KV operations (check existence + write).
+
 ## `NUXT_REDIRECT_STATUS_CODE`
 
 Redirects default to use HTTP 301 status code, you can set it to `302`/`307`/`308`.
@@ -26,9 +32,11 @@ Cache links can speed up access, but setting them too long may result in slow ch
 
 ## `NUXT_REDIRECT_WITH_QUERY`
 
-URL parameters are not carried during link redirection by default and it is not recommended to enable this feature.
+URL parameters are not carried during link redirection by default and it is not recommended to enable this feature. This is the global default; individual links can override this via the **Redirect with Query Parameters** toggle in **Link Settings**.
 
 ## `NUXT_HOME_URL`
+
+> If you are using Worker deployment, this variable needs to be configured in **Settings** -> **Build** -> **Variables and Secrets** and **Settings** -> **Variables and Secrets**.
 
 The default Sink homepage is the introduction page, you can replace it with your own website.
 
@@ -65,3 +73,30 @@ Access statistics do not count bot traffic.
 ## `NUXT_API_CORS`
 
 Set the environment variable `NUXT_API_CORS=true` during build to enable CORS support for the API.
+
+## `NUXT_DISABLE_AUTO_BACKUP`
+
+Set to `true` to disable the automatic daily KV backup to R2 storage. Default is `false`.
+
+This feature requires:
+
+1. R2 bucket binding configured in `wrangler.jsonc`
+2. Create R2 bucket: `wrangler r2 bucket create sink`
+
+Backups are stored in R2 with the path `backups/links-{timestamp}.json` and run daily at 00:00 UTC.
+
+## `NUXT_SAFE_BROWSING_DOH`
+
+Set to a DNS over HTTPS (DoH) endpoint URL to enable automatic unsafe link detection when creating or editing links. When enabled, Sink queries the DoH service to check if the destination domain is flagged as malicious. If the domain resolves to `0.0.0.0`, the link is automatically marked as unsafe and visitors will see a warning page before being redirected.
+
+Recommended values:
+
+- `https://family.cloudflare-dns.com/dns-query` — Cloudflare Family DNS (blocks malware and adult content)
+- Custom [Cloudflare Zero Trust Gateway](https://developers.cloudflare.com/cloudflare-one/policies/gateway/) DoH URL — supports custom block lists, domain risk categories, and more granular control
+
+Default is empty (disabled). Users can still manually mark links as unsafe in the dashboard regardless of this setting.
+
+## `NUXT_NOT_FOUND_REDIRECT`
+
+Optional custom redirect target when a slug is not found.
+If this is not set, Sink will fall back to its default 404 page.
