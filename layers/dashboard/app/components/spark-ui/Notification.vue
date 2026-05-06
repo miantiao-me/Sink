@@ -9,6 +9,8 @@ const props = defineProps<{
   color?: string
   time: number
 }>()
+
+const { locale } = useI18n()
 </script>
 
 <template>
@@ -45,7 +47,7 @@ const props = defineProps<{
             "
           >{{ props.name }}</span>
           <span class="mx-1">·</span>
-          <span class="text-xs text-gray-500">{{ shortTime(props.time) }}</span>
+          <span class="text-xs text-gray-500">{{ shortTime(props.time, locale) }}</span>
         </div>
         <p class="text-sm font-normal">
           {{ props.description }}

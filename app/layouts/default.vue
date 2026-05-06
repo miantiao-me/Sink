@@ -1,10 +1,11 @@
 <script setup lang="ts">
+import NumberFlow from '@number-flow/vue'
 import { Menu, Star, X } from 'lucide-vue-next'
 import { GitHubIcon, TelegramIcon, XIcon } from 'vue3-simple-icons'
 
 const showMenu = ref(false)
 const { title, telegram, twitter, github } = useAppConfig()
-const { stats } = useGithubStats()
+const { rawStats } = useGithubStats()
 </script>
 
 <template>
@@ -105,7 +106,7 @@ const { stats } = useGithubStats()
                   >
                     <GitHubIcon class="size-4" />
                     <Star class="size-3" />
-                    <span class="tabular-nums">{{ stats.stars }}</span>
+                    <NumberFlow class="tabular-nums" :value="rawStats.stars" />
                   </a>
                 </Button>
 

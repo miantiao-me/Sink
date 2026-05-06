@@ -92,6 +92,8 @@ const validateSlug = makeValidator(slugValidator)
 const validateComment = makeValidator(commentValidator)
 const validateOptionalUrl = makeValidator(optionalUrlValidator)
 
+const utmBuilderOpen = ref(false)
+
 function isInvalid(field: AnyFieldApi) {
   return field.state.meta.isTouched && !field.state.meta.isValid
 }
@@ -141,8 +143,14 @@ async function aiSlug() {
 }
 
 const currentSlug = form.useStore(state => state.values.slug || '')
+const currentUrl = form.useStore(state => state.values.url || '')
 
 const { previewMode } = useRuntimeConfig().public
+
+async function applyUtmUrl(url: string) {
+  form.setFieldValue('url', url)
+  await form.validateField('url', 'blur')
+}
 
 defineExpose({ randomSlug })
 </script>
@@ -167,9 +175,21 @@ defineExpose({ randomSlug })
         :validators="{ onBlur: validateUrl }"
       >
         <Field :data-invalid="isInvalid(field)">
-          <FieldLabel :for="field.name">
-            {{ $t('links.form.url') }}
-          </FieldLabel>
+          <div class="flex items-center justify-between">
+            <FieldLabel :for="field.name">
+              {{ $t('links.form.url') }}
+            </FieldLabel>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              class="h-6 px-2 text-xs font-medium"
+              aria-label="Open UTM builder"
+              @click="utmBuilderOpen = true"
+            >
+              UTM
+            </Button>
+          </div>
           <Input
             :id="field.name"
             :name="field.name"
@@ -199,6 +219,7 @@ defineExpose({ randomSlug })
             </FieldLabel>
             <div v-if="!isEdit" class="flex space-x-3">
               <Button
+                type="button"
                 variant="ghost"
                 size="icon"
                 class="h-auto w-auto p-0"
@@ -208,6 +229,7 @@ defineExpose({ randomSlug })
                 <Shuffle class="h-4 w-4" />
               </Button>
               <Button
+                type="button"
                 variant="ghost"
                 size="icon"
                 class="h-auto w-auto p-0"
@@ -274,4 +296,10 @@ defineExpose({ randomSlug })
       :current-slug="currentSlug"
     />
   </form>
+
+  <DashboardLinksEditorUtmBuilder
+    v-model:open="utmBuilderOpen"
+    :url="currentUrl"
+    @apply="applyUtmUrl"
+  />
 </template>

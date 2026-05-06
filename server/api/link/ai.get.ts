@@ -59,7 +59,12 @@ export default eventHandler(async (event) => {
     { role: 'user', content: userContent },
   ]
 
-  const response = await AI.run(aiModel as keyof AiModels, { messages }) as AiChatResponse
+  const response = await AI.run(aiModel as keyof AiModels, {
+    messages,
+    chat_template_kwargs: {
+      enable_thinking: false,
+    },
+  }) as AiChatResponse
 
   let content = response.response ?? response.choices?.[0]?.message?.content ?? ''
   // Strip markdown code block wrapper (e.g. ```json\n{...}\n```)

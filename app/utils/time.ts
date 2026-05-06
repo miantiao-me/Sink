@@ -10,25 +10,25 @@ export function getTimeZone() {
 
 export function getLocale() {
   if (typeof Intl === 'undefined')
-    return navigator.language
+    return typeof navigator === 'undefined' ? 'en-US' : navigator.language
 
   return Intl.DateTimeFormat().resolvedOptions().locale
 }
 
-export function shortDate(unix = 0) {
-  return new Intl.DateTimeFormat(undefined, { dateStyle: 'short' }).format(unix * 1000)
+export function shortDate(unix = 0, locale?: string) {
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'short' }).format(unix * 1000)
 }
 
-export function longDate(unix = 0) {
-  return new Intl.DateTimeFormat(undefined, { dateStyle: 'long' }).format(unix * 1000)
+export function longDate(unix = 0, locale?: string) {
+  return new Intl.DateTimeFormat(locale, { dateStyle: 'long' }).format(unix * 1000)
 }
 
-export function shortTime(unix = 0) {
-  return new Intl.DateTimeFormat(undefined, { timeStyle: 'short' }).format(unix * 1000)
+export function shortTime(unix = 0, locale?: string) {
+  return new Intl.DateTimeFormat(locale, { timeStyle: 'short' }).format(unix * 1000)
 }
 
-export function longTime(unix = 0) {
-  return new Intl.DateTimeFormat(undefined, { timeStyle: 'long' }).format(unix * 1000)
+export function longTime(unix = 0, locale?: string) {
+  return new Intl.DateTimeFormat(locale, { timeStyle: 'long' }).format(unix * 1000)
 }
 
 export function date2unix(dateValue: DateValue | Date, type?: string) {
@@ -46,8 +46,8 @@ export function unix2date(unix: number) {
   return toCalendarDate(fromAbsolute(unix * 1000, getTimeZone()))
 }
 
-export function getWeekdayNames(style: 'long' | 'short' | 'narrow' = 'short') {
-  const formatter = new Intl.DateTimeFormat(undefined, { weekday: style })
+export function getWeekdayNames(style: 'long' | 'short' | 'narrow' = 'short', locale?: string) {
+  const formatter = new Intl.DateTimeFormat(locale, { weekday: style })
   // 2024-01-01 is Monday
   return Array.from({ length: 7 }, (_, i) => {
     const date = new Date(2024, 0, 1 + i)

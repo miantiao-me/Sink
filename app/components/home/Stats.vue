@@ -1,5 +1,7 @@
 <script setup lang="ts">
-const { stats } = useGithubStats()
+import NumberFlow from '@number-flow/vue'
+
+const { rawStats } = useGithubStats()
 </script>
 
 <template>
@@ -42,9 +44,7 @@ const { stats } = useGithubStats()
             <template #fallback>
               <Skeleton class="mx-auto h-12 w-24" />
             </template>
-            <div class="text-5xl font-bold tabular-nums">
-              {{ stats.stars }}
-            </div>
+            <NumberFlow class="text-5xl font-bold tabular-nums" :value="rawStats.stars" />
           </ClientOnly>
           <p class="text-muted-foreground">
             {{ $t('home.stats.stars') }}
@@ -60,9 +60,7 @@ const { stats } = useGithubStats()
             <template #fallback>
               <Skeleton class="mx-auto h-12 w-24" />
             </template>
-            <div class="text-5xl font-bold tabular-nums">
-              {{ stats.forks }}
-            </div>
+            <NumberFlow class="text-5xl font-bold tabular-nums" :value="rawStats.forks" />
           </ClientOnly>
           <p class="text-muted-foreground">
             {{ $t('home.stats.forks') }}

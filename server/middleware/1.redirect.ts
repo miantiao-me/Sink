@@ -19,6 +19,8 @@ const SOCIAL_BOTS = [
   'whatsapp',
 ]
 
+const APPLE_DEVICE_UA_MARKERS = ['iphone', 'ipad', 'ipod', 'crios']
+
 function isSocialBot(userAgent: string): boolean {
   const ua = userAgent.toLowerCase()
   return SOCIAL_BOTS.some(bot => ua.includes(bot))
@@ -34,7 +36,7 @@ function getDeviceRedirectUrl(userAgent: string, link: Link): string | null {
     return link.google
   }
 
-  if (link.apple && (ua.includes('iphone') || ua.includes('ipad') || ua.includes('ipod'))) {
+  if (link.apple && APPLE_DEVICE_UA_MARKERS.some(marker => ua.includes(marker))) {
     return link.apple
   }
 
@@ -74,7 +76,7 @@ export default eventHandler(async (event) => {
     if (link) {
       let locale: RedirectLocale | undefined
       const getLocale = () => {
-        locale ??= resolveRedirectLocale(getHeader(event, 'accept-language'))
+        locale ??= resolveRedirectLocale(event)
         return locale
       }
       const sendNoStoreHtml = (html: string) => {
