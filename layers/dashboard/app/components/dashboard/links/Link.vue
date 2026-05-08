@@ -9,7 +9,7 @@ const props = defineProps<{
   link: Link
 }>()
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const editPopoverOpen = ref(false)
 
 const countersMap = inject<Ref<Record<string, CounterData>> | undefined>('linksCountersMap', undefined)
@@ -187,11 +187,11 @@ function copyLink() {
                 <TooltipTrigger as-child>
                   <span
                     class="inline-flex items-center leading-5 whitespace-nowrap"
-                  ><CalendarPlus2 aria-hidden="true" class="mr-1 h-4 w-4" /> {{ shortDate(link.createdAt) }}</span>
+                  ><CalendarPlus2 aria-hidden="true" class="mr-1 h-4 w-4" /> {{ shortDate(link.createdAt, locale) }}</span>
                 </TooltipTrigger>
                 <TooltipContent>
-                  <p>{{ $t('links.created_at') }}: {{ longDate(link.createdAt) }}</p>
-                  <p>{{ $t('links.updated_at') }}: {{ longDate(link.updatedAt) }}</p>
+                  <p>{{ $t('links.created_at') }}: {{ longDate(link.createdAt, locale) }}</p>
+                  <p>{{ $t('links.updated_at') }}: {{ longDate(link.updatedAt, locale) }}</p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>
@@ -204,10 +204,10 @@ function copyLink() {
                       class="
                         inline-flex items-center leading-5 whitespace-nowrap
                       "
-                    ><Hourglass aria-hidden="true" class="mr-1 h-4 w-4" /> {{ shortDate(link.expiration) }}</span>
+                    ><Hourglass aria-hidden="true" class="mr-1 h-4 w-4" /> {{ shortDate(link.expiration, locale) }}</span>
                   </TooltipTrigger>
                   <TooltipContent>
-                    <p>{{ $t('links.expires_at') }}: {{ longDate(link.expiration) }}</p>
+                    <p>{{ $t('links.expires_at') }}: {{ longDate(link.expiration, locale) }}</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>

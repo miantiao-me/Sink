@@ -1,8 +1,10 @@
-import { useAppConfig, useFetch } from '#imports'
+import { useAppConfig, useFetch, useI18n } from '#imports'
 import { computed } from 'vue'
+import { formatNumber } from '@/utils/number'
 
 export function useGithubStats() {
   const { github } = useAppConfig()
+  const { locale } = useI18n()
   const repo = github.replace('https://github.com/', '')
 
   const { data, status } = useFetch(
@@ -24,10 +26,15 @@ export function useGithubStats() {
     },
   )
 
-  const formattedStats = computed(() => ({
-    stars: data.value?.stars?.toLocaleString() ?? '6,000',
-    forks: data.value?.forks?.toLocaleString() ?? '4,000',
+  const rawStats = computed(() => ({
+    stars: data.value?.stars ?? 6000,
+    forks: data.value?.forks ?? 4000,
   }))
 
-  return { stats: formattedStats, status }
+  const formattedStats = computed(() => ({
+    stars: formatNumber(rawStats.value.stars, locale.value),
+    forks: formatNumber(rawStats.value.forks, locale.value),
+  }))
+
+  return { stats: formattedStats, rawStats, status }
 }

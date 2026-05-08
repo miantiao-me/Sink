@@ -1,18 +1,18 @@
-import { defineStore } from '#imports'
+import { defineStore, useI18n } from '#imports'
 import { getLocalTimeZone, now, startOfMonth, startOfWeek } from '@internationalized/date'
 import { useUrlSearchParams } from '@vueuse/core'
 import { safeDestr } from 'destr'
 import { ref, watch } from 'vue'
 import { date2unix, getLocale } from '@/utils/time'
 
-function computeDateRange(name: string): [number, number] {
+function computeDateRange(name: string, locale: string): [number, number] {
   const tz = getLocalTimeZone()
   const currentTime = now(tz)
 
   const presets: Record<string, () => [number, number]> = {
     'today': () => [date2unix(currentTime, 'start'), date2unix(currentTime)],
     'last-24h': () => [date2unix(currentTime.subtract({ hours: 24 })), date2unix(currentTime)],
-    'this-week': () => [date2unix(startOfWeek(currentTime, getLocale()), 'start'), date2unix(currentTime)],
+    'this-week': () => [date2unix(startOfWeek(currentTime, locale || getLocale()), 'start'), date2unix(currentTime)],
     'last-7d': () => [date2unix(currentTime.subtract({ days: 7 })), date2unix(currentTime)],
     'this-month': () => [date2unix(startOfMonth(currentTime), 'start'), date2unix(currentTime)],
     'last-30d': () => [date2unix(currentTime.subtract({ days: 30 })), date2unix(currentTime)],
@@ -24,6 +24,7 @@ function computeDateRange(name: string): [number, number] {
 }
 
 export const useDashboardAnalysisStore = defineStore('dashboard-analysis', () => {
+  const { locale } = useI18n()
   const searchParams = useUrlSearchParams('history')
   let initialized = false
 
@@ -38,7 +39,7 @@ export const useDashboardAnalysisStore = defineStore('dashboard-analysis', () =>
 
   function selectPreset(name: string) {
     datePreset.value = name
-    updateDateRange(computeDateRange(name))
+    updateDateRange(computeDateRange(name, locale.value))
   }
 
   function updateFilter(type: string, value: string) {
@@ -76,7 +77,7 @@ export const useDashboardAnalysisStore = defineStore('dashboard-analysis', () =>
 
     // Apply default date range from preset if not restored
     if (dateRange.value.startAt === 0 && datePreset.value) {
-      const [start, end] = computeDateRange(datePreset.value)
+      const [start, end] = computeDateRange(datePreset.value, locale.value)
       dateRange.value.startAt = start
       dateRange.value.endAt = end
     }

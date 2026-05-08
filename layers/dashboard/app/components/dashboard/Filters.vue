@@ -72,7 +72,7 @@ watchDebounced(selectedLinks, (value) => {
   <FilterTemplate>
     <Command v-model="selectedLinks" multiple>
       <CommandInput :placeholder="selectedLinks.length ? selectedLinks.join(', ') : $t('dashboard.filter_placeholder')" />
-      <CommandEmpty>No link found.</CommandEmpty>
+      <CommandEmpty>{{ $t('links.no_results') }}</CommandEmpty>
       <CommandList :class="{ 'max-h-none': !isDesktop }">
         <CommandGroup>
           <VList

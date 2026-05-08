@@ -126,7 +126,7 @@ function openFilePicker() {
     <div v-else class="relative aspect-[1200/630]">
       <img
         :src="imageUrl"
-        alt="Preview"
+        :alt="$t('links.form.image_preview')"
         class="aspect-[1200/630] w-full rounded-md object-cover"
       >
       <Button

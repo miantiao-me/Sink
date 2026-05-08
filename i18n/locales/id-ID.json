@@ -1,0 +1,328 @@
+{
+  "common": {
+    "i18n": "Multibahasa",
+    "abbreviations": "Id",
+    "current_language": "Bahasa Indonesia",
+    "try_again": "Coba lagi",
+    "cancel": "Batal",
+    "continue": "Lanjutkan",
+    "close": "Tutup",
+    "save": "Simpan",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "delete_success": "Berhasil dihapus!",
+    "search": "Cari"
+  },
+  "theme": {
+    "toggle": "Ganti tema",
+    "light": "Terang",
+    "dark": "Gelap",
+    "system": "Sistem"
+  },
+  "login": {
+    "title": "Masuk",
+    "description": "Masukkan token situs untuk login",
+    "tips": "Tips",
+    "preview_token": "Token situs untuk mode pratinjau adalah",
+    "submit": "Masuk",
+    "failed": "Login gagal, silakan coba lagi",
+    "token_label": "Token Situs",
+    "token_required": "Token wajib diisi"
+  },
+  "logout": {
+    "title": "Keluar?",
+    "confirm": "Apakah Anda yakin ingin keluar?",
+    "action": "Keluar"
+  },
+  "layouts": {
+    "footer": {
+      "copyright": "Sebuah produk dari HTML.ZONE",
+      "social": {
+        "email": "Email",
+        "telegram": "Telegram",
+        "blog": "Blog",
+        "twitter": "Twitter",
+        "mastodon": "Mastodon",
+        "github": "GitHub"
+      }
+    },
+    "header": {
+      "select_language": "Pilih Bahasa"
+    }
+  },
+  "nav": {
+    "links": "Tautan",
+    "analysis": "Analisis",
+    "realtime": "Real-time",
+    "migrate": "Impor/Ekspor"
+  },
+  "sidebar": {
+    "subtitle": "Pemendek Tautan",
+    "platform": "Platform",
+    "settings": "Pengaturan",
+    "import": "Impor",
+    "export": "Ekspor",
+    "coffee": "Traktir Kopi",
+    "github": "GitHub",
+    "stars": "Bintang",
+    "update": "Versi baru {version} tersedia (saat ini: {current})"
+  },
+  "home": {
+    "hero": {
+      "github_repo": "Repositori GitHub"
+    },
+    "features": {
+      "title": "Fitur",
+      "subtitle": "Fungsi sederhana dan cukup",
+      "url_shortening": {
+        "title": "Pemendek URL",
+        "description": "Ringkas URL Anda menjadi lebih pendek"
+      },
+      "analytics": {
+        "title": "Analitik",
+        "description": "Pantau analitik tautan dan kumpulkan statistik"
+      },
+      "serverless": {
+        "title": "Serverless",
+        "description": "Deploy tanpa perlu server tradisional"
+      },
+      "customizable_slug": {
+        "title": "Slug Kustom",
+        "description": "Dukungan slug personal dan sensitif huruf besar/kecil"
+      },
+      "ai_slug": {
+        "title": "Slug AI",
+        "description": "Gunakan AI untuk menghasilkan slug"
+      },
+      "link_expiration": {
+        "title": "Kedaluwarsa Tautan",
+        "description": "Atur tanggal kedaluwarsa untuk tautan"
+      },
+      "device_routing": {
+        "title": "Pengalihan Perangkat",
+        "description": "Alihkan pengguna iOS/Android ke tautan App Store"
+      },
+      "og_preview": {
+        "title": "Pratinjau Sosial",
+        "description": "Pratinjau OpenGraph khusus untuk media sosial"
+      },
+      "realtime_analytics": {
+        "title": "Analitik Real-time",
+        "description": "Globe 3D langsung dan log peristiwa real-time"
+      },
+      "qr_code": {
+        "title": "Kode QR",
+        "description": "Buat kode QR untuk tautan pendek"
+      },
+      "import_export": {
+        "title": "Impor/Ekspor",
+        "description": "Migrasi massal melalui file JSON"
+      },
+      "multi_language": {
+        "title": "Multibahasa",
+        "description": "Dukungan penuh i18n untuk dashboard"
+      }
+    },
+    "cta": {
+      "title": "Deploy Sekarang",
+      "description": "Hanya dengan beberapa klik, Anda bisa langsung deploy tanpa biaya",
+      "button": "Mulai Deploy"
+    },
+    "logos": {
+      "title": "Dibangun dengan teknologi terbaik"
+    },
+    "twitter": {
+      "follow": "Ikuti di X (Twitter)"
+    },
+    "stats": {
+      "title": "Sink dalam Angka",
+      "subtitle": "Dipercaya oleh developer di seluruh dunia",
+      "stars": "Bintang di GitHub",
+      "forks": "Fork"
+    },
+    "testimonials": {
+      "title": "Disukai Pengguna",
+      "subtitle": "Lihat apa kata developer tentang Sink"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "visits": "Kunjungan",
+    "views": "Tampilan",
+    "visitors": "Pengunjung",
+    "referers": "Referer",
+    "stats": "Statistik {slug}",
+    "trend": "Tren",
+    "weekly_trend": "Tren Mingguan",
+    "custom_date": "Tanggal Kustom",
+    "date": "Tanggal",
+    "date_range": "Rentang Tanggal",
+    "locations": "Lokasi",
+    "details": "Detail",
+    "name": "Nama",
+    "count": "Jumlah",
+    "loading": "Memuat",
+    "no_data": "Tidak ada data",
+    "none": "(Tidak ada)",
+    "filter_placeholder": "Filter tautan...",
+    "date_picker": {
+      "today": "Hari ini",
+      "last_24h": "24 jam terakhir",
+      "this_week": "Minggu ini",
+      "last_7d": "7 hari terakhir",
+      "this_month": "Bulan ini",
+      "last_30d": "30 hari terakhir",
+      "last_90d": "90 hari terakhir",
+      "custom": "Kustom",
+      "custom_title": "Tanggal Kustom",
+      "single_date": "Tanggal",
+      "date_range": "Rentang Tanggal"
+    },
+    "metrics": {
+      "country": "Negara",
+      "region": "Wilayah",
+      "city": "Kota",
+      "referer": "Referer",
+      "slug": "Slug",
+      "language": "Bahasa",
+      "timezone": "Zona Waktu",
+      "device": "Perangkat",
+      "deviceType": "Tipe Perangkat",
+      "os": "OS",
+      "browser": "Browser",
+      "browserType": "Tipe Browser"
+    },
+    "time_picker": {
+      "today": "Hari ini",
+      "last_5m": "5 menit terakhir",
+      "last_10m": "10 menit terakhir",
+      "last_30m": "30 menit terakhir",
+      "last_1h": "1 jam terakhir",
+      "last_6h": "6 jam terakhir",
+      "last_12h": "12 jam terakhir",
+      "last_24h": "24 jam terakhir"
+    }
+  },
+  "links": {
+    "create": "Buat Tautan",
+    "edit": "Edit Tautan",
+    "delete_confirm_title": "Apakah Anda yakin?",
+    "delete_confirm_desc": "Tindakan ini tidak dapat dibatalkan. Tautan akan dihapus permanen.",
+    "delete_success": "Berhasil dihapus!",
+    "delete_failed": "Gagal menghapus!",
+    "update_success": "Tautan berhasil diperbarui",
+    "create_success": "Tautan berhasil dibuat",
+    "preview_mode_tip": "Tautan mode pratinjau berlaku hingga 5 menit.",
+    "search_placeholder": "Cari tautan...",
+    "no_results": "Tidak ditemukan tautan.",
+    "group_title": "Tautan",
+    "copy_success": "Berhasil disalin!",
+    "created_at": "Dibuat pada",
+    "updated_at": "Diperbarui pada",
+    "expires_at": "Kedaluwarsa pada",
+    "no_more": "Tidak ada lagi tautan",
+    "load_failed": "Gagal memuat tautan,",
+    "download_qr_code": "Unduh Kode QR",
+    "change_qr_color": "Ubah warna QR",
+    "form": {
+      "url": "URL",
+      "slug": "Slug",
+      "comment": "Catatan",
+      "expiration": "Kedaluwarsa",
+      "pick_date": "Pilih tanggal",
+      "device_redirect": "Redirect Perangkat",
+      "google_play": "URL Google Play",
+      "app_store": "URL App Store",
+      "link_settings": "Pengaturan Tautan",
+      "redirect_with_query_label": "Redirect dengan Parameter Query",
+      "redirect_with_query_description": "Tambahkan parameter query ke URL tujuan.",
+      "cloaking_label": "Aktifkan Cloaking Tautan",
+      "cloaking_description": "Tampilkan tautan pendek di bilah alamat browser, bukan URL tujuan. Mungkin tidak berfungsi pada situs yang memblokir penyematan iframe.",
+      "unsafe_label": "Tandai Tidak Aman",
+      "unsafe_description": "Tampilkan halaman peringatan sebelum mengalihkan. Pengunjung harus mengonfirmasi untuk melanjutkan.",
+      "password_label": "Proteksi Kata Sandi",
+      "password_description": "Wajibkan kata sandi untuk mengakses tautan pendek ini.",
+      "password_placeholder": "Kosongkan untuk menonaktifkan",
+      "og_settings": "Pengaturan OpenGraph",
+      "og_title": "Judul",
+      "og_title_placeholder": "Kosongkan untuk menggunakan nama host URL",
+      "og_description": "Deskripsi",
+      "og_description_placeholder": "Deskripsi tautan",
+      "og_image": "Gambar",
+      "advanced": "Lanjutan",
+      "more_options": "Opsi Tambahan",
+      "image_invalid_type": "Harap unggah file gambar",
+      "image_size_limit": "Ukuran gambar tidak boleh melebihi 5MB",
+      "image_upload_success": "Gambar berhasil diunggah",
+      "image_upload_failed": "Gagal mengunggah gambar",
+      "image_upload_hint": "Klik atau seret untuk mengunggah gambar",
+      "image_ratio_hint": "Disarankan: 1200×630",
+      "image_preview": "Pratinjau gambar",
+      "slug_required": "Masukkan slug terlebih dahulu",
+      "utm_builder": "Pembuat UTM",
+      "utm_description": "Buat parameter UTM secara lokal dan tambahkan ke URL tujuan.",
+      "utm_preview": "Pratinjau",
+      "utm_source": "Sumber UTM",
+      "utm_medium": "Media UTM",
+      "utm_campaign": "Kampanye UTM",
+      "utm_term": "Istilah UTM",
+      "utm_content": "Konten UTM",
+      "utm_apply": "Terapkan",
+      "utm_clear": "Bersihkan",
+      "utm_invalid_url": "Masukkan URL valid untuk melihat pratinjau dan menerapkan parameter UTM."
+    },
+    "sort": {
+      "newest": "Terbaru",
+      "oldest": "Terlama",
+      "az": "Slug A-Z",
+      "za": "Slug Z-A",
+      "tip": "Hanya untuk data yang sudah dimuat"
+    },
+    "update_failed": "Gagal memperbarui tautan",
+    "create_failed": "Gagal membuat tautan",
+    "ai_slug_failed": "Gagal membuat slug AI"
+  },
+  "migrate": {
+    "backup": {
+      "title": "Cadangan Manual",
+      "description": "Picu pencadangan manual semua tautan ke bucket R2 yang dikonfigurasi",
+      "button": "Mulai Pencadangan",
+      "backing_up": "Mencadangkan...",
+      "success": "Pencadangan berhasil",
+      "failed": "Pencadangan gagal"
+    },
+    "export": {
+      "title": "Ekspor Tautan",
+      "description": "Unduh semua tautan Anda sebagai file JSON",
+      "button": "Ekspor Semua",
+      "total_links": "Total tautan",
+      "success": "Ekspor berhasil",
+      "failed": "Ekspor gagal"
+    },
+    "import": {
+      "title": "Impor Tautan",
+      "description": "Unggah file JSON untuk mengimpor tautan",
+      "dropzone": "Jatuhkan file JSON di sini atau klik untuk mengunggah",
+      "links_found": "tautan ditemukan",
+      "button": "Mulai Impor",
+      "importing": "Mengimpor...",
+      "import_more": "Impor Lagi",
+      "download_success": "Unduh Item Berhasil",
+      "download_skipped": "Unduh Item Dilewati",
+      "download_failed": "Unduh Item Gagal",
+      "result": {
+        "title": "Hasil Impor",
+        "success": "Berhasil diimpor",
+        "skipped": "Dilewati (sudah ada)",
+        "failed": "Gagal",
+        "success_message": "{count} tautan berhasil diimpor"
+      },
+      "errors": {
+        "invalid_json": "File JSON tidak valid",
+        "invalid_format": "Format file tidak valid. Gunakan file yang diekspor dari Sink.",
+        "no_links": "Tidak ada tautan yang ditemukan dalam file",
+        "parse_error": "Gagal mengurai file"
+      }
+    }
+  }
+}

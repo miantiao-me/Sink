@@ -19,6 +19,7 @@ const props = defineProps<{
 }>()
 
 const datePickerOpen = ref(false)
+const { locale } = useI18n()
 
 // Compute default open items based on existing values
 const defaultOpenItems = computed(() => {
@@ -59,7 +60,7 @@ const defaultOpenItems = computed(() => {
                   <CalendarIcon class="mr-2 h-4 w-4" />
                   {{
                     field.state.value
-                      ? field.state.value.toDate(getTimeZone()).toLocaleDateString()
+                      ? field.state.value.toDate(getTimeZone()).toLocaleDateString(locale)
                       : $t('links.form.pick_date')
                   }}
                 </Button>

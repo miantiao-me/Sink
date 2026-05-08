@@ -88,6 +88,7 @@ const { hasUpdate, currentVersion, latestVersion } = useVersionCheck()
                     "
                   >
                     <Languages class="size-4" />
+                    <span class="sr-only">{{ $t('layouts.header.select_language') }}</span>
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
@@ -128,6 +129,7 @@ const { hasUpdate, currentVersion, latestVersion } = useVersionCheck()
                         dark:block
                       "
                     />
+                    <span class="sr-only">{{ $t('theme.toggle') }}</span>
                   </button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent
