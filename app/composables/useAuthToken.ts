@@ -1,20 +1,30 @@
 const TOKEN_KEY = 'SinkSiteToken'
 
-export function useAuthToken() {
-  function getToken() {
-    if (import.meta.client) {
-      return localStorage.getItem(TOKEN_KEY)
-    }
+export function getAuthToken() {
+  if (!import.meta.client)
     return null
-  }
 
-  function setToken(token: string) {
-    localStorage.setItem(TOKEN_KEY, token)
-  }
+  return localStorage.getItem(TOKEN_KEY)
+}
 
-  function removeToken() {
-    localStorage.removeItem(TOKEN_KEY)
-  }
+export function setAuthToken(token: string) {
+  if (!import.meta.client)
+    return
 
-  return { getToken, setToken, removeToken }
+  localStorage.setItem(TOKEN_KEY, token)
+}
+
+export function removeAuthToken() {
+  if (!import.meta.client)
+    return
+
+  localStorage.removeItem(TOKEN_KEY)
+}
+
+export function useAuthToken() {
+  return {
+    getToken: getAuthToken,
+    setToken: setAuthToken,
+    removeToken: removeAuthToken,
+  }
 }

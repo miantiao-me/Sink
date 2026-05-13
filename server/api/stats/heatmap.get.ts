@@ -6,7 +6,7 @@ const { select } = SqlBricks
 
 const HeatmapQuerySchema = QuerySchema.extend({
   clientTimezone: z.string()
-    .regex(/^[A-Z_]+(?:\/[A-Z_-]+)*$/i)
+    .regex(/^[\w+-]+(?:\/[\w+-]+)*$/)
     .max(64)
     .default('Etc/UTC'),
 })

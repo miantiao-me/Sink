@@ -1,5 +1,47 @@
+import type { H3Event } from 'h3'
+import { parseAcceptLanguage } from 'intl-parse-accept-language'
+
+interface RedirectTranslation {
+  passwordTitle: string
+  passwordLabel: string
+  passwordPlaceholder: string
+  passwordError: string
+  continue: string
+  unsafeTitle: string
+  unsafeDesc: string
+  goBack: string
+}
+
+const REDIRECT_LOCALES = [
+  'de-DE',
+  'en-US',
+  'fr-FR',
+  'id-ID',
+  'it-IT',
+  'pt-BR',
+  'pt-PT',
+  'vi-VN',
+  'zh-CN',
+  'zh-TW',
+] as const
+
+export type RedirectLocale = typeof REDIRECT_LOCALES[number]
+
+const DEFAULT_REDIRECT_LOCALE = 'en-US' satisfies RedirectLocale
+const REDIRECT_LOCALE_COOKIE = 'sink_i18n_redirected'
+
 export const REDIRECT_TRANSLATIONS = {
-  'en': {
+  'de-DE': {
+    passwordTitle: 'Passwort erforderlich',
+    passwordLabel: 'Passwort',
+    passwordPlaceholder: 'Passwort eingeben',
+    passwordError: 'Falsches Passwort',
+    continue: 'Weiter',
+    unsafeTitle: 'Potenziell unsicherer Link',
+    unsafeDesc: 'Dieser Link wurde als potenziell unsicher markiert. Gehen Sie mit Vorsicht vor.',
+    goBack: 'Zurück',
+  },
+  'en-US': {
     passwordTitle: 'Password Required',
     passwordLabel: 'Password',
     passwordPlaceholder: 'Enter password',
@@ -8,6 +50,66 @@ export const REDIRECT_TRANSLATIONS = {
     unsafeTitle: 'Potentially Unsafe Link',
     unsafeDesc: 'This link has been flagged as potentially unsafe. Proceed with caution.',
     goBack: 'Go Back',
+  },
+  'fr-FR': {
+    passwordTitle: 'Mot de passe requis',
+    passwordLabel: 'Mot de passe',
+    passwordPlaceholder: 'Entrez le mot de passe',
+    passwordError: 'Mot de passe incorrect',
+    continue: 'Continuer',
+    unsafeTitle: 'Lien potentiellement dangereux',
+    unsafeDesc: 'Ce lien a été signalé comme potentiellement dangereux. Procédez avec prudence.',
+    goBack: 'Retour',
+  },
+  'id-ID': {
+    passwordTitle: 'Diperlukan Kata Sandi',
+    passwordLabel: 'Kata Sandi',
+    passwordPlaceholder: 'Masukkan kata sandi',
+    passwordError: 'Kata sandi salah',
+    continue: 'Lanjutkan',
+    unsafeTitle: 'Tautan Berpotensi Tidak Aman',
+    unsafeDesc: 'Tautan ini telah ditandai berpotensi tidak aman. Lanjutkan dengan hati-hati.',
+    goBack: 'Kembali',
+  },
+  'it-IT': {
+    passwordTitle: 'Password richiesta',
+    passwordLabel: 'Password',
+    passwordPlaceholder: 'Inserisci la password',
+    passwordError: 'Password errata',
+    continue: 'Continua',
+    unsafeTitle: 'Link potenzialmente non sicuro',
+    unsafeDesc: 'Questo link è stato contrassegnato come potenzialmente non sicuro. Procedi con cautela.',
+    goBack: 'Indietro',
+  },
+  'pt-BR': {
+    passwordTitle: 'Senha necessária',
+    passwordLabel: 'Senha',
+    passwordPlaceholder: 'Digite a senha',
+    passwordError: 'Senha incorreta',
+    continue: 'Continuar',
+    unsafeTitle: 'Link potencialmente inseguro',
+    unsafeDesc: 'Este link foi sinalizado como potencialmente inseguro. Prossiga com cuidado.',
+    goBack: 'Voltar',
+  },
+  'pt-PT': {
+    passwordTitle: 'Palavra-passe necessária',
+    passwordLabel: 'Palavra-passe',
+    passwordPlaceholder: 'Introduza a palavra-passe',
+    passwordError: 'Palavra-passe incorreta',
+    continue: 'Continuar',
+    unsafeTitle: 'Ligação potencialmente insegura',
+    unsafeDesc: 'Esta ligação foi assinalada como potencialmente insegura. Prossiga com cuidado.',
+    goBack: 'Voltar',
+  },
+  'vi-VN': {
+    passwordTitle: 'Yêu cầu mật khẩu',
+    passwordLabel: 'Mật khẩu',
+    passwordPlaceholder: 'Nhập mật khẩu',
+    passwordError: 'Mật khẩu không đúng',
+    continue: 'Tiếp tục',
+    unsafeTitle: 'Liên kết có thể không an toàn',
+    unsafeDesc: 'Liên kết này đã bị đánh dấu là có thể không an toàn. Hãy thận trọng khi tiếp tục.',
+    goBack: 'Quay lại',
   },
   'zh-CN': {
     passwordTitle: '需要密码',
@@ -29,83 +131,25 @@ export const REDIRECT_TRANSLATIONS = {
     unsafeDesc: '此連結已被標記為潛在不安全。請謹慎訪問。',
     goBack: '返回',
   },
-  'ja': {
-    passwordTitle: 'パスワードが必要です',
-    passwordLabel: 'パスワード',
-    passwordPlaceholder: 'パスワードを入力',
-    passwordError: 'パスワードが間違っています',
-    continue: '続ける',
-    unsafeTitle: '安全でない可能性のあるリンク',
-    unsafeDesc: 'このリンクは安全でない可能性があるとしてフラグが付けられています。注意して進んでください。',
-    goBack: '戻る',
-  },
-  'ko': {
-    passwordTitle: '비밀번호 필요',
-    passwordLabel: '비밀번호',
-    passwordPlaceholder: '비밀번호 입력',
-    passwordError: '비밀번호가 올바르지 않습니다',
-    continue: '계속',
-    unsafeTitle: '잠재적으로 안전하지 않은 링크',
-    unsafeDesc: '이 링크는 잠재적으로 안전하지 않은 것으로 표시되었습니다. 주의해서 진행하십시오.',
-    goBack: '뒤로 가기',
-  },
-  'fr': {
-    passwordTitle: 'Mot de passe requis',
-    passwordLabel: 'Mot de passe',
-    passwordPlaceholder: 'Entrez le mot de passe',
-    passwordError: 'Mot de passe incorrect',
-    continue: 'Continuer',
-    unsafeTitle: 'Lien potentiellement dangereux',
-    unsafeDesc: 'Ce lien a été signalé comme potentiellement dangereux. Procédez avec prudence.',
-    goBack: 'Retour',
-  },
-  'de': {
-    passwordTitle: 'Passwort erforderlich',
-    passwordLabel: 'Passwort',
-    passwordPlaceholder: 'Passwort eingeben',
-    passwordError: 'Falsches Passwort',
-    continue: 'Weiter',
-    unsafeTitle: 'Potenziell unsicherer Link',
-    unsafeDesc: 'Dieser Link wurde als potenziell unsicher markiert. Gehen Sie mit Vorsicht vor.',
-    goBack: 'Zurück',
-  },
-  'es': {
-    passwordTitle: 'Contraseña requerida',
-    passwordLabel: 'Contraseña',
-    passwordPlaceholder: 'Introducir contraseña',
-    passwordError: 'Contraseña incorrecta',
-    continue: 'Continuar',
-    unsafeTitle: 'Enlace potencialmente inseguro',
-    unsafeDesc: 'Este enlace ha sido marcado como potencialmente inseguro. Proceda con precaución.',
-    goBack: 'Volver',
-  },
-  'pt': {
-    passwordTitle: 'Senha necessária',
-    passwordLabel: 'Senha',
-    passwordPlaceholder: 'Digite a senha',
-    passwordError: 'Senha incorreta',
-    continue: 'Continuar',
-    unsafeTitle: 'Link potencialmente inseguro',
-    unsafeDesc: 'Este link foi sinalizado como potencialmente inseguro. Prossiga com cuidado.',
-    goBack: 'Voltar',
-  },
-  'ru': {
-    passwordTitle: 'Требуется пароль',
-    passwordLabel: 'Пароль',
-    passwordPlaceholder: 'Введите пароль',
-    passwordError: 'Неверный пароль',
-    continue: 'Продолжить',
-    unsafeTitle: 'Потенциально небезопасная ссылка',
-    unsafeDesc: 'Эта ссылка была отмечена как потенциально небезопасная. Будьте осторожны.',
-    goBack: 'Назад',
-  },
-} as const
+} as const satisfies Record<RedirectLocale, RedirectTranslation>
 
-export type RedirectLocale = keyof typeof REDIRECT_TRANSLATIONS
+const SUPPORTED_LOCALES = [...REDIRECT_LOCALES]
 
-const SUPPORTED_LOCALES = Object.keys(REDIRECT_TRANSLATIONS) as RedirectLocale[]
+const LOCALE_ALIASES: Record<string, RedirectLocale> = {
+  'de': 'de-DE',
+  'en': 'en-US',
+  'fr': 'fr-FR',
+  'id': 'id-ID',
+  'it': 'it-IT',
+  'pt': 'pt-BR',
+  'vi': 'vi-VN',
+  'zh': 'zh-CN',
+  'zh-Hans': 'zh-CN',
+  'zh-Hant': 'zh-TW',
+  'zh-HK': 'zh-TW',
+  'zh-MO': 'zh-TW',
+}
 
-// Normalize locale codes that may use underscores or inconsistent casing (e.g. zh_cn -> zh-CN)
 function normalizeLocaleCode(code: string): string {
   const normalized = code.replace('_', '-')
   try {
@@ -116,30 +160,39 @@ function normalizeLocaleCode(code: string): string {
   }
 }
 
-export function resolveRedirectLocale(header: string | undefined): RedirectLocale {
+function resolveLocaleCode(code: string | undefined): RedirectLocale | undefined {
+  if (!code)
+    return undefined
+
+  const normalized = normalizeLocaleCode(code)
+  if (!normalized)
+    return undefined
+
+  if (SUPPORTED_LOCALES.includes(normalized as RedirectLocale))
+    return normalized as RedirectLocale
+
+  const alias = LOCALE_ALIASES[normalized]
+  if (alias)
+    return alias
+
+  const prefix = normalized.split('-')[0]
+  return prefix ? LOCALE_ALIASES[prefix] : undefined
+}
+
+export function resolveRedirectLocale(event: H3Event): RedirectLocale {
+  const cookieLocale = resolveLocaleCode(getCookie(event, REDIRECT_LOCALE_COOKIE))
+  if (cookieLocale)
+    return cookieLocale
+
+  const header = getHeader(event, 'accept-language')
   if (!header)
-    return 'en'
+    return DEFAULT_REDIRECT_LOCALE
 
-  const languages = header.split(',')
-    .map((lang) => {
-      const parts = lang.trim().split(';q=')
-      const code = parts[0] || ''
-      const q = parts[1]
-      return { code: normalizeLocaleCode(code), q: q ? Number.parseFloat(q) : 1.0 }
-    })
-    .sort((a, b) => b.q - a.q)
-
-  for (const { code } of languages) {
-    if (!code)
-      continue
-    // Exact match (e.g. zh-CN)
-    if (SUPPORTED_LOCALES.includes(code as RedirectLocale))
-      return code as RedirectLocale
-    // Prefix match (e.g. en-US -> en)
-    const prefix = code.split('-')[0]
-    if (prefix && SUPPORTED_LOCALES.includes(prefix as RedirectLocale))
-      return prefix as RedirectLocale
+  for (const code of parseAcceptLanguage(header)) {
+    const locale = resolveLocaleCode(code)
+    if (locale)
+      return locale
   }
 
-  return 'en'
+  return DEFAULT_REDIRECT_LOCALE
 }

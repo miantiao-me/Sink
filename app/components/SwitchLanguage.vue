@@ -9,7 +9,7 @@ const { setLocale, locales } = useI18n()
     <DropdownMenuTrigger as-child>
       <Button variant="ghost">
         <Languages class="h-5 w-5" />
-        <span class="sr-only">{{ $t('theme.toggle') }}</span>
+        <span class="sr-only">{{ $t('layouts.header.select_language') }}</span>
       </Button>
     </DropdownMenuTrigger>
     <DropdownMenuContent

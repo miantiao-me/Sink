@@ -12,6 +12,7 @@ const heatmapData = shallowRef<HeatmapDataPoint[]>([])
 const isLoaded = ref(false)
 const id = inject(LINK_ID_KEY, computed(() => undefined))
 const analysisStore = useDashboardAnalysisStore()
+const { locale } = useI18n()
 
 const effectiveTimeRange = computed(() => ({
   startAt: analysisStore.dateRange.startAt,
@@ -20,7 +21,7 @@ const effectiveTimeRange = computed(() => ({
 
 const effectiveFilters = computed(() => analysisStore.filters)
 
-const weekdays = getWeekdayNames('short')
+const weekdays = computed(() => getWeekdayNames('short', locale.value))
 // weekday indices: Monday=1, Tuesday=2, ..., Sunday=7 (ISO 8601)
 const weekdayIndices = [1, 2, 3, 4, 5, 6, 7]
 
@@ -153,7 +154,7 @@ onMounted(() => {
                       hover:ring-1 hover:ring-foreground/10
                     "
                     role="gridcell"
-                    :aria-label="`${weekdays[arrayIdx]} ${hour}:00 - ${metric === 'visits' ? $t('dashboard.visits') : $t('dashboard.visitors')}: ${formatNumber(getCellValue(weekdayIdx, hour))}`"
+                    :aria-label="`${weekdays[arrayIdx]} ${hour}:00 - ${metric === 'visits' ? $t('dashboard.visits') : $t('dashboard.visitors')}: ${formatNumber(getCellValue(weekdayIdx, hour), locale)}`"
                     :style="{
                       backgroundColor: getCellColor(weekdayIdx, hour),
                     }"
@@ -165,7 +166,7 @@ onMounted(() => {
                   </p>
                   <p class="text-muted-foreground">
                     {{ metric === 'visits' ? $t('dashboard.visits') : $t('dashboard.visitors') }}:
-                    {{ formatNumber(getCellValue(weekdayIdx, hour)) }}
+                    {{ formatNumber(getCellValue(weekdayIdx, hour), locale) }}
                   </p>
                 </TooltipContent>
               </Tooltip>

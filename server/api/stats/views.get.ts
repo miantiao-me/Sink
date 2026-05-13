@@ -13,7 +13,7 @@ const unitMap: { [x: string]: string } = {
 const ViewsQuerySchema = QuerySchema.extend({
   unit: z.enum(['minute', 'hour', 'day']),
   clientTimezone: z.string()
-    .regex(/^[A-Z_]+(?:\/[A-Z_-]+)*$/i)
+    .regex(/^[\w+-]+(?:\/[\w+-]+)*$/)
     .max(64)
     .default('Etc/UTC'),
 })

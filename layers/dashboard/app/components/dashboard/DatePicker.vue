@@ -3,6 +3,7 @@ import type { DateRange, DateValue } from 'reka-ui'
 import { getLocalTimeZone } from '@internationalized/date'
 
 const analysisStore = useDashboardAnalysisStore()
+const { locale } = useI18n()
 
 const openCustomDateRange = ref(false)
 const customDate = ref<DateValue | undefined>()
@@ -49,7 +50,7 @@ function onPresetChange(value: string | number | bigint | Record<string, any> | 
     <SelectTrigger>
       <SelectValue v-if="analysisStore.datePreset" />
       <div v-else>
-        {{ shortDate(analysisStore.dateRange.startAt) }} - {{ shortDate(analysisStore.dateRange.endAt) }}
+        {{ shortDate(analysisStore.dateRange.startAt, locale) }} - {{ shortDate(analysisStore.dateRange.endAt, locale) }}
       </div>
     </SelectTrigger>
     <SelectContent>

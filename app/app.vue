@@ -3,6 +3,7 @@ import 'vue-sonner/style.css'
 
 const { title, description, image } = useAppConfig()
 const route = useRoute()
+const localeHead = useLocaleHead()
 
 useSeoMeta({
   title: `${title} - Link Shortener with Analytics`,
@@ -18,10 +19,8 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
-useHead({
-  htmlAttrs: {
-    lang: 'en',
-  },
+useHead(() => ({
+  htmlAttrs: localeHead.value.htmlAttrs,
   meta: [
     {
       name: 'viewport',
@@ -43,7 +42,7 @@ useHead({
       href: '/apple-touch-icon.png',
     },
   ],
-})
+}))
 </script>
 
 <template>
