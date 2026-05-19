@@ -54,6 +54,7 @@
     "links": "链接",
     "analysis": "分析",
     "realtime": "实时",
+    "check": "检测",
     "migrate": "导入/导出"
   },
   "sidebar": {
@@ -88,23 +89,23 @@
       },
       "customizable_slug": {
         "title": "自定义短链",
-        "description": "支持个性化短链和大小写敏感"
+        "description": "支持个性化短链、UTM 参数和大小写敏感"
       },
       "ai_slug": {
-        "title": "AI 短链",
-        "description": "利用 AI 生成短链"
+        "title": "AI 助手",
+        "description": "根据页面内容生成短链和 OpenGraph 元数据"
       },
       "link_expiration": {
-        "title": "链接过期",
-        "description": "为您的链接设置过期日期"
+        "title": "链接控制",
+        "description": "设置过期时间、访问密码和不安全链接警告"
       },
       "device_routing": {
-        "title": "设备路由",
-        "description": "iOS/Android 用户自动跳转应用商店"
+        "title": "智能路由",
+        "description": "根据访客设备或国家重定向"
       },
       "og_preview": {
         "title": "社交预览",
-        "description": "自定义社交媒体 OpenGraph 预览"
+        "description": "自定义标题、描述和图片等社交预览"
       },
       "realtime_analytics": {
         "title": "实时分析",
@@ -116,11 +117,11 @@
       },
       "import_export": {
         "title": "导入/导出",
-        "description": "通过 JSON 文件批量迁移"
+        "description": "通过 JSON 批量迁移链接，并通过 CSV 导出访问分析"
       },
       "multi_language": {
         "title": "多语言",
-        "description": "仪表盘完整的国际化支持"
+        "description": "仪表盘和跳转页面完整的国际化支持"
       }
     },
     "cta": {
@@ -229,6 +230,7 @@
       "slug": "短链",
       "comment": "备注",
       "expiration": "过期时间",
+      "expiration_description": "到期后短链接将自动删除。",
       "pick_date": "选择日期",
       "device_redirect": "设备跳转",
       "google_play": "Google Play 链接",
@@ -249,7 +251,14 @@
       "og_description": "描述",
       "og_description_placeholder": "链接描述",
       "og_image": "图片",
-      "advanced": "高级设置",
+      "geo_routing": "地理跳转",
+      "add_geo_route": "添加地理跳转",
+      "country_code": "国家/地区代码 (例如 CN)",
+      "select_country": "选择国家/地区",
+      "search_country": "搜索国家/地区...",
+      "no_country_found": "未找到国家/地区。",
+      "find_country_code": "查找您的国家/地区代码",
+      "advanced": "高级选项",
       "more_options": "更多选项",
       "image_invalid_type": "请上传图片文件",
       "image_size_limit": "图片大小不能超过 5MB",
@@ -269,7 +278,8 @@
       "utm_content": "UTM 内容",
       "utm_apply": "应用",
       "utm_clear": "清空",
-      "utm_invalid_url": "请输入有效 URL 以预览并应用 UTM 参数。"
+      "utm_invalid_url": "请输入有效 URL 以预览并应用 UTM 参数。",
+      "ai_og_generate": "生成 AI OpenGraph"
     },
     "sort": {
       "newest": "最新",
@@ -280,9 +290,89 @@
     },
     "update_failed": "更新链接失败",
     "create_failed": "创建链接失败",
-    "ai_slug_failed": "AI 生成短链失败"
+    "ai_slug_failed": "AI 生成短链失败",
+    "ai_og_failed": "生成 AI OpenGraph 失败",
+    "ai_og_success": "成功生成 AI OpenGraph"
+  },
+  "check": {
+    "title": "链接检测",
+    "description": "检测已有链接的目标 URL 是否可访问。结果仅展示，不会修改链接。",
+    "config": {
+      "timeout": "超时时间（秒）",
+      "timeout_description": "单个链接的超时时间，默认 6 秒。",
+      "batch_size": "批量大小",
+      "batch_size_description": "每次请求检测的链接数量，最大 10。"
+    },
+    "actions": {
+      "start": "开始检测",
+      "checking": "检测中...",
+      "stop": "停止",
+      "reload": "重新加载链接",
+      "loading": "加载中...",
+      "clear": "清空结果",
+      "export": "导出 CSV",
+      "detail": "详情",
+      "original": "原链接"
+    },
+    "stats": {
+      "total": "总数",
+      "checked": "已检测",
+      "normal": "正常",
+      "abnormal": "异常",
+      "network_error": "网络异常"
+    },
+    "progress": {
+      "title": "进度",
+      "description": "已检测 {checked} / {total} 个链接",
+      "stopped": "检测已停止"
+    },
+    "results": {
+      "title": "检测结果",
+      "description": "默认展示异常结果，可通过标签按状态码快速筛选。"
+    },
+    "tabs": {
+      "abnormal": "异常 ({count})",
+      "status": "{status} ({count})",
+      "all": "全部 ({count})"
+    },
+    "table": {
+      "slug": "短链",
+      "url": "目标 URL",
+      "status": "状态码",
+      "result": "结果",
+      "duration": "耗时",
+      "error": "错误",
+      "action": "操作"
+    },
+    "result": {
+      "normal": "正常",
+      "broken": "异常",
+      "network_error": "网络异常"
+    },
+    "empty": {
+      "not_started": "暂无检测结果。",
+      "no_broken_links": "没有发现异常链接。",
+      "no_matching_results": "没有匹配的结果。"
+    },
+    "messages": {
+      "load_failed": "链接加载失败",
+      "completed": "链接检测完成",
+      "stopped": "链接检测已停止"
+    },
+    "duration_ms": "{duration} 毫秒"
   },
   "migrate": {
+    "access_export": {
+      "title": "导出访问数据",
+      "description": "将访问统计数据下载为 CSV 文件",
+      "date_range": "日期范围",
+      "slug_label": "Slug 筛选",
+      "slug_description": "留空将导出全部 Slug。",
+      "button": "导出 CSV",
+      "exporting": "正在导出...",
+      "success": "导出成功",
+      "failed": "导出失败"
+    },
     "backup": {
       "title": "手动备份",
       "description": "手动触发所有链接到已配置 R2 存储桶的备份",

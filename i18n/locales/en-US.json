@@ -54,6 +54,7 @@
     "links": "Links",
     "analysis": "Analysis",
     "realtime": "Realtime",
+    "check": "Check",
     "migrate": "Import/Export"
   },
   "sidebar": {
@@ -88,23 +89,23 @@
       },
       "customizable_slug": {
         "title": "Customizable Slug",
-        "description": "Support for personalized slugs and case sensitivity"
+        "description": "Support personalized slugs, UTM parameters, and case sensitivity"
       },
       "ai_slug": {
-        "title": "AI Slug",
-        "description": "Leverage AI to generate slugs"
+        "title": "AI Assistance",
+        "description": "Generate slugs and OpenGraph metadata from page content"
       },
       "link_expiration": {
-        "title": "Link Expiration",
-        "description": "Set expiration dates for your links"
+        "title": "Link Control",
+        "description": "Set expirations, passwords, and unsafe-link warning pages"
       },
       "device_routing": {
-        "title": "Device Routing",
-        "description": "Redirect iOS/Android users to App Store links"
+        "title": "Smart Routing",
+        "description": "Redirect visitors by device or country"
       },
       "og_preview": {
         "title": "Social Preview",
-        "description": "Custom OpenGraph previews for social media"
+        "description": "Customize social previews with titles, descriptions, and images"
       },
       "realtime_analytics": {
         "title": "Real-time Analytics",
@@ -116,11 +117,11 @@
       },
       "import_export": {
         "title": "Import/Export",
-        "description": "Bulk migration via JSON files"
+        "description": "Bulk link migration via JSON and access analytics via CSV"
       },
       "multi_language": {
         "title": "Multi-language",
-        "description": "Full i18n support for the dashboard"
+        "description": "Full i18n support for dashboard and redirect pages"
       }
     },
     "cta": {
@@ -229,6 +230,7 @@
       "slug": "Slug",
       "comment": "Comment",
       "expiration": "Expiration",
+      "expiration_description": "The short link is automatically deleted after it expires.",
       "pick_date": "Pick a date",
       "device_redirect": "Device Redirect",
       "google_play": "Google Play URL",
@@ -249,6 +251,13 @@
       "og_description": "Description",
       "og_description_placeholder": "Link description",
       "og_image": "Image",
+      "geo_routing": "Geo Redirect",
+      "add_geo_route": "Add Geo Redirect",
+      "country_code": "Country Code (e.g. US)",
+      "select_country": "Select country",
+      "search_country": "Search country...",
+      "no_country_found": "No country found.",
+      "find_country_code": "Find your country code",
       "advanced": "Advanced",
       "more_options": "More Options",
       "image_invalid_type": "Please upload an image file",
@@ -269,7 +278,8 @@
       "utm_content": "UTM Content",
       "utm_apply": "Apply",
       "utm_clear": "Clear",
-      "utm_invalid_url": "Enter a valid URL to preview and apply UTM parameters."
+      "utm_invalid_url": "Enter a valid URL to preview and apply UTM parameters.",
+      "ai_og_generate": "Generate AI OpenGraph"
     },
     "sort": {
       "newest": "Newest First",
@@ -280,9 +290,89 @@
     },
     "update_failed": "Failed to update link",
     "create_failed": "Failed to create link",
-    "ai_slug_failed": "Failed to generate AI slug"
+    "ai_slug_failed": "Failed to generate AI slug",
+    "ai_og_failed": "Failed to generate AI OpenGraph",
+    "ai_og_success": "AI OpenGraph generated successfully"
+  },
+  "check": {
+    "title": "Link Check",
+    "description": "Check whether existing destination URLs are reachable. Results are displayed only and will not modify links.",
+    "config": {
+      "timeout": "Timeout (seconds)",
+      "timeout_description": "Timeout for each link. Default is 6 seconds.",
+      "batch_size": "Batch size",
+      "batch_size_description": "Links checked per request. Maximum is 10."
+    },
+    "actions": {
+      "start": "Start Check",
+      "checking": "Checking...",
+      "stop": "Stop",
+      "reload": "Reload Links",
+      "loading": "Loading...",
+      "clear": "Clear Results",
+      "export": "Export CSV",
+      "detail": "Detail",
+      "original": "Original"
+    },
+    "stats": {
+      "total": "Total",
+      "checked": "Checked",
+      "normal": "Normal",
+      "abnormal": "Abnormal",
+      "network_error": "Network Error"
+    },
+    "progress": {
+      "title": "Progress",
+      "description": "{checked} of {total} links checked",
+      "stopped": "Check stopped"
+    },
+    "results": {
+      "title": "Results",
+      "description": "Abnormal results are shown by default. Use tabs to filter by status code."
+    },
+    "tabs": {
+      "abnormal": "Abnormal ({count})",
+      "status": "{status} ({count})",
+      "all": "All ({count})"
+    },
+    "table": {
+      "slug": "Slug",
+      "url": "URL",
+      "status": "Status",
+      "result": "Result",
+      "duration": "Duration",
+      "error": "Error",
+      "action": "Action"
+    },
+    "result": {
+      "normal": "Normal",
+      "broken": "Broken",
+      "network_error": "Network Error"
+    },
+    "empty": {
+      "not_started": "No results yet.",
+      "no_broken_links": "No broken links found.",
+      "no_matching_results": "No matching results."
+    },
+    "messages": {
+      "load_failed": "Failed to load links",
+      "completed": "Link check completed",
+      "stopped": "Link check stopped"
+    },
+    "duration_ms": "{duration} ms"
   },
   "migrate": {
+    "access_export": {
+      "title": "Export Access Data",
+      "description": "Download access statistics as a CSV file",
+      "date_range": "Date Range",
+      "slug_label": "Slug Filter",
+      "slug_description": "Leave empty to export all slugs.",
+      "button": "Export CSV",
+      "exporting": "Exporting...",
+      "success": "Export successful",
+      "failed": "Export failed"
+    },
     "backup": {
       "title": "Manual Backup",
       "description": "Trigger a manual backup of all links to the configured R2 bucket",

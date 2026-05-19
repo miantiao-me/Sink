@@ -34,6 +34,13 @@ defineRouteMeta({
                     title: { type: 'string', description: 'Custom title for link preview' },
                     description: { type: 'string', description: 'Custom description for link preview' },
                     image: { type: 'string', description: 'Custom image for link preview' },
+                    apple: { type: 'string', description: 'Apple App Store redirect URL' },
+                    google: { type: 'string', description: 'Google Play Store redirect URL' },
+                    cloaking: { type: 'boolean', description: 'Enable link cloaking (mask destination URL)' },
+                    redirectWithQuery: { type: 'boolean', description: 'Append query parameters to destination URL' },
+                    password: { type: 'string', description: 'Password protection for the link' },
+                    unsafe: { type: 'boolean', description: 'Mark link as unsafe, showing a warning page before redirect' },
+                    geo: { type: 'object', additionalProperties: { type: 'string' }, description: 'Geo-routing rules (country code to URL)' },
                   },
                 },
               },
@@ -93,16 +100,15 @@ export default eventHandler(async (event) => {
 
       const now = Math.floor(Date.now() / 1000)
       const link = {
+        ...linkData,
         id: linkData.id || nanoid(10)(),
-        url: linkData.url,
         slug,
-        comment: linkData.comment,
         createdAt: linkData.createdAt || now,
         updatedAt: linkData.updatedAt || now,
-        expiration: linkData.expiration,
-        title: linkData.title,
-        description: linkData.description,
-        image: linkData.image,
+      }
+
+      if (link.password) {
+        link.password = await normalizeLinkPasswordForStorage(link.password)
       }
 
       await putLink(event, link)

@@ -54,6 +54,7 @@
     "links": "Liens",
     "analysis": "Statistiques",
     "realtime": "Realtime",
+    "check": "Check",
     "migrate": "Import/Export"
   },
   "sidebar": {
@@ -88,23 +89,23 @@
       },
       "customizable_slug": {
         "title": "Slug personnalisable",
-        "description": "Prise en charge des slugs personnalisés et de la sensibilité à la casse"
+        "description": "Prise en charge des slugs personnalisés, des paramètres UTM et de la casse"
       },
       "ai_slug": {
-        "title": "Slug IA",
-        "description": "Utilisez l'IA pour créer des slugs"
+        "title": "Assistance IA",
+        "description": "Générez des slugs et métadonnées OpenGraph depuis le contenu des pages"
       },
       "link_expiration": {
-        "title": "Expiration des liens",
-        "description": "Définissez des dates d'expiration pour vos liens"
+        "title": "Contrôle des liens",
+        "description": "Définissez expirations, mots de passe et alertes de liens dangereux"
       },
       "device_routing": {
-        "title": "Routage par appareil",
-        "description": "Redirigez les utilisateurs iOS/Android vers les stores d'apps"
+        "title": "Routage intelligent",
+        "description": "Redirigez les visiteurs selon l'appareil ou le pays"
       },
       "og_preview": {
         "title": "Aperçu social",
-        "description": "Aperçus OpenGraph personnalisés pour les réseaux sociaux"
+        "description": "Personnalisez les aperçus avec titres, descriptions et images"
       },
       "realtime_analytics": {
         "title": "Analyses en temps réel",
@@ -116,11 +117,11 @@
       },
       "import_export": {
         "title": "Import/Export",
-        "description": "Migration en masse via fichiers JSON"
+        "description": "Migration de liens via JSON et export analytics via CSV"
       },
       "multi_language": {
         "title": "Multilingue",
-        "description": "Support i18n complet pour le tableau de bord"
+        "description": "Support i18n complet pour le tableau de bord et les pages de redirection"
       }
     },
     "cta": {
@@ -229,6 +230,7 @@
       "slug": "Slug",
       "comment": "Commentaire",
       "expiration": "Expiration",
+      "expiration_description": "Le lien court est automatiquement supprimé après son expiration.",
       "pick_date": "Choisir une date",
       "device_redirect": "Redirection par appareil",
       "google_play": "URL Google Play",
@@ -249,6 +251,13 @@
       "og_description": "Description",
       "og_description_placeholder": "Description du lien",
       "og_image": "Image",
+      "geo_routing": "Redirection géographique",
+      "add_geo_route": "Ajouter une redirection géographique",
+      "country_code": "Code pays (par ex. FR)",
+      "select_country": "Sélectionner un pays",
+      "search_country": "Rechercher un pays...",
+      "no_country_found": "Aucun pays trouvé.",
+      "find_country_code": "Trouver votre code pays",
       "advanced": "Avancé",
       "more_options": "Plus d'options",
       "image_invalid_type": "Veuillez télécharger un fichier image",
@@ -269,7 +278,8 @@
       "utm_content": "Contenu UTM",
       "utm_apply": "Appliquer",
       "utm_clear": "Effacer",
-      "utm_invalid_url": "Saisissez une URL valide pour prévisualiser et appliquer les paramètres UTM."
+      "utm_invalid_url": "Saisissez une URL valide pour prévisualiser et appliquer les paramètres UTM.",
+      "ai_og_generate": "Générer l'OpenGraph IA"
     },
     "sort": {
       "newest": "Les plus récents",
@@ -280,9 +290,89 @@
     },
     "update_failed": "Échec de la mise à jour du lien",
     "create_failed": "Échec de la création du lien",
-    "ai_slug_failed": "Échec de la génération du slug IA"
+    "ai_slug_failed": "Échec de la génération du slug IA",
+    "ai_og_failed": "Échec de la génération de l'OpenGraph IA",
+    "ai_og_success": "OpenGraph IA généré avec succès"
+  },
+  "check": {
+    "title": "Link Check",
+    "description": "Check whether existing destination URLs are reachable. Results are displayed only and will not modify links.",
+    "config": {
+      "timeout": "Timeout (seconds)",
+      "timeout_description": "Timeout for each link. Default is 6 seconds.",
+      "batch_size": "Batch size",
+      "batch_size_description": "Links checked per request. Maximum is 10."
+    },
+    "actions": {
+      "start": "Start Check",
+      "checking": "Checking...",
+      "stop": "Stop",
+      "reload": "Reload Links",
+      "loading": "Loading...",
+      "clear": "Clear Results",
+      "export": "Export CSV",
+      "detail": "Detail",
+      "original": "Original"
+    },
+    "stats": {
+      "total": "Total",
+      "checked": "Checked",
+      "normal": "Normal",
+      "abnormal": "Abnormal",
+      "network_error": "Network Error"
+    },
+    "progress": {
+      "title": "Progress",
+      "description": "{checked} of {total} links checked",
+      "stopped": "Check stopped"
+    },
+    "results": {
+      "title": "Results",
+      "description": "Abnormal results are shown by default. Use tabs to filter by status code."
+    },
+    "tabs": {
+      "abnormal": "Abnormal ({count})",
+      "status": "{status} ({count})",
+      "all": "All ({count})"
+    },
+    "table": {
+      "slug": "Slug",
+      "url": "URL",
+      "status": "Status",
+      "result": "Result",
+      "duration": "Duration",
+      "error": "Error",
+      "action": "Action"
+    },
+    "result": {
+      "normal": "Normal",
+      "broken": "Broken",
+      "network_error": "Network Error"
+    },
+    "empty": {
+      "not_started": "No results yet.",
+      "no_broken_links": "No broken links found.",
+      "no_matching_results": "No matching results."
+    },
+    "messages": {
+      "load_failed": "Failed to load links",
+      "completed": "Link check completed",
+      "stopped": "Link check stopped"
+    },
+    "duration_ms": "{duration} ms"
   },
   "migrate": {
+    "access_export": {
+      "title": "Export Access Data",
+      "description": "Download access statistics as a CSV file",
+      "date_range": "Date Range",
+      "slug_label": "Slug Filter",
+      "slug_description": "Leave empty to export all slugs.",
+      "button": "Export CSV",
+      "exporting": "Exporting...",
+      "success": "Export successful",
+      "failed": "Export failed"
+    },
     "backup": {
       "title": "Sauvegarde manuelle",
       "description": "Déclenchez une sauvegarde manuelle de tous les liens vers le bucket R2 configuré",

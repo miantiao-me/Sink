@@ -47,7 +47,9 @@ async function handleFile(file: File) {
   }
   catch (error) {
     console.error(error)
-    toast.error(t('links.form.image_upload_failed'))
+    toast.error(t('links.form.image_upload_failed'), {
+      description: error instanceof Error ? error.message : String(error),
+    })
   }
   finally {
     uploading.value = false
@@ -90,11 +92,12 @@ function openFilePicker() {
 
 <template>
   <div class="space-y-2">
-    <div
+    <AspectRatio
       v-if="!imageUrl"
+      :ratio="1200 / 630"
       class="
-        relative flex aspect-[1200/630] cursor-pointer items-center
-        justify-center rounded-md border-2 border-dashed transition-colors
+        relative flex cursor-pointer items-center justify-center rounded-md
+        border-2 border-dashed transition-colors
       "
       :class="[
         !canUpload ? 'cursor-not-allowed opacity-50' : 'cursor-pointer',
@@ -121,13 +124,13 @@ function openFilePicker() {
         class="hidden"
         @change="onFileChange"
       >
-    </div>
+    </AspectRatio>
 
-    <div v-else class="relative aspect-[1200/630]">
+    <AspectRatio v-else :ratio="1200 / 630" class="relative">
       <img
         :src="imageUrl"
         :alt="$t('links.form.image_preview')"
-        class="aspect-[1200/630] w-full rounded-md object-cover"
+        class="h-full w-full rounded-md object-cover"
       >
       <Button
         type="button"
@@ -138,6 +141,6 @@ function openFilePicker() {
       >
         <X class="h-4 w-4" />
       </Button>
-    </div>
+    </AspectRatio>
   </div>
 </template>

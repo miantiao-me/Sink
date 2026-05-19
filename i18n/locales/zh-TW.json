@@ -54,6 +54,7 @@
     "links": "連結",
     "analysis": "分析",
     "realtime": "即時",
+    "check": "檢查",
     "migrate": "匯入/匯出"
   },
   "sidebar": {
@@ -88,23 +89,23 @@
       },
       "customizable_slug": {
         "title": "自定義短連結",
-        "description": "支持自訂連結和大小寫敏感"
+        "description": "支援自訂短連結、UTM 參數和大小寫敏感"
       },
       "ai_slug": {
-        "title": "AI 短連結",
-        "description": "利用 AI 生成短連結"
+        "title": "AI 助手",
+        "description": "根據頁面內容生成短連結和 OpenGraph 元資料"
       },
       "link_expiration": {
-        "title": "短連結過期",
-        "description": "為您的短連結設定過期日期"
+        "title": "連結控制",
+        "description": "設定過期時間、訪問密碼和不安全連結警告"
       },
       "device_routing": {
-        "title": "裝置路由",
-        "description": "iOS/Android 用戶自動跳轉應用商店"
+        "title": "智慧路由",
+        "description": "根據訪客裝置或國家重定向"
       },
       "og_preview": {
         "title": "社交預覽",
-        "description": "自訂社交媒體 OpenGraph 預覽"
+        "description": "自訂標題、描述和圖片等社交預覽"
       },
       "realtime_analytics": {
         "title": "即時分析",
@@ -116,11 +117,11 @@
       },
       "import_export": {
         "title": "匯入/匯出",
-        "description": "透過 JSON 檔案批次遷移"
+        "description": "透過 JSON 批次遷移連結，並透過 CSV 匯出訪問分析"
       },
       "multi_language": {
         "title": "多語言",
-        "description": "儀表板完整的國際化支援"
+        "description": "儀表板和跳轉頁面完整的國際化支援"
       }
     },
     "cta": {
@@ -229,6 +230,7 @@
       "slug": "短連結",
       "comment": "備註",
       "expiration": "過期時間",
+      "expiration_description": "到期後短連結將自動刪除。",
       "pick_date": "選擇日期",
       "device_redirect": "設備跳轉",
       "google_play": "Google Play 連結",
@@ -249,6 +251,13 @@
       "og_description": "描述",
       "og_description_placeholder": "連結描述",
       "og_image": "圖片",
+      "geo_routing": "地理跳轉",
+      "add_geo_route": "新增地理跳轉",
+      "country_code": "國家/地區代碼 (例如 TW)",
+      "select_country": "選擇國家/地區",
+      "search_country": "搜尋國家/地區...",
+      "no_country_found": "找不到國家/地區。",
+      "find_country_code": "尋找您的國家/地區代碼",
       "advanced": "進階設置",
       "more_options": "更多選項",
       "image_invalid_type": "請上傳圖片檔案",
@@ -269,7 +278,8 @@
       "utm_content": "UTM 內容",
       "utm_apply": "套用",
       "utm_clear": "清除",
-      "utm_invalid_url": "請輸入有效的 URL 以預覽並套用 UTM 參數。"
+      "utm_invalid_url": "請輸入有效的 URL 以預覽並套用 UTM 參數。",
+      "ai_og_generate": "生成 AI OpenGraph"
     },
     "sort": {
       "newest": "最新",
@@ -280,9 +290,89 @@
     },
     "update_failed": "更新連結失敗",
     "create_failed": "創建連結失敗",
-    "ai_slug_failed": "AI 生成短連結失敗"
+    "ai_slug_failed": "AI 生成短連結失敗",
+    "ai_og_failed": "生成 AI OpenGraph 失敗",
+    "ai_og_success": "成功生成 AI OpenGraph"
+  },
+  "check": {
+    "title": "連結檢測",
+    "description": "檢測既有連結的目標 URL 是否可存取。結果僅供顯示，不會修改連結。",
+    "config": {
+      "timeout": "逾時時間（秒）",
+      "timeout_description": "單個連結的逾時時間，預設 6 秒。",
+      "batch_size": "批次大小",
+      "batch_size_description": "每次請求檢測的連結數量，最多 10。"
+    },
+    "actions": {
+      "start": "開始檢測",
+      "checking": "檢測中...",
+      "stop": "停止",
+      "reload": "重新載入連結",
+      "loading": "載入中...",
+      "clear": "清空結果",
+      "export": "匯出 CSV",
+      "detail": "詳細資料",
+      "original": "原連結"
+    },
+    "stats": {
+      "total": "總數",
+      "checked": "已檢測",
+      "normal": "正常",
+      "abnormal": "異常",
+      "network_error": "網路異常"
+    },
+    "progress": {
+      "title": "進度",
+      "description": "已檢測 {checked} / {total} 個連結",
+      "stopped": "檢測已停止"
+    },
+    "results": {
+      "title": "檢測結果",
+      "description": "預設顯示異常結果，可透過標籤依狀態碼快速篩選。"
+    },
+    "tabs": {
+      "abnormal": "異常 ({count})",
+      "status": "{status} ({count})",
+      "all": "全部 ({count})"
+    },
+    "table": {
+      "slug": "短連結",
+      "url": "目標 URL",
+      "status": "狀態碼",
+      "result": "結果",
+      "duration": "耗時",
+      "error": "錯誤",
+      "action": "操作"
+    },
+    "result": {
+      "normal": "正常",
+      "broken": "異常",
+      "network_error": "網路異常"
+    },
+    "empty": {
+      "not_started": "暫無檢測結果。",
+      "no_broken_links": "未發現異常連結。",
+      "no_matching_results": "沒有符合的結果。"
+    },
+    "messages": {
+      "load_failed": "連結載入失敗",
+      "completed": "連結檢測完成",
+      "stopped": "連結檢測已停止"
+    },
+    "duration_ms": "{duration} 毫秒"
   },
   "migrate": {
+    "access_export": {
+      "title": "匯出存取資料",
+      "description": "將存取統計資料下載為 CSV 檔案",
+      "date_range": "日期範圍",
+      "slug_label": "Slug 篩選",
+      "slug_description": "留空將匯出全部 Slug。",
+      "button": "匯出 CSV",
+      "exporting": "正在匯出...",
+      "success": "匯出成功",
+      "failed": "匯出失敗"
+    },
     "backup": {
       "title": "手動備份",
       "description": "手動觸發所有連結到已配置 R2 儲存桶的備份",

@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import type { AnyFieldApi, Link, LinkFormData } from '@/types'
+import type { Link, LinkFormData } from '@/types'
 import { LinkSchema, nanoid } from '#shared/schemas/link'
+import { isMaskedLinkPassword } from '#shared/utils/link-password'
 import { useForm } from '@tanstack/vue-form'
 import { Shuffle, Sparkles } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
@@ -24,6 +25,16 @@ const optionalUrlValidator = z.string().trim().url().max(2048).optional().or(z.l
 
 const generateSlug = nanoid()
 
+function getPasswordSubmitValue(password: string): string | undefined {
+  if (isMaskedLinkPassword(password))
+    return undefined
+
+  if (password === '')
+    return props.isEdit ? '' : undefined
+
+  return password
+}
+
 const form = useForm({
   defaultValues: {
     url: props.link.url ?? '',
@@ -41,9 +52,18 @@ const form = useForm({
     redirectWithQuery: props.link.redirectWithQuery ?? false,
     password: props.link.password ?? '',
     unsafe: props.link.unsafe ?? false,
+    geo: props.link.geo ? Object.entries(props.link.geo).map(([country, url]) => ({ country, url })) : [],
   } satisfies LinkFormData,
   onSubmit: async ({ value }) => {
     try {
+      const geoRecord: Record<string, string> = {}
+      value.geo?.forEach((g) => {
+        const country = g.country.trim().toUpperCase()
+        const url = g.url.trim()
+        if (country && url) {
+          geoRecord[country] = url
+        }
+      })
       const linkData = {
         url: value.url,
         slug: value.slug,
@@ -58,8 +78,9 @@ const form = useForm({
         image: value.image || undefined,
         cloaking: value.cloaking,
         redirectWithQuery: value.redirectWithQuery,
-        password: value.password || undefined,
-        unsafe: value.unsafe || undefined,
+        password: getPasswordSubmitValue(value.password),
+        unsafe: props.isEdit ? value.unsafe : value.unsafe || undefined,
+        geo: Object.keys(geoRecord).length > 0 ? geoRecord : undefined,
       }
       const { link: newLink } = await useAPI<{ link: Link }>(
         props.isEdit ? '/api/link/edit' : '/api/link/create',
@@ -80,27 +101,13 @@ const form = useForm({
   },
 })
 
-function makeValidator<T>(schema: z.ZodSchema<T>) {
-  return ({ value }: { value: T }) => {
-    const result = schema.safeParse(value)
-    return result.success ? undefined : result.error.errors[0]?.message
-  }
-}
-
-const validateUrl = makeValidator(urlValidator)
-const validateSlug = makeValidator(slugValidator)
-const validateComment = makeValidator(commentValidator)
-const validateOptionalUrl = makeValidator(optionalUrlValidator)
+const validateUrl = makeZodValidator(urlValidator)
+const validateSlug = makeZodValidator(slugValidator)
+const validateComment = makeZodValidator(commentValidator)
+const validateOptionalUrl = makeZodValidator(optionalUrlValidator)
 
 const utmBuilderOpen = ref(false)
-
-function isInvalid(field: AnyFieldApi) {
-  return field.state.meta.isTouched && !field.state.meta.isValid
-}
-
-function getAriaInvalid(field: AnyFieldApi) {
-  return isInvalid(field) ? 'true' : undefined
-}
+const { isInvalid, getAriaInvalid } = useFieldHelpers()
 
 function formatErrors(errors: unknown[]): string[] {
   return errors
@@ -172,7 +179,7 @@ defineExpose({ randomSlug })
       <form.Field
         v-slot="{ field }"
         name="url"
-        :validators="{ onBlur: validateUrl }"
+        :validators="{ onBlur: validateUrl, onSubmit: validateUrl }"
       >
         <Field :data-invalid="isInvalid(field)">
           <div class="flex items-center justify-between">
@@ -210,7 +217,7 @@ defineExpose({ randomSlug })
       <form.Field
         v-slot="{ field }"
         name="slug"
-        :validators="{ onBlur: validateSlug }"
+        :validators="{ onBlur: validateSlug, onSubmit: validateSlug }"
       >
         <Field :data-invalid="isInvalid(field)">
           <div class="flex items-center justify-between">
@@ -265,25 +272,15 @@ defineExpose({ randomSlug })
       <form.Field
         v-slot="{ field }"
         name="comment"
-        :validators="{ onBlur: validateComment }"
+        :validators="{ onBlur: validateComment, onSubmit: validateComment }"
       >
-        <Field :data-invalid="isInvalid(field)">
-          <FieldLabel :for="field.name">
-            {{ $t('links.form.comment') }}
-          </FieldLabel>
-          <Textarea
-            :id="field.name"
-            :name="field.name"
-            :model-value="field.state.value"
-            :aria-invalid="getAriaInvalid(field)"
-            @blur="field.handleBlur"
-            @input="field.handleChange(($event.target as HTMLTextAreaElement).value)"
-          />
-          <FieldError
-            v-if="isInvalid(field)"
-            :errors="formatErrors(field.state.meta.errors)"
-          />
-        </Field>
+        <DashboardLinksEditorFieldTextarea
+          :field="field"
+          :label="$t('links.form.comment')"
+          :invalid="isInvalid(field)"
+          :aria-invalid="getAriaInvalid(field)"
+          :errors="formatErrors(field.state.meta.errors)"
+        />
       </form.Field>
     </FieldGroup>
 

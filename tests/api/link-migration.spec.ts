@@ -3,7 +3,8 @@ import type { ExportData } from '../../shared/schemas/link'
 import { generateMock } from '@anatine/zod-mock'
 import { describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { fetch, fetchWithAuth, postJson } from '../utils'
+import { LINK_PASSWORD_HASH_PREFIX, LINK_PASSWORD_MASK_PREFIX } from '../../shared/utils/link-password'
+import { expectStoredHashedPassword, fetch, fetchWithAuth, getStoredLink, postJson } from '../utils'
 
 const linkSchema = z.object({
   url: z.string().url(),
@@ -43,6 +44,28 @@ describe.sequential('/api/link/export', () => {
     expect(response.headers.get('Cache-Control')).toBe('no-store')
   })
 
+  it('exports hashed password without exposing plaintext or mask', async () => {
+    const password = 'export-secret123'
+    const payload = {
+      url: 'https://example.com',
+      slug: `000-export-password-${crypto.randomUUID()}`,
+      password,
+    }
+
+    const createResponse = await postJson('/api/link/create', payload)
+    expect(createResponse.status).toBe(201)
+    await expectStoredHashedPassword(payload.slug, password)
+
+    const response = await fetchWithAuth('/api/link/export')
+    expect(response.status).toBe(200)
+
+    const data: ExportData = await response.json()
+    const link = data.links.find(link => link.slug === payload.slug)
+    expect(link?.password?.startsWith(LINK_PASSWORD_HASH_PREFIX), link?.password).toBe(true)
+    expect(link?.password).not.toBe(password)
+    expect(link?.password?.startsWith(LINK_PASSWORD_MASK_PREFIX)).toBe(false)
+  })
+
   it('returns 401 when accessing without auth', async () => {
     const response = await fetch('/api/link/export')
     expect(response.status).toBe(401)
@@ -76,6 +99,62 @@ describe.sequential('/api/link/import', () => {
 
     const data: ImportResult = await response.json()
     expect(data.skipped).toBeGreaterThanOrEqual(0)
+  })
+
+  it('hashes plaintext password during import', async () => {
+    const password = 'import-secret123'
+    const payload = {
+      version: '1.0',
+      links: [{
+        url: 'https://example.com',
+        slug: `import-password-${crypto.randomUUID()}`,
+        password,
+      }],
+    }
+
+    const response = await postJson('/api/link/import', payload)
+    expect(response.status).toBe(200)
+
+    const data: ImportResult = await response.json()
+    expect(data.success).toBe(1)
+    await expectStoredHashedPassword(payload.links[0].slug, password)
+  })
+
+  it('keeps already hashed password during import', async () => {
+    const password = 'reimport-secret123'
+    const sourcePayload = {
+      url: 'https://example.com',
+      slug: `000-reimport-source-${crypto.randomUUID()}`,
+      password,
+    }
+
+    const createResponse = await postJson('/api/link/create', sourcePayload)
+    expect(createResponse.status).toBe(201)
+    await expectStoredHashedPassword(sourcePayload.slug, password)
+
+    const exportResponse = await fetchWithAuth('/api/link/export')
+    expect(exportResponse.status).toBe(200)
+
+    const exportData: ExportData = await exportResponse.json()
+    const exportedLink = exportData.links.find(link => link.slug === sourcePayload.slug)
+    const exportedPassword = exportedLink?.password
+    expect(exportedPassword?.startsWith(LINK_PASSWORD_HASH_PREFIX), exportedPassword).toBe(true)
+    if (!exportedPassword)
+      throw new Error('Missing exported password')
+
+    const importSlug = `reimport-hash-${crypto.randomUUID()}`
+    const importResponse = await postJson('/api/link/import', {
+      version: '1.0',
+      links: [{
+        url: sourcePayload.url,
+        slug: importSlug,
+        password: exportedPassword,
+      }],
+    })
+    expect(importResponse.status).toBe(200)
+
+    const storedLink = await getStoredLink(importSlug)
+    expect(storedLink?.password).toBe(exportedPassword)
   })
 
   it('returns 400 for invalid import data', async () => {

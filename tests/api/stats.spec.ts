@@ -156,3 +156,41 @@ describe('/api/stats/heatmap', () => {
     expect(response.status).toBe(401)
   })
 })
+
+describe('/api/stats/export', () => {
+  it('returns CSV with valid auth', async () => {
+    const response = await fetchWithAuth('/api/stats/export')
+
+    expect(response.status).toBe(200)
+    expect(response.headers.get('content-type')).toContain('text/csv')
+
+    const csv = await response.text()
+    expect(csv.replace(/^\uFEFF/, '').split('\n')[0]).toBe('slug,url,viewer,views,referer')
+  })
+
+  it('supports time filter', async () => {
+    const now = Math.floor(Date.now() / 1000)
+    const response = await fetchWithAuth(`/api/stats/export?startAt=${now - 86400}&endAt=${now}`)
+
+    expect(response.status).toBe(200)
+  })
+
+  it('supports slug filter', async () => {
+    const response = await fetchWithAuth('/api/stats/export?slug=0')
+
+    expect(response.status).toBe(200)
+  })
+
+  it('returns 400 for invalid time range', async () => {
+    const now = Math.floor(Date.now() / 1000)
+    const response = await fetchWithAuth(`/api/stats/export?startAt=${now}&endAt=${now - 86400}`)
+
+    expect(response.status).toBe(400)
+  })
+
+  it('returns 401 when accessing without auth', async () => {
+    const response = await fetch('/api/stats/export')
+
+    expect(response.status).toBe(401)
+  })
+})
