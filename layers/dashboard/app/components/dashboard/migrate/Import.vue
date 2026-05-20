@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { ImportData } from '#shared/schemas/import'
 import { ImportDataSchema } from '#shared/schemas/import'
+import { createExportFilename } from '#shared/utils/export-file'
 import { AlertCircle, CheckCircle, Download, SkipForward, Upload, XCircle } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 
@@ -180,7 +181,7 @@ function downloadItems(
     exportedAt: new Date().toISOString(),
     count: links.length,
     links,
-  }, `sink-import-${filename}-${Date.now()}.json`)
+  }, createExportFilename(`sink-import-${filename}`, 'json'))
 }
 
 function downloadSuccessItems() {

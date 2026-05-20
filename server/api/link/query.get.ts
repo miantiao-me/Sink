@@ -25,10 +25,10 @@ export default eventHandler(async (event) => {
 
   const { link, metadata } = await getLinkWithMetadata(event, slug)
   if (link) {
-    return {
+    return sanitizeLinkPassword({
       ...metadata,
       ...link,
-    }
+    })
   }
 
   throw createError({

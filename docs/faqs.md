@@ -94,3 +94,20 @@ Import and Export are designed to work within Cloudflare Workers' KV operation l
 - **Expired links**: Imported as-is to support migration scenarios.
 - **Duplicate slugs**: Skipped during import (existing links are preserved).
 - **Validation**: All links are validated against the schema before import starts.
+- **Passwords**: Exported password values are masked. Masked passwords are preserved during import and cannot be submitted as new plaintext passwords.
+
+## 12. How do password-protected and unsafe links work?
+
+- **Password protection**: Visitors see a password form before redirecting. Programmatic clients can send the `x-link-password` header when requesting the short link.
+- **Unsafe warning**: Links marked as unsafe show a warning page before redirecting. Programmatic clients can send `x-link-confirm: true` after confirming the destination.
+- **Automatic unsafe detection**: Set `NUXT_SAFE_BROWSING_DOH` to a DoH endpoint to mark suspicious destinations automatically during create or edit.
+
+## 13. How does geo-routing work?
+
+Geo-routing redirects visitors to country-specific URLs based on Cloudflare's `request.cf.country` value. Configure a two-letter country code map such as `{ "US": "https://example.com/us" }` in the link settings or API `geo` field.
+
+Device routing takes precedence when an Apple or Android device-specific URL matches the visitor.
+
+## 14. How can I export analytics data?
+
+Use the dashboard's access export feature or call `GET /api/stats/export` with the same filter parameters used by analytics views, such as `startAt`, `endAt`, `slug`, `country`, `browser`, or `device`. The API returns a CSV file with `slug`, `url`, `viewer`, `views`, and `referer` columns.

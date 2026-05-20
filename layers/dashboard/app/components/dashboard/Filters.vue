@@ -5,9 +5,12 @@ import { Check, ChevronsUpDown } from 'lucide-vue-next'
 import { VList } from 'virtua/vue'
 import { cn } from '@/lib/utils'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   filters?: Record<string, string>
-}>()
+  debounce?: number
+}>(), {
+  debounce: 500,
+})
 
 const emit = defineEmits<{
   change: [key: string, value: string]
@@ -43,9 +46,19 @@ onMounted(() => {
   getLinks()
 })
 
-watchDebounced(selectedLinks, (value) => {
+function emitSelectedLinks(value: string[]) {
   emit('change', 'slug', value.join(','))
-}, { debounce: 500, maxWait: 1000 })
+}
+
+if (props.debounce === 0) {
+  watch(selectedLinks, emitSelectedLinks)
+}
+else {
+  watchDebounced(selectedLinks, emitSelectedLinks, {
+    debounce: props.debounce,
+    maxWait: props.debounce * 2,
+  })
+}
 </script>
 
 <template>
@@ -72,7 +85,7 @@ watchDebounced(selectedLinks, (value) => {
   <FilterTemplate>
     <Command v-model="selectedLinks" multiple>
       <CommandInput :placeholder="selectedLinks.length ? selectedLinks.join(', ') : $t('dashboard.filter_placeholder')" />
-      <CommandEmpty>No link found.</CommandEmpty>
+      <CommandEmpty>{{ $t('links.no_results') }}</CommandEmpty>
       <CommandList :class="{ 'max-h-none': !isDesktop }">
         <CommandGroup>
           <VList

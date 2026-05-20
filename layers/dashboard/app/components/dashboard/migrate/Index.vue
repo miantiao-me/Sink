@@ -11,5 +11,6 @@
     <DashboardMigrateExport />
     <DashboardMigrateImport />
     <DashboardMigrateBackup />
+    <DashboardMigrateAccessExport />
   </div>
 </template>

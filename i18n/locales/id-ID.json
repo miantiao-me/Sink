@@ -1,0 +1,418 @@
+{
+  "common": {
+    "i18n": "Multibahasa",
+    "abbreviations": "Id",
+    "current_language": "Bahasa Indonesia",
+    "try_again": "Coba lagi",
+    "cancel": "Batal",
+    "continue": "Lanjutkan",
+    "close": "Tutup",
+    "save": "Simpan",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "delete_success": "Berhasil dihapus!",
+    "search": "Cari"
+  },
+  "theme": {
+    "toggle": "Ganti tema",
+    "light": "Terang",
+    "dark": "Gelap",
+    "system": "Sistem"
+  },
+  "login": {
+    "title": "Masuk",
+    "description": "Masukkan token situs untuk login",
+    "tips": "Tips",
+    "preview_token": "Token situs untuk mode pratinjau adalah",
+    "submit": "Masuk",
+    "failed": "Login gagal, silakan coba lagi",
+    "token_label": "Token Situs",
+    "token_required": "Token wajib diisi"
+  },
+  "logout": {
+    "title": "Keluar?",
+    "confirm": "Apakah Anda yakin ingin keluar?",
+    "action": "Keluar"
+  },
+  "layouts": {
+    "footer": {
+      "copyright": "Sebuah produk dari HTML.ZONE",
+      "social": {
+        "email": "Email",
+        "telegram": "Telegram",
+        "blog": "Blog",
+        "twitter": "Twitter",
+        "mastodon": "Mastodon",
+        "github": "GitHub"
+      }
+    },
+    "header": {
+      "select_language": "Pilih Bahasa"
+    }
+  },
+  "nav": {
+    "links": "Tautan",
+    "analysis": "Analisis",
+    "realtime": "Real-time",
+    "check": "Check",
+    "migrate": "Impor/Ekspor"
+  },
+  "sidebar": {
+    "subtitle": "Pemendek Tautan",
+    "platform": "Platform",
+    "settings": "Pengaturan",
+    "import": "Impor",
+    "export": "Ekspor",
+    "coffee": "Traktir Kopi",
+    "github": "GitHub",
+    "stars": "Bintang",
+    "update": "Versi baru {version} tersedia (saat ini: {current})"
+  },
+  "home": {
+    "hero": {
+      "github_repo": "Repositori GitHub"
+    },
+    "features": {
+      "title": "Fitur",
+      "subtitle": "Fungsi sederhana dan cukup",
+      "url_shortening": {
+        "title": "Pemendek URL",
+        "description": "Ringkas URL Anda menjadi lebih pendek"
+      },
+      "analytics": {
+        "title": "Analitik",
+        "description": "Pantau analitik tautan dan kumpulkan statistik"
+      },
+      "serverless": {
+        "title": "Serverless",
+        "description": "Deploy tanpa perlu server tradisional"
+      },
+      "customizable_slug": {
+        "title": "Slug Kustom",
+        "description": "Dukung slug personal, parameter UTM, dan sensitivitas huruf"
+      },
+      "ai_slug": {
+        "title": "Bantuan AI",
+        "description": "Buat slug dan metadata OpenGraph dari konten halaman"
+      },
+      "link_expiration": {
+        "title": "Kontrol Tautan",
+        "description": "Atur kedaluwarsa, kata sandi, dan peringatan tautan tidak aman"
+      },
+      "device_routing": {
+        "title": "Routing Cerdas",
+        "description": "Alihkan pengunjung berdasarkan perangkat atau negara"
+      },
+      "og_preview": {
+        "title": "Pratinjau Sosial",
+        "description": "Sesuaikan pratinjau dengan judul, deskripsi, dan gambar"
+      },
+      "realtime_analytics": {
+        "title": "Analitik Real-time",
+        "description": "Globe 3D langsung dan log peristiwa real-time"
+      },
+      "qr_code": {
+        "title": "Kode QR",
+        "description": "Buat kode QR untuk tautan pendek"
+      },
+      "import_export": {
+        "title": "Impor/Ekspor",
+        "description": "Migrasi tautan via JSON dan ekspor analitik via CSV"
+      },
+      "multi_language": {
+        "title": "Multibahasa",
+        "description": "Dukungan penuh i18n untuk dashboard dan halaman pengalihan"
+      }
+    },
+    "cta": {
+      "title": "Deploy Sekarang",
+      "description": "Hanya dengan beberapa klik, Anda bisa langsung deploy tanpa biaya",
+      "button": "Mulai Deploy"
+    },
+    "logos": {
+      "title": "Dibangun dengan teknologi terbaik"
+    },
+    "twitter": {
+      "follow": "Ikuti di X (Twitter)"
+    },
+    "stats": {
+      "title": "Sink dalam Angka",
+      "subtitle": "Dipercaya oleh developer di seluruh dunia",
+      "stars": "Bintang di GitHub",
+      "forks": "Fork"
+    },
+    "testimonials": {
+      "title": "Disukai Pengguna",
+      "subtitle": "Lihat apa kata developer tentang Sink"
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "visits": "Kunjungan",
+    "views": "Tampilan",
+    "visitors": "Pengunjung",
+    "referers": "Referer",
+    "stats": "Statistik {slug}",
+    "trend": "Tren",
+    "weekly_trend": "Tren Mingguan",
+    "custom_date": "Tanggal Kustom",
+    "date": "Tanggal",
+    "date_range": "Rentang Tanggal",
+    "locations": "Lokasi",
+    "details": "Detail",
+    "name": "Nama",
+    "count": "Jumlah",
+    "loading": "Memuat",
+    "no_data": "Tidak ada data",
+    "none": "(Tidak ada)",
+    "filter_placeholder": "Filter tautan...",
+    "date_picker": {
+      "today": "Hari ini",
+      "last_24h": "24 jam terakhir",
+      "this_week": "Minggu ini",
+      "last_7d": "7 hari terakhir",
+      "this_month": "Bulan ini",
+      "last_30d": "30 hari terakhir",
+      "last_90d": "90 hari terakhir",
+      "custom": "Kustom",
+      "custom_title": "Tanggal Kustom",
+      "single_date": "Tanggal",
+      "date_range": "Rentang Tanggal"
+    },
+    "metrics": {
+      "country": "Negara",
+      "region": "Wilayah",
+      "city": "Kota",
+      "referer": "Referer",
+      "slug": "Slug",
+      "language": "Bahasa",
+      "timezone": "Zona Waktu",
+      "device": "Perangkat",
+      "deviceType": "Tipe Perangkat",
+      "os": "OS",
+      "browser": "Browser",
+      "browserType": "Tipe Browser"
+    },
+    "time_picker": {
+      "today": "Hari ini",
+      "last_5m": "5 menit terakhir",
+      "last_10m": "10 menit terakhir",
+      "last_30m": "30 menit terakhir",
+      "last_1h": "1 jam terakhir",
+      "last_6h": "6 jam terakhir",
+      "last_12h": "12 jam terakhir",
+      "last_24h": "24 jam terakhir"
+    }
+  },
+  "links": {
+    "create": "Buat Tautan",
+    "edit": "Edit Tautan",
+    "delete_confirm_title": "Apakah Anda yakin?",
+    "delete_confirm_desc": "Tindakan ini tidak dapat dibatalkan. Tautan akan dihapus permanen.",
+    "delete_success": "Berhasil dihapus!",
+    "delete_failed": "Gagal menghapus!",
+    "update_success": "Tautan berhasil diperbarui",
+    "create_success": "Tautan berhasil dibuat",
+    "preview_mode_tip": "Tautan mode pratinjau berlaku hingga 5 menit.",
+    "search_placeholder": "Cari tautan...",
+    "no_results": "Tidak ditemukan tautan.",
+    "group_title": "Tautan",
+    "copy_success": "Berhasil disalin!",
+    "created_at": "Dibuat pada",
+    "updated_at": "Diperbarui pada",
+    "expires_at": "Kedaluwarsa pada",
+    "no_more": "Tidak ada lagi tautan",
+    "load_failed": "Gagal memuat tautan,",
+    "download_qr_code": "Unduh Kode QR",
+    "change_qr_color": "Ubah warna QR",
+    "form": {
+      "url": "URL",
+      "slug": "Slug",
+      "comment": "Catatan",
+      "expiration": "Kedaluwarsa",
+      "expiration_description": "Tautan pendek otomatis dihapus setelah kedaluwarsa.",
+      "pick_date": "Pilih tanggal",
+      "device_redirect": "Redirect Perangkat",
+      "google_play": "URL Google Play",
+      "app_store": "URL App Store",
+      "link_settings": "Pengaturan Tautan",
+      "redirect_with_query_label": "Redirect dengan Parameter Query",
+      "redirect_with_query_description": "Tambahkan parameter query ke URL tujuan.",
+      "cloaking_label": "Aktifkan Cloaking Tautan",
+      "cloaking_description": "Tampilkan tautan pendek di bilah alamat browser, bukan URL tujuan. Mungkin tidak berfungsi pada situs yang memblokir penyematan iframe.",
+      "unsafe_label": "Tandai Tidak Aman",
+      "unsafe_description": "Tampilkan halaman peringatan sebelum mengalihkan. Pengunjung harus mengonfirmasi untuk melanjutkan.",
+      "password_label": "Proteksi Kata Sandi",
+      "password_description": "Wajibkan kata sandi untuk mengakses tautan pendek ini.",
+      "password_placeholder": "Kosongkan untuk menonaktifkan",
+      "og_settings": "Pengaturan OpenGraph",
+      "og_title": "Judul",
+      "og_title_placeholder": "Kosongkan untuk menggunakan nama host URL",
+      "og_description": "Deskripsi",
+      "og_description_placeholder": "Deskripsi tautan",
+      "og_image": "Gambar",
+      "geo_routing": "Redirect Geo",
+      "add_geo_route": "Tambah Redirect Geo",
+      "country_code": "Kode Negara (mis. ID)",
+      "select_country": "Pilih negara",
+      "search_country": "Cari negara...",
+      "no_country_found": "Negara tidak ditemukan.",
+      "find_country_code": "Cari kode negara Anda",
+      "advanced": "Lanjutan",
+      "more_options": "Opsi Tambahan",
+      "image_invalid_type": "Harap unggah file gambar",
+      "image_size_limit": "Ukuran gambar tidak boleh melebihi 5MB",
+      "image_upload_success": "Gambar berhasil diunggah",
+      "image_upload_failed": "Gagal mengunggah gambar",
+      "image_upload_hint": "Klik atau seret untuk mengunggah gambar",
+      "image_ratio_hint": "Disarankan: 1200×630",
+      "image_preview": "Pratinjau gambar",
+      "slug_required": "Masukkan slug terlebih dahulu",
+      "utm_builder": "Pembuat UTM",
+      "utm_description": "Buat parameter UTM secara lokal dan tambahkan ke URL tujuan.",
+      "utm_preview": "Pratinjau",
+      "utm_source": "Sumber UTM",
+      "utm_medium": "Media UTM",
+      "utm_campaign": "Kampanye UTM",
+      "utm_term": "Istilah UTM",
+      "utm_content": "Konten UTM",
+      "utm_apply": "Terapkan",
+      "utm_clear": "Bersihkan",
+      "utm_invalid_url": "Masukkan URL valid untuk melihat pratinjau dan menerapkan parameter UTM.",
+      "ai_og_generate": "Buat OpenGraph AI"
+    },
+    "sort": {
+      "newest": "Terbaru",
+      "oldest": "Terlama",
+      "az": "Slug A-Z",
+      "za": "Slug Z-A",
+      "tip": "Hanya untuk data yang sudah dimuat"
+    },
+    "update_failed": "Gagal memperbarui tautan",
+    "create_failed": "Gagal membuat tautan",
+    "ai_slug_failed": "Gagal membuat slug AI",
+    "ai_og_failed": "Gagal membuat OpenGraph AI",
+    "ai_og_success": "OpenGraph AI berhasil dibuat"
+  },
+  "check": {
+    "title": "Link Check",
+    "description": "Check whether existing destination URLs are reachable. Results are displayed only and will not modify links.",
+    "config": {
+      "timeout": "Timeout (seconds)",
+      "timeout_description": "Timeout for each link. Default is 6 seconds.",
+      "batch_size": "Batch size",
+      "batch_size_description": "Links checked per request. Maximum is 10."
+    },
+    "actions": {
+      "start": "Start Check",
+      "checking": "Checking...",
+      "stop": "Stop",
+      "reload": "Reload Links",
+      "loading": "Loading...",
+      "clear": "Clear Results",
+      "export": "Export CSV",
+      "detail": "Detail",
+      "original": "Original"
+    },
+    "stats": {
+      "total": "Total",
+      "checked": "Checked",
+      "normal": "Normal",
+      "abnormal": "Abnormal",
+      "network_error": "Network Error"
+    },
+    "progress": {
+      "title": "Progress",
+      "description": "{checked} of {total} links checked",
+      "stopped": "Check stopped"
+    },
+    "results": {
+      "title": "Results",
+      "description": "Abnormal results are shown by default. Use tabs to filter by status code."
+    },
+    "tabs": {
+      "abnormal": "Abnormal ({count})",
+      "status": "{status} ({count})",
+      "all": "All ({count})"
+    },
+    "table": {
+      "slug": "Slug",
+      "url": "URL",
+      "status": "Status",
+      "result": "Result",
+      "duration": "Duration",
+      "error": "Error",
+      "action": "Action"
+    },
+    "result": {
+      "normal": "Normal",
+      "broken": "Broken",
+      "network_error": "Network Error"
+    },
+    "empty": {
+      "not_started": "No results yet.",
+      "no_broken_links": "No broken links found.",
+      "no_matching_results": "No matching results."
+    },
+    "messages": {
+      "load_failed": "Failed to load links",
+      "completed": "Link check completed",
+      "stopped": "Link check stopped"
+    },
+    "duration_ms": "{duration} ms"
+  },
+  "migrate": {
+    "access_export": {
+      "title": "Export Access Data",
+      "description": "Download access statistics as a CSV file",
+      "date_range": "Date Range",
+      "slug_label": "Slug Filter",
+      "slug_description": "Leave empty to export all slugs.",
+      "button": "Export CSV",
+      "exporting": "Exporting...",
+      "success": "Export successful",
+      "failed": "Export failed"
+    },
+    "backup": {
+      "title": "Cadangan Manual",
+      "description": "Picu pencadangan manual semua tautan ke bucket R2 yang dikonfigurasi",
+      "button": "Mulai Pencadangan",
+      "backing_up": "Mencadangkan...",
+      "success": "Pencadangan berhasil",
+      "failed": "Pencadangan gagal"
+    },
+    "export": {
+      "title": "Ekspor Tautan",
+      "description": "Unduh semua tautan Anda sebagai file JSON",
+      "button": "Ekspor Semua",
+      "total_links": "Total tautan",
+      "success": "Ekspor berhasil",
+      "failed": "Ekspor gagal"
+    },
+    "import": {
+      "title": "Impor Tautan",
+      "description": "Unggah file JSON untuk mengimpor tautan",
+      "dropzone": "Jatuhkan file JSON di sini atau klik untuk mengunggah",
+      "links_found": "tautan ditemukan",
+      "button": "Mulai Impor",
+      "importing": "Mengimpor...",
+      "import_more": "Impor Lagi",
+      "download_success": "Unduh Item Berhasil",
+      "download_skipped": "Unduh Item Dilewati",
+      "download_failed": "Unduh Item Gagal",
+      "result": {
+        "title": "Hasil Impor",
+        "success": "Berhasil diimpor",
+        "skipped": "Dilewati (sudah ada)",
+        "failed": "Gagal",
+        "success_message": "{count} tautan berhasil diimpor"
+      },
+      "errors": {
+        "invalid_json": "File JSON tidak valid",
+        "invalid_format": "Format file tidak valid. Gunakan file yang diekspor dari Sink.",
+        "no_links": "Tidak ada tautan yang ditemukan dalam file",
+        "parse_error": "Gagal mengurai file"
+      }
+    }
+  }
+}

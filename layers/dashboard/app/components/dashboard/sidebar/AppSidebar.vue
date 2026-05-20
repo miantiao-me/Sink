@@ -28,6 +28,12 @@ const platformItems = computed<NavItem[]>(() => [
     icon: DASHBOARD_ROUTES.realtime.icon,
     isActive: isActive('realtime'),
   },
+  {
+    title: 'nav.check',
+    url: '/dashboard/check',
+    icon: DASHBOARD_ROUTES.check.icon,
+    isActive: isActive('check'),
+  },
 ])
 
 const settingsItems = computed<NavItem[]>(() => [

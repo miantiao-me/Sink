@@ -6,6 +6,8 @@ defineProps<{
   metrics: MetricItem[]
   type: string
 }>()
+
+const { locale } = useI18n()
 </script>
 
 <template>
@@ -54,7 +56,7 @@ defineProps<{
           <div
             class="text-right"
           >
-            {{ formatNumber(metric.count) }}
+            {{ formatNumber(metric.count, locale) }}
             <span class="text-xs text-gray-500">({{ metric.percent }}%)</span>
           </div>
         </div>
