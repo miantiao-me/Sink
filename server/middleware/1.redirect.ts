@@ -19,6 +19,8 @@ const SOCIAL_BOTS = [
   'whatsapp',
 ]
 
+const APPLE_DEVICE_UA_MARKERS = ['iphone', 'ipad', 'ipod', 'crios']
+
 function isSocialBot(userAgent: string): boolean {
   const ua = userAgent.toLowerCase()
   return SOCIAL_BOTS.some(bot => ua.includes(bot))
@@ -34,7 +36,7 @@ function getDeviceRedirectUrl(userAgent: string, link: Link): string | null {
     return link.google
   }
 
-  if (link.apple && (ua.includes('iphone') || ua.includes('ipad') || ua.includes('ipod'))) {
+  if (link.apple && APPLE_DEVICE_UA_MARKERS.some(marker => ua.includes(marker))) {
     return link.apple
   }
 
@@ -74,7 +76,7 @@ export default eventHandler(async (event) => {
     if (link) {
       let locale: RedirectLocale | undefined
       const getLocale = () => {
-        locale ??= resolveRedirectLocale(getHeader(event, 'accept-language'))
+        locale ??= resolveRedirectLocale(event)
         return locale
       }
       const sendNoStoreHtml = (html: string) => {
@@ -82,6 +84,20 @@ export default eventHandler(async (event) => {
         setHeader(event, 'Cache-Control', 'no-store')
         return html
       }
+      const userAgent = getHeader(event, 'user-agent') || ''
+      const query = getQuery(event)
+      const shouldRedirectWithQuery = link.redirectWithQuery ?? redirectWithQuery
+      const buildTarget = (url: string) => shouldRedirectWithQuery ? withQuery(url, query) : url
+
+      let targetUrl = link.url
+      const country = event.context.cloudflare?.request?.cf?.country
+      if (country && typeof country === 'string' && link.geo?.[country.toUpperCase()]) {
+        targetUrl = link.geo[country.toUpperCase()]!
+      }
+      targetUrl = buildTarget(targetUrl)
+
+      const deviceRedirectUrl = getDeviceRedirectUrl(userAgent, link)
+      const finalTargetUrl = deviceRedirectUrl ?? targetUrl
 
       // Password protection check
       if (link.password) {
@@ -89,19 +105,19 @@ export default eventHandler(async (event) => {
 
         if (event.method === 'POST') {
           const body = await readBody(event)
-          const submittedPassword = body?.password
+          const submittedPassword = typeof body?.password === 'string' ? body.password : ''
 
-          if (submittedPassword !== link.password) {
+          if (!await verifyLinkPassword(submittedPassword, link.password)) {
             return sendNoStoreHtml(generatePasswordHtml(slug, { hasError: true, locale: getLocale() }))
           }
 
           // Password correct - show unsafe warning if needed
           if (link.unsafe && body?.confirm !== 'true') {
-            return sendNoStoreHtml(generateUnsafeWarningHtml(slug, link.url, { password: link.password, locale: getLocale() }))
+            return sendNoStoreHtml(generateUnsafeWarningHtml(slug, finalTargetUrl, { password: submittedPassword, locale: getLocale() }))
           }
         }
         else if (headerPassword) {
-          if (headerPassword !== link.password) {
+          if (!await verifyLinkPassword(headerPassword, link.password)) {
             throw createError({ status: 403, statusText: 'Incorrect password' })
           }
           // Header-password path: check unsafe warning via x-link-confirm header
@@ -119,11 +135,11 @@ export default eventHandler(async (event) => {
         if (event.method === 'POST') {
           const body = await readBody(event)
           if (body?.confirm !== 'true') {
-            return sendNoStoreHtml(generateUnsafeWarningHtml(slug, link.url, { locale: getLocale() }))
+            return sendNoStoreHtml(generateUnsafeWarningHtml(slug, finalTargetUrl, { locale: getLocale() }))
           }
         }
         else {
-          return sendNoStoreHtml(generateUnsafeWarningHtml(slug, link.url, { locale: getLocale() }))
+          return sendNoStoreHtml(generateUnsafeWarningHtml(slug, finalTargetUrl, { locale: getLocale() }))
         }
       }
 
@@ -135,32 +151,26 @@ export default eventHandler(async (event) => {
         console.error('Failed write access log:', error)
       }
 
-      const userAgent = getHeader(event, 'user-agent') || ''
-      const query = getQuery(event)
-      const shouldRedirectWithQuery = link.redirectWithQuery ?? redirectWithQuery
-      const buildTarget = (url: string) => shouldRedirectWithQuery ? withQuery(url, query) : url
-
-      const deviceRedirectUrl = getDeviceRedirectUrl(userAgent, link)
       if (deviceRedirectUrl) {
-        return sendRedirect(event, deviceRedirectUrl, +redirectStatusCode)
+        return sendRedirect(event, finalTargetUrl, +redirectStatusCode)
       }
 
       if (isSocialBot(userAgent) && hasOgConfig(link)) {
         const baseUrl = `${getRequestProtocol(event)}://${getRequestHost(event)}`
-        const html = generateOgHtml(link, buildTarget(link.url), baseUrl)
+        const html = generateOgHtml(link, targetUrl, baseUrl)
         setHeader(event, 'Content-Type', 'text/html; charset=utf-8')
         return html
       }
 
       if (link.cloaking) {
         const baseUrl = `${getRequestProtocol(event)}://${getRequestHost(event)}`
-        const html = generateCloakingHtml(link, buildTarget(link.url), baseUrl)
+        const html = generateCloakingHtml(link, targetUrl, baseUrl)
         setHeader(event, 'Content-Type', 'text/html; charset=utf-8')
         setHeader(event, 'Cache-Control', 'no-store, private')
         return html
       }
 
-      return sendRedirect(event, buildTarget(link.url), +redirectStatusCode)
+      return sendRedirect(event, finalTargetUrl, +redirectStatusCode)
     }
     else {
       if (notFoundRedirect) {

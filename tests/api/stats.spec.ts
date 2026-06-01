@@ -100,6 +100,12 @@ describe('/api/stats/views', () => {
     expect(response.status).toBe(200)
   })
 
+  it('supports offset-style clientTimezone values', async () => {
+    const response = await fetchWithAuth('/api/stats/views?slug=0&unit=day&clientTimezone=Etc/GMT-8')
+
+    expect(response.status).toBe(200)
+  })
+
   it('returns 400 for invalid clientTimezone format', async () => {
     const response = await fetchWithAuth('/api/stats/views?slug=0&unit=day&clientTimezone=invalid<>timezone')
 
@@ -120,6 +126,70 @@ describe('/api/stats/views', () => {
 
   it('returns 401 when accessing without auth', async () => {
     const response = await fetch('/api/stats/views?slug=0&unit=day')
+
+    expect(response.status).toBe(401)
+  })
+})
+
+describe('/api/stats/heatmap', () => {
+  it('supports clientTimezone parameter', async () => {
+    const response = await fetchWithAuth('/api/stats/heatmap?clientTimezone=Asia/Shanghai')
+
+    expect(response.status).toBe(200)
+  })
+
+  it('supports offset-style clientTimezone values', async () => {
+    const response = await fetchWithAuth('/api/stats/heatmap?clientTimezone=Etc/GMT-8')
+
+    expect(response.status).toBe(200)
+  })
+
+  it('returns 400 for invalid clientTimezone format', async () => {
+    const response = await fetchWithAuth('/api/stats/heatmap?clientTimezone=invalid<>timezone')
+
+    expect(response.status).toBe(400)
+  })
+
+  it('returns 401 when accessing without auth', async () => {
+    const response = await fetch('/api/stats/heatmap?clientTimezone=Asia/Shanghai')
+
+    expect(response.status).toBe(401)
+  })
+})
+
+describe('/api/stats/export', () => {
+  it('returns CSV with valid auth', async () => {
+    const response = await fetchWithAuth('/api/stats/export')
+
+    expect(response.status).toBe(200)
+    expect(response.headers.get('content-type')).toContain('text/csv')
+
+    const csv = await response.text()
+    expect(csv.replace(/^\uFEFF/, '').split('\n')[0]).toBe('slug,url,viewer,views,referer')
+  })
+
+  it('supports time filter', async () => {
+    const now = Math.floor(Date.now() / 1000)
+    const response = await fetchWithAuth(`/api/stats/export?startAt=${now - 86400}&endAt=${now}`)
+
+    expect(response.status).toBe(200)
+  })
+
+  it('supports slug filter', async () => {
+    const response = await fetchWithAuth('/api/stats/export?slug=0')
+
+    expect(response.status).toBe(200)
+  })
+
+  it('returns 400 for invalid time range', async () => {
+    const now = Math.floor(Date.now() / 1000)
+    const response = await fetchWithAuth(`/api/stats/export?startAt=${now}&endAt=${now - 86400}`)
+
+    expect(response.status).toBe(400)
+  })
+
+  it('returns 401 when accessing without auth', async () => {
+    const response = await fetch('/api/stats/export')
 
     expect(response.status).toBe(401)
   })

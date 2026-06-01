@@ -50,10 +50,10 @@ interface PasswordHtmlOptions {
 }
 
 export function generatePasswordHtml(slug: string, options: PasswordHtmlOptions = {}): string {
-  const { hasError = false, locale = 'en' } = options
+  const { hasError = false, locale = 'en-US' } = options
   const t = REDIRECT_TRANSLATIONS[locale]
   return `<!DOCTYPE html>
-<html>
+<html lang="${escape(locale)}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -92,10 +92,10 @@ interface UnsafeWarningHtmlOptions {
 }
 
 export function generateUnsafeWarningHtml(slug: string, targetUrl: string, options: UnsafeWarningHtmlOptions = {}): string {
-  const { password, locale = 'en' } = options
+  const { password, locale = 'en-US' } = options
   const t = REDIRECT_TRANSLATIONS[locale]
   return `<!DOCTYPE html>
-<html>
+<html lang="${escape(locale)}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">

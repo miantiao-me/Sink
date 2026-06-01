@@ -1,4 +1,7 @@
-import { SELF } from 'cloudflare:test'
+import type { Link } from '../shared/schemas/link'
+import { env, SELF } from 'cloudflare:test'
+import { expect } from 'vitest'
+import { LINK_PASSWORD_HASH_PREFIX, LINK_PASSWORD_MASK_PREFIX } from '../shared/utils/link-password'
 
 export function fetchWithAuth(path: string, options?: RequestInit): Promise<Response> {
   return SELF.fetch(`http://localhost${path}`, {
@@ -30,6 +33,32 @@ export function putJson(path: string, body: unknown, withAuth = true): Promise<R
     body: JSON.stringify(body),
     headers: { 'Content-Type': 'application/json' },
   })
+}
+
+export async function getStoredLink(slug: string) {
+  return await env.KV.get<Link>(`link:${slug}`, { type: 'json' })
+}
+
+export async function deleteStoredLink(slug: string) {
+  await env.KV.delete(`link:${slug}`)
+}
+
+export async function deleteStoredLinks(slugs: string[]) {
+  await Promise.all(slugs.map(slug => deleteStoredLink(slug)))
+}
+
+export function expectMaskedPassword(password: string | undefined, plainText: string) {
+  expect(password).toBeDefined()
+  expect(password?.startsWith(LINK_PASSWORD_MASK_PREFIX), password).toBe(true)
+  expect(password).toContain(plainText.slice(-3))
+  expect(password).not.toBe(plainText)
+  expect(password?.startsWith(LINK_PASSWORD_HASH_PREFIX)).toBe(false)
+}
+
+export async function expectStoredHashedPassword(slug: string, plainText: string) {
+  const storedLink = await getStoredLink(slug)
+  expect(storedLink?.password?.startsWith(LINK_PASSWORD_HASH_PREFIX), storedLink?.password).toBe(true)
+  expect(storedLink?.password).not.toBe(plainText)
 }
 
 // 1x1 transparent PNG for testing

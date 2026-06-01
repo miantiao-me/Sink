@@ -46,16 +46,26 @@ The Analytics Engine DATASET, it is not recommended to modify unless you need to
 
 ## `NUXT_AI_MODEL`
 
-You can modify the large model yourself. The supported names can be viewed at [Workers AI Models](https://developers.cloudflare.com/workers-ai/models/#text-generation).
+You can modify the large model used for AI slug and OpenGraph metadata generation. The supported names can be viewed at [Workers AI Models](https://developers.cloudflare.com/workers-ai/models/#text-generation).
 
 ## `NUXT_AI_PROMPT`
 
-Supports custom prompts, it is recommended to keep the placeholder {slugRegex}.
+Supports custom prompts for AI slug generation. It is recommended to keep the placeholder `{slugRegex}`. Sink sends the URL and, when available, extracted page content to the model.
 
 Default prompt:
 
 ```txt
-You are a URL shortening assistant, please shorten the URL provided by the user into a SLUG. The SLUG information must come from the URL itself, do not make any assumptions. A SLUG is human-readable and should not exceed three words and can be validated using regular expressions {slugRegex} . Only the best one is returned, the format must be JSON reference {"slug": "example-slug"}
+You are a URL shortening assistant, please shorten the URL provided by the user into a SLUG. The SLUG information should be derived from the URL and page content (if provided). Do not make any assumptions beyond the given information. A SLUG is human-readable and should not exceed three words and can be validated using regular expressions {slugRegex} . Only the best one is returned, the format must be JSON reference {"slug": "example-slug"}
+```
+
+## `NUXT_AI_OG_PROMPT`
+
+Supports custom prompts for AI OpenGraph title and description generation. Sink appends the preferred locale to the prompt so the generated metadata matches the visitor or dashboard language.
+
+Default prompt:
+
+```txt
+You are an OpenGraph metadata assistant. Please summarize the page content provided by the user into a perfect title and description for an OpenGraph preview. Do not make any assumptions beyond the given information. Only the best one is returned, the format must be JSON reference {"title": "Example Title", "description": "Example description that summarizes the page accurately."}
 ```
 
 ## `NUXT_CASE_SENSITIVE`

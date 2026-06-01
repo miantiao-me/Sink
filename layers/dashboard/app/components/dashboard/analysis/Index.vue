@@ -19,7 +19,7 @@ onBeforeMount(() => {
 
 <template>
   <h3 v-if="link" class="text-xl leading-10 font-bold">
-    {{ link.slug }} {{ $t('dashboard.stats') }}
+    {{ $t('dashboard.stats', { slug: link.slug }) }}
   </h3>
   <DashboardAnalysisCounters />
   <Tabs v-model="viewMode" default-value="trend">
