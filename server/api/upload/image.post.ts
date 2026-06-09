@@ -25,8 +25,7 @@ defineRouteMeta({
 })
 
 export default eventHandler(async (event) => {
-  const { cloudflare } = event.context
-  const { R2 } = cloudflare.env
+  const R2 = requireR2Bucket(event.context.cloudflare.env)
 
   const formData = await readFormData(event)
   const file = formData.get('file') as File | null

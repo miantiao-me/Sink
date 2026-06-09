@@ -1,27 +1,8 @@
 import { defineStore, useI18n } from '#imports'
-import { getLocalTimeZone, now, startOfMonth, startOfWeek } from '@internationalized/date'
 import { useUrlSearchParams } from '@vueuse/core'
 import { safeDestr } from 'destr'
 import { ref, watch } from 'vue'
-import { date2unix, getLocale } from '@/utils/time'
-
-function computeDateRange(name: string, locale: string): [number, number] {
-  const tz = getLocalTimeZone()
-  const currentTime = now(tz)
-
-  const presets: Record<string, () => [number, number]> = {
-    'today': () => [date2unix(currentTime, 'start'), date2unix(currentTime)],
-    'last-24h': () => [date2unix(currentTime.subtract({ hours: 24 })), date2unix(currentTime)],
-    'this-week': () => [date2unix(startOfWeek(currentTime, locale || getLocale()), 'start'), date2unix(currentTime)],
-    'last-7d': () => [date2unix(currentTime.subtract({ days: 7 })), date2unix(currentTime)],
-    'this-month': () => [date2unix(startOfMonth(currentTime), 'start'), date2unix(currentTime)],
-    'last-30d': () => [date2unix(currentTime.subtract({ days: 30 })), date2unix(currentTime)],
-    'last-90d': () => [date2unix(currentTime.subtract({ days: 90 })), date2unix(currentTime)],
-  }
-
-  const getRange = presets[name]
-  return getRange ? getRange() : presets['last-7d']!()
-}
+import { computeDateRange } from '@/utils/time'
 
 export const useDashboardAnalysisStore = defineStore('dashboard-analysis', () => {
   const { locale } = useI18n()

@@ -32,5 +32,8 @@ export default eventHandler(async (event) => {
   const { limit, cursor } = await getValidatedQuery(event, ListQuerySchema.parse)
 
   const list = await listLinks(event, { limit, cursor })
-  return list
+  return {
+    ...list,
+    links: sanitizeLinksPassword(list.links),
+  }
 })

@@ -9,6 +9,7 @@ const props = withDefaults(defineProps<{
 
 const { t } = useI18n()
 const linksStore = useDashboardLinksStore()
+const linksSearchStore = useDashboardLinksSearchStore()
 const dialogOpen = ref(false)
 const isEdit = !!props.link.id
 
@@ -24,6 +25,7 @@ watch(dialogOpen, (open) => {
 
 function handleSuccess(link: Link) {
   dialogOpen.value = false
+  linksSearchStore.syncLink(link, isEdit ? 'edit' : 'create')
   linksStore.notifyLinkUpdate(link, isEdit ? 'edit' : 'create')
 }
 

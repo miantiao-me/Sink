@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Link } from '@/types'
+import { createExportFilename } from '#shared/utils/export-file'
 import { Download, Loader } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 
@@ -48,7 +49,7 @@ async function handleExport() {
       links: allLinks,
     }
 
-    saveAsJson(exportData, `sink-links-${Date.now()}.json`)
+    saveAsJson(exportData, createExportFilename('sink-links', 'json'))
 
     toast.success(t('migrate.export.success'))
   }
