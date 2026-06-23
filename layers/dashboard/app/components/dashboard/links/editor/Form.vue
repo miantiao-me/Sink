@@ -3,7 +3,7 @@ import type { Link, LinkFormData } from '@/types'
 import { LinkSchema, nanoid } from '#shared/schemas/link'
 import { isMaskedLinkPassword } from '#shared/utils/link-password'
 import { useForm } from '@tanstack/vue-form'
-import { Shuffle, Sparkles } from 'lucide-vue-next'
+import { ExternalLink, Shuffle, Sparkles } from 'lucide-vue-next'
 import { toast } from 'vue-sonner'
 import { z } from 'zod'
 
@@ -17,6 +17,8 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+const linksSearchStore = useDashboardLinksSearchStore()
+const requestUrl = useRequestURL()
 
 const urlValidator = LinkSchema.shape.url
 const slugValidator = LinkSchema.shape.slug
@@ -151,8 +153,14 @@ async function aiSlug() {
 
 const currentSlug = form.useStore(state => state.values.slug || '')
 const currentUrl = form.useStore(state => state.values.url || '')
+const duplicateLink = computed(() => linksSearchStore.findDuplicateLink(currentUrl.value, props.link.slug))
+const shortDuplicateLink = computed(() => duplicateLink.value ? `${requestUrl.origin}/${duplicateLink.value.slug}` : '')
 
 const { previewMode } = useRuntimeConfig().public
+
+onMounted(() => {
+  linksSearchStore.loadLinks()
+})
 
 async function applyUtmUrl(url: string) {
   form.setFieldValue('url', url)
@@ -207,6 +215,24 @@ defineExpose({ randomSlug })
             @blur="field.handleBlur"
             @input="field.handleChange(($event.target as HTMLInputElement).value)"
           />
+          <FieldDescription
+            v-if="!isInvalid(field) && duplicateLink"
+            class="flex items-center gap-2"
+          >
+            <span>{{ $t('links.form.duplicate_url_hint', { shortLink: shortDuplicateLink }) }}</span>
+            <NuxtLink
+              :to="{ path: '/dashboard/link', query: { slug: duplicateLink.slug } }"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open duplicate link details in new tab"
+              class="
+                inline-flex shrink-0 items-center text-primary/80 no-underline
+                hover:text-primary
+              "
+            >
+              <ExternalLink class="h-4 w-4" />
+            </NuxtLink>
+          </FieldDescription>
           <FieldError
             v-if="isInvalid(field)"
             :errors="formatErrors(field.state.meta.errors)"

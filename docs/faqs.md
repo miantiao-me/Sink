@@ -53,7 +53,9 @@ Set `NUXT_DISABLE_BOT_ACCESS_LOG` to `true`.
 
 ## 9. What is Link Cloaking?
 
-Link cloaking masks your destination URL by showing your short link domain in the browser address bar instead of redirecting to the target URL. The destination page loads inside a full-screen iframe.
+Link cloaking keeps your short link in the browser address bar instead of redirecting the top-level page to the target URL. The destination page loads inside a full-screen iframe.
+
+It is a simple iframe-based feature. It does not hide the destination URL from page source, browser developer tools, network logs, or users who inspect the page.
 
 ### How to enable it
 
@@ -63,7 +65,8 @@ Toggle **Enable Link Cloaking** in the **Link Settings** section when creating o
 
 - **Sites that block iframes**: Websites with `X-Frame-Options: DENY` or `Content-Security-Policy: frame-ancestors 'none'` will not load inside the iframe. Most major sites (Google, GitHub, Twitter, etc.) block iframe embedding.
 - **HTTPS required**: The destination URL must use HTTPS. Mixed content (HTTPS short link → HTTP destination) will be blocked by browsers.
-- **Limited interaction**: Some features like OAuth login flows, `window.top` navigation, and certain payment forms may not work correctly inside the iframe.
+- **Limited interaction**: Some features like OAuth login flows and certain payment forms may not work correctly inside the iframe. Sink allows user-activated top-level navigation to improve checkout and external redirect compatibility, but it cannot make every embedded site work.
+- **No target URL hiding**: Sink does not proxy cloaked links or rewrite destination pages. This keeps cloaking simple and predictable, but the target URL can still be inspected by visitors.
 - **Device redirects take priority**: If both cloaking and device redirects (iOS/Android) are configured, device redirects will take precedence on matching devices.
 
 ### If the destination site blocks iframes

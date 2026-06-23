@@ -6,6 +6,12 @@ export type { Link }
 
 export type LinkUpdateType = 'create' | 'edit' | 'delete'
 
+export interface LinkSearchItem {
+  slug: string
+  url: string
+  comment?: string
+}
+
 // Form data derived from Link, with DateValue for expiration and required strings for optional fields
 type LinkFormFields = Omit<Link, 'id' | 'createdAt' | 'updatedAt' | 'expiration' | 'geo'> & {
   expiration: DateValue | undefined

@@ -99,6 +99,29 @@ describe('/', () => {
     expect(html).toContain(cnUrl)
   })
 
+  it('adds viewport meta to cloaked links for mobile browsers (fixes #301)', async () => {
+    const slug = `cloaking-viewport-${crypto.randomUUID()}`
+    const targetUrl = 'https://example.com/mobile-target'
+
+    const createResponse = await postJson('/api/link/create', {
+      url: targetUrl,
+      slug,
+      cloaking: true,
+    })
+    expect(createResponse.status).toBe(201)
+    createdSlugs.push(slug)
+
+    const response = await fetch(`/${slug}`, { redirect: 'manual' })
+    const html = await response.text()
+
+    expect(response.status).toBe(200)
+    expect(html).toContain('<meta name="viewport" content="width=device-width,initial-scale=1">')
+    expect(html).toContain(`<iframe src="${targetUrl}"`)
+    expect(html).toContain('allow-top-navigation-by-user-activation')
+    expect(html).toContain('allow-downloads')
+    expect(html).toContain('allow-modals')
+  })
+
   it('prefers device redirect over geo redirect', async () => {
     const slug = `device-over-geo-${crypto.randomUUID()}`
     const apple = 'https://apps.apple.com/app/sink-test-priority'

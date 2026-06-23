@@ -279,7 +279,8 @@
       "utm_apply": "Apply",
       "utm_clear": "Clear",
       "utm_invalid_url": "Enter a valid URL to preview and apply UTM parameters.",
-      "ai_og_generate": "Generate AI OpenGraph"
+      "ai_og_generate": "Generate AI OpenGraph",
+      "duplicate_url_hint": "This URL already exists as {shortLink}"
     },
     "sort": {
       "newest": "Newest First",

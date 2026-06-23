@@ -279,7 +279,8 @@
       "utm_apply": "应用",
       "utm_clear": "清空",
       "utm_invalid_url": "请输入有效 URL 以预览并应用 UTM 参数。",
-      "ai_og_generate": "生成 AI OpenGraph"
+      "ai_og_generate": "生成 AI OpenGraph",
+      "duplicate_url_hint": "该 URL 已存在为 {shortLink}"
     },
     "sort": {
       "newest": "最新",
