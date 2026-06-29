@@ -52,12 +52,10 @@ onMounted(() => {
 })
 
 const displayedLinks = computed(() => {
+  if (linksStore.sortBy === 'newest' || linksStore.sortBy === 'oldest')
+    return links.value
   const sorted = [...links.value]
   switch (linksStore.sortBy) {
-    case 'newest':
-      return sorted.sort((a, b) => b.createdAt - a.createdAt)
-    case 'oldest':
-      return sorted.sort((a, b) => a.createdAt - b.createdAt)
     case 'az':
       return sorted.sort((a, b) => a.slug.localeCompare(b.slug))
     case 'za':
@@ -67,12 +65,22 @@ const displayedLinks = computed(() => {
   }
 })
 
+function sortParam() {
+  switch (linksStore.sortBy) {
+    case 'newest': return 'createdAt_desc'
+    case 'oldest': return 'createdAt_asc'
+    case 'za': return 'slug_desc'
+    default: return 'slug_asc'
+  }
+}
+
 async function getLinks() {
   try {
     const data = await useAPI<LinkListResponse>('/api/link/list', {
       query: {
         limit,
         cursor,
+        sort: sortParam(),
       },
     })
     const newLinks = data.links.filter(Boolean)
@@ -89,6 +97,14 @@ async function getLinks() {
     listError.value = true
   }
 }
+
+watch(() => linksStore.sortBy, () => {
+  links.value = []
+  cursor = ''
+  listComplete.value = false
+  listError.value = false
+  getLinks()
+})
 
 const { isLoading } = useInfiniteScroll(
   scrollContainer as unknown as Ref<HTMLElement | null>,

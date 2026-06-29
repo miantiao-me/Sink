@@ -63,10 +63,68 @@ interface ListLinksOptions {
   cursor?: string
 }
 
-interface ListLinksResult {
+export interface ListLinksResult {
   links: (Link | null)[]
   list_complete: boolean
   cursor?: string
+}
+
+export async function listLinksSorted(event: H3Event, options: ListLinksOptions & { direction: 'newest' | 'oldest' }): Promise<ListLinksResult> {
+  const { cloudflare } = event.context
+  const { KV } = cloudflare.env
+
+  let cursorCreatedAt = 0
+  let cursorSlug = ''
+  if (options.cursor) {
+    const sep = options.cursor.indexOf('::')
+    if (sep !== -1) {
+      cursorCreatedAt = Number(options.cursor.slice(0, sep))
+      cursorSlug = options.cursor.slice(sep + 2)
+    }
+  }
+
+  const allKeys: string[] = []
+  let kvCursor: string | undefined
+  let listComplete = false
+  while (!listComplete) {
+    const result = await KV.list({ prefix: 'link:', limit: 1000, cursor: kvCursor })
+    allKeys.push(...result.keys.map(k => k.name))
+    listComplete = result.list_complete
+    if (!listComplete && 'cursor' in result)
+      kvCursor = result.cursor
+  }
+
+  const allLinks: Link[] = (
+    await Promise.all(allKeys.map(key => KV.get(key, { type: 'json' }) as Promise<Link | null>))
+  ).filter((l): l is Link => l !== null)
+
+  if (options.direction === 'newest') {
+    allLinks.sort((a, b) => b.createdAt - a.createdAt || a.slug.localeCompare(b.slug))
+  }
+  else {
+    allLinks.sort((a, b) => a.createdAt - b.createdAt || a.slug.localeCompare(b.slug))
+  }
+
+  let startIndex = 0
+  if (options.cursor) {
+    startIndex = allLinks.findIndex(l =>
+      options.direction === 'newest'
+        ? l.createdAt < cursorCreatedAt || (l.createdAt === cursorCreatedAt && l.slug > cursorSlug)
+        : l.createdAt > cursorCreatedAt || (l.createdAt === cursorCreatedAt && l.slug > cursorSlug),
+    )
+    if (startIndex === -1)
+      return { links: [], list_complete: true }
+  }
+
+  const page = allLinks.slice(startIndex, startIndex + options.limit)
+  const lastItem = page[page.length - 1]
+  const nextCursor = lastItem ? `${lastItem.createdAt}::${lastItem.slug}` : ''
+
+  return {
+    links: page,
+    list_complete: startIndex + options.limit >= allLinks.length,
+    cursor: nextCursor,
+  }
 }
 
 export async function listLinks(event: H3Event, options: ListLinksOptions): Promise<ListLinksResult> {
