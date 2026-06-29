@@ -69,19 +69,12 @@ export interface ListLinksResult {
   cursor?: string
 }
 
-export async function listLinksSorted(event: H3Event, options: ListLinksOptions & { direction: 'newest' | 'oldest' }): Promise<ListLinksResult> {
+export async function listLinksSorted(
+  event: H3Event,
+  options: ListLinksOptions & { sort: 'createdAt_desc' | 'createdAt_asc' | 'slug_desc' },
+): Promise<ListLinksResult> {
   const { cloudflare } = event.context
   const { KV } = cloudflare.env
-
-  let cursorCreatedAt = 0
-  let cursorSlug = ''
-  if (options.cursor) {
-    const sep = options.cursor.indexOf('::')
-    if (sep !== -1) {
-      cursorCreatedAt = Number(options.cursor.slice(0, sep))
-      cursorSlug = options.cursor.slice(sep + 2)
-    }
-  }
 
   const allKeys: string[] = []
   let kvCursor: string | undefined
@@ -98,27 +91,63 @@ export async function listLinksSorted(event: H3Event, options: ListLinksOptions 
     await Promise.all(allKeys.map(key => KV.get(key, { type: 'json' }) as Promise<Link | null>))
   ).filter((l): l is Link => l !== null)
 
-  if (options.direction === 'newest') {
+  if (options.sort === 'createdAt_desc') {
     allLinks.sort((a, b) => b.createdAt - a.createdAt || a.slug.localeCompare(b.slug))
   }
-  else {
+  else if (options.sort === 'createdAt_asc') {
     allLinks.sort((a, b) => a.createdAt - b.createdAt || a.slug.localeCompare(b.slug))
+  }
+  else if (options.sort === 'slug_desc') {
+    allLinks.sort((a, b) => b.slug.localeCompare(a.slug))
   }
 
   let startIndex = 0
   if (options.cursor) {
-    startIndex = allLinks.findIndex(l =>
-      options.direction === 'newest'
-        ? l.createdAt < cursorCreatedAt || (l.createdAt === cursorCreatedAt && l.slug > cursorSlug)
-        : l.createdAt > cursorCreatedAt || (l.createdAt === cursorCreatedAt && l.slug > cursorSlug),
-    )
+    if (options.sort === 'createdAt_desc') {
+      let cursorCreatedAt = 0
+      let cursorSlug = ''
+      const sep = options.cursor.indexOf('::')
+      if (sep !== -1) {
+        cursorCreatedAt = Number(options.cursor.slice(0, sep))
+        cursorSlug = options.cursor.slice(sep + 2)
+      }
+      startIndex = allLinks.findIndex(l =>
+        l.createdAt < cursorCreatedAt || (l.createdAt === cursorCreatedAt && l.slug > cursorSlug),
+      )
+    }
+    else if (options.sort === 'createdAt_asc') {
+      let cursorCreatedAt = 0
+      let cursorSlug = ''
+      const sep = options.cursor.indexOf('::')
+      if (sep !== -1) {
+        cursorCreatedAt = Number(options.cursor.slice(0, sep))
+        cursorSlug = options.cursor.slice(sep + 2)
+      }
+      startIndex = allLinks.findIndex(l =>
+        l.createdAt > cursorCreatedAt || (l.createdAt === cursorCreatedAt && l.slug > cursorSlug),
+      )
+    }
+    else if (options.sort === 'slug_desc') {
+      const cursorSlug = options.cursor
+      startIndex = allLinks.findIndex(l => l.slug < cursorSlug)
+    }
+
     if (startIndex === -1)
       return { links: [], list_complete: true }
   }
 
   const page = allLinks.slice(startIndex, startIndex + options.limit)
   const lastItem = page[page.length - 1]
-  const nextCursor = lastItem ? `${lastItem.createdAt}::${lastItem.slug}` : ''
+
+  let nextCursor = ''
+  if (lastItem) {
+    if (options.sort === 'slug_desc') {
+      nextCursor = lastItem.slug
+    }
+    else {
+      nextCursor = `${lastItem.createdAt}::${lastItem.slug}`
+    }
+  }
 
   return {
     links: page,

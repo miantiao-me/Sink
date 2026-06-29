@@ -41,15 +41,15 @@ export default eventHandler(async (event) => {
   const { limit, cursor, sort } = await getValidatedQuery(event, ListQuerySchema.parse)
 
   let list: ListLinksResult
-  if (sort === 'createdAt_desc' || sort === 'createdAt_asc') {
+  if (sort === 'slug_asc') {
+    list = await listLinks(event, { limit, cursor })
+  }
+  else {
     list = await listLinksSorted(event, {
       limit,
       cursor,
-      direction: sort === 'createdAt_desc' ? 'newest' : 'oldest',
+      sort,
     })
-  }
-  else {
-    list = await listLinks(event, { limit, cursor })
   }
 
   return {
