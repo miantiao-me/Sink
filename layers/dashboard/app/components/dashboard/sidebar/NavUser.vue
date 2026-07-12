@@ -9,6 +9,8 @@ interface User {
 }
 
 const { isMobile } = useSidebar()
+const { getToken, removeToken } = useAuthToken()
+const { authMethod, accessEnabled, clearAuthSession } = useAuthSession()
 
 const hostname = computed<string>(() => {
   if (import.meta.client) {
@@ -24,7 +26,16 @@ const user = computed<User>(() => ({
 }))
 
 function logOut() {
-  localStorage.removeItem('SinkSiteToken')
+  const method = authMethod.value || (getToken() ? 'site-token' : 'cloudflare-access')
+  const shouldLogoutAccess = accessEnabled.value || method === 'cloudflare-access'
+  removeToken()
+  clearAuthSession()
+
+  if (shouldLogoutAccess) {
+    window.location.assign('/cdn-cgi/access/logout')
+    return
+  }
+
   navigateTo('/dashboard/login')
 }
 </script>

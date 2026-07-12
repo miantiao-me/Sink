@@ -14,7 +14,13 @@
    - `NUXT_SITE_TOKEN`: Must be at least **8** characters long. This token grants access to your dashboard.
    - `NUXT_CF_ACCOUNT_ID`: Find your [account ID](https://developers.cloudflare.com/fundamentals/setup/find-account-and-zone-ids/).
    - `NUXT_CF_API_TOKEN`: Create a [Cloudflare API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) with at least `Account.Account Analytics` permission. [See reference.](https://developers.cloudflare.com/analytics/analytics-engine/sql-api/#authentication)
+   - (_Optional_) `NUXT_WEBHOOK_URL`: The HTTPS endpoint that enables and receives click webhooks.
+   - (_Optional_) `NUXT_WEBHOOK_SECRET`: A `whsec_`-prefixed Base64 secret. Generate one with `printf 'whsec_%s\n' "$(openssl rand -base64 32)"` and store it as a secret in the dashboard, not in `wrangler.jsonc`. If omitted, delivery is unauthenticated and unsigned, which is not recommended over untrusted networks.
 
 9. Enable Analytics Engine. In **Workers & Pages**, go to **Account details** in the right panel, locate **Analytics Engine**, and click **Set up** to enable the free tier. Name them `sink` and `ANALYTICS`, or else overwrite it with `NUXT_DATASET` and update your `wrangler.jsonc` accordingly
 10. Redeploy the project.
 11. To update your code, refer to the official GitHub documentation: [Syncing a fork branch from the web UI](https://docs.github.com/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork#syncing-a-fork-branch-from-the-web-ui 'GitHub: Syncing a fork').
+
+To optionally protect the dashboard with Cloudflare Zero Trust while keeping short links public, refer to [Cloudflare Access Authentication](../cloudflare-access.md).
+
+Click webhook delivery is best effort and has no retries. See [Click Webhooks](../configuration.md#click-webhooks) for payload, signature, and privacy details.

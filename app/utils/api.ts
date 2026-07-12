@@ -1,5 +1,4 @@
 import type { NitroFetchOptions, NitroFetchRequest } from 'nitropack'
-import { navigateTo } from '#imports'
 import { defu } from 'defu'
 import { useAuthToken } from '@/composables/useAuthToken'
 
@@ -12,14 +11,16 @@ export function useAPI<T = unknown>(api: string, options?: APIOptions): Promise<
 
   const mergedOptions = defu(options || {}, {
     headers: {
-      Authorization: `Bearer ${getToken() || ''}`,
+      'Authorization': `Bearer ${getToken() || ''}`,
+      'X-Requested-With': 'XMLHttpRequest',
     },
   }) as NitroFetchOptions<NitroFetchRequest>
 
   return $fetch<T>(api, mergedOptions).catch((error) => {
     if (error?.status === 401) {
       removeToken()
-      navigateTo('/dashboard/login')
+      if (import.meta.client && window.location.pathname !== '/dashboard/login')
+        window.location.assign('/dashboard/login')
     }
     return Promise.reject(error)
   }) as Promise<T>

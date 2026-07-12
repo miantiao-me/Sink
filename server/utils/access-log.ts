@@ -55,6 +55,21 @@ export type LogsMap = {
   [key in DoublesMap[DoublesKey]]?: number | undefined
 }
 
+export interface WebhookClickContext {
+  country: string
+  region: string
+  city: string
+  device: string
+  browser: string
+  os: string
+  referer: string
+}
+
+export interface AccessLogResult {
+  logs: LogsMap
+  click: WebhookClickContext
+}
+
 export const logsMap = Object.fromEntries([
   ...Object.entries(blobsMap).map(([k, v]) => [v, k]),
   ...Object.entries(doublesMap).map(([k, v]) => [v, k]),
@@ -92,7 +107,16 @@ export function doubles2logs(doubles: number[]) {
   }, {} as Partial<LogsMap>)
 }
 
-export function useAccessLog(event: H3Event) {
+function getCountryName(country?: string): string {
+  try {
+    return new Intl.DisplayNames(['en'], { type: 'region' }).of(country || 'WD') || 'Worldwide'
+  }
+  catch {
+    return 'Worldwide'
+  }
+}
+
+export function collectAccessLog(event: H3Event): AccessLogResult | undefined {
   const ip = getHeader(event, 'cf-connecting-ip') || getHeader(event, 'x-real-ip') || getRequestIP(event, { xForwardedFor: true })
 
   const { host: referer } = parseURL(getHeader(event, 'referer'))
@@ -111,7 +135,7 @@ export function useAccessLog(event: H3Event) {
   })).getResult()
 
   const { cloudflare } = event.context
-  const { request: { cf }, env } = cloudflare
+  const { request: { cf } } = cloudflare
   const link = event.context.link || {}
 
   const isBot = cf?.botManagement?.verifiedBot
@@ -121,12 +145,11 @@ export function useAccessLog(event: H3Event) {
   const { disableBotAccessLog } = useRuntimeConfig(event)
   if (isBot && disableBotAccessLog) {
     console.log('bot access log disabled:', userAgent)
-    return Promise.resolve()
+    return
   }
 
-  const regionNames = new Intl.DisplayNames(['en'], { type: 'region' })
-  const countryName = regionNames.of(cf?.country || 'WD') // fallback to "Worldwide"
-  const accessLogs = {
+  const countryName = getCountryName(cf?.country)
+  const logs = {
     url: link.url,
     slug: link.slug,
     ua: userAgent,
@@ -149,14 +172,32 @@ export function useAccessLog(event: H3Event) {
     longitude: Number(cf?.longitude || getHeader(event, 'cf-iplongitude') || 0),
   }
 
+  return {
+    logs,
+    click: {
+      country: cf?.country || '',
+      region: cf?.region || '',
+      city: cf?.city || '',
+      device: uaInfo?.device?.type || uaInfo?.device?.model || '',
+      browser: uaInfo?.browser?.name || '',
+      os: uaInfo?.os?.name || '',
+      referer: referer || '',
+    },
+  }
+}
+
+export function writeAccessLog(event: H3Event, accessLogs: LogsMap): void {
+  const { cloudflare } = event.context
+  const link = event.context.link || {}
+
   if (process.env.NODE_ENV === 'production') {
-    return env.ANALYTICS.writeDataPoint({
+    cloudflare.env.ANALYTICS.writeDataPoint({
       indexes: [link.id], // only one index
       blobs: logs2blobs(accessLogs),
       doubles: logs2doubles(accessLogs),
     })
+    return
   }
 
   console.log('access logs:', accessLogs, logs2blobs(accessLogs), logs2doubles(accessLogs), { ...blobs2logs(logs2blobs(accessLogs)), ...doubles2logs(logs2doubles(accessLogs)) })
-  return Promise.resolve()
 }
