@@ -1,15 +1,11 @@
+import type { LinkSearchItem } from '#shared/types/link'
+
 defineRouteMeta({
   openAPI: {
     description: 'Search all links (returns slug, url, comment for each link)',
     security: [{ bearerAuth: [] }],
   },
 })
-
-interface Link {
-  slug: string
-  url: string
-  comment?: string
-}
 
 interface LinkMetadata {
   url?: string
@@ -25,7 +21,7 @@ interface LinkData {
 export default eventHandler(async (event) => {
   const { cloudflare } = event.context
   const { KV } = cloudflare.env
-  const list: Link[] = []
+  const list: LinkSearchItem[] = []
   let finalCursor: string | undefined
 
   try {
@@ -54,7 +50,7 @@ export default eventHandler(async (event) => {
               if (link) {
                 list.push({
                   slug: key.name.replace('link:', ''),
-                  url: link.url,
+                  url: withoutQuery(link.url),
                   comment: link.comment,
                 })
                 await KV.put(key.name, JSON.stringify(link), {

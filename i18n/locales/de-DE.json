@@ -279,7 +279,8 @@
       "utm_apply": "Anwenden",
       "utm_clear": "Löschen",
       "utm_invalid_url": "Gib eine gültige URL ein, um UTM-Parameter in der Vorschau zu sehen und anzuwenden.",
-      "ai_og_generate": "KI-OpenGraph generieren"
+      "ai_og_generate": "KI-OpenGraph generieren",
+      "duplicate_url_hint": "Diese URL existiert bereits als {shortLink}"
     },
     "sort": {
       "newest": "Neueste zuerst",

@@ -279,7 +279,8 @@
       "utm_apply": "Appliquer",
       "utm_clear": "Effacer",
       "utm_invalid_url": "Saisissez une URL valide pour prévisualiser et appliquer les paramètres UTM.",
-      "ai_og_generate": "Générer l'OpenGraph IA"
+      "ai_og_generate": "Générer l'OpenGraph IA",
+      "duplicate_url_hint": "Cette URL existe déjà sous {shortLink}"
     },
     "sort": {
       "newest": "Les plus récents",

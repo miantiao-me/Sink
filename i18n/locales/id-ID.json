@@ -279,7 +279,8 @@
       "utm_apply": "Terapkan",
       "utm_clear": "Bersihkan",
       "utm_invalid_url": "Masukkan URL valid untuk melihat pratinjau dan menerapkan parameter UTM.",
-      "ai_og_generate": "Buat OpenGraph AI"
+      "ai_og_generate": "Buat OpenGraph AI",
+      "duplicate_url_hint": "URL ini sudah ada sebagai {shortLink}"
     },
     "sort": {
       "newest": "Terbaru",

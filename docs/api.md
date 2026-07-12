@@ -12,13 +12,15 @@ Visit your Sink instance at `https://your-domain/_docs/scalar` for interactive A
 
 ## Authentication
 
-All API endpoints require authentication via Bearer token in the `Authorization` header:
+All API endpoints accept the site token in the `Authorization` header:
 
 ```http
 Authorization: Bearer YOUR_SITE_TOKEN
 ```
 
 The token is the same as `NUXT_SITE_TOKEN` configured in your environment variables.
+
+When [Cloudflare Access authentication](cloudflare-access.md) is configured, browser requests from an authenticated dashboard session can use the signed Access application token instead. Sink validates the token signature, issuer, audience, and expiration. Clients must not construct or trust `Cf-Access-Jwt-Assertion` themselves; Cloudflare Access supplies the token or authorization cookie.
 
 ## API Endpoints
 

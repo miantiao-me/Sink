@@ -279,7 +279,8 @@
       "utm_apply": "套用",
       "utm_clear": "清除",
       "utm_invalid_url": "請輸入有效的 URL 以預覽並套用 UTM 參數。",
-      "ai_og_generate": "生成 AI OpenGraph"
+      "ai_og_generate": "生成 AI OpenGraph",
+      "duplicate_url_hint": "此 URL 已存在為 {shortLink}"
     },
     "sort": {
       "newest": "最新",

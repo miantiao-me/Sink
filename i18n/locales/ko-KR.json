@@ -1,0 +1,419 @@
+{
+  "common": {
+    "i18n": "다국어",
+    "abbreviations": "한",
+    "current_language": "한국어",
+    "try_again": "다시 시도",
+    "cancel": "취소",
+    "continue": "계속",
+    "close": "닫기",
+    "save": "저장",
+    "edit": "편집",
+    "delete": "삭제",
+    "delete_success": "삭제되었습니다!",
+    "search": "검색"
+  },
+  "theme": {
+    "toggle": "테마 전환",
+    "light": "라이트",
+    "dark": "다크",
+    "system": "시스템"
+  },
+  "login": {
+    "title": "로그인",
+    "description": "로그인하려면 사이트 토큰을 입력하세요",
+    "tips": "안내",
+    "preview_token": "미리보기 모드용 사이트 토큰은",
+    "submit": "로그인",
+    "failed": "로그인에 실패했습니다. 다시 시도해 주세요",
+    "token_label": "사이트 토큰",
+    "token_required": "토큰을 입력해야 합니다"
+  },
+  "logout": {
+    "title": "로그아웃하시겠습니까?",
+    "confirm": "정말 로그아웃하시겠습니까?",
+    "action": "로그아웃"
+  },
+  "layouts": {
+    "footer": {
+      "copyright": "Products of HTML.ZONE",
+      "social": {
+        "email": "이메일",
+        "telegram": "텔레그램",
+        "blog": "블로그",
+        "twitter": "트위터",
+        "mastodon": "마스토돈",
+        "github": "GitHub"
+      }
+    },
+    "header": {
+      "select_language": "언어 선택"
+    }
+  },
+  "nav": {
+    "links": "링크",
+    "analysis": "분석",
+    "realtime": "실시간",
+    "check": "점검",
+    "migrate": "가져오기/내보내기"
+  },
+  "sidebar": {
+    "subtitle": "링크 단축기",
+    "platform": "플랫폼",
+    "settings": "설정",
+    "import": "가져오기",
+    "export": "내보내기",
+    "coffee": "커피 한 잔 사주기",
+    "github": "GitHub",
+    "stars": "스타",
+    "update": "새 버전 {version}을(를) 사용할 수 있습니다 (현재: {current})"
+  },
+  "home": {
+    "hero": {
+      "github_repo": "GitHub 저장소"
+    },
+    "features": {
+      "title": "기능",
+      "subtitle": "간단하면서도 충분한 기능",
+      "url_shortening": {
+        "title": "URL 단축",
+        "description": "URL을 최소 길이로 압축하세요"
+      },
+      "analytics": {
+        "title": "분석",
+        "description": "링크 분석을 모니터링하고 유용한 통계를 수집하세요"
+      },
+      "serverless": {
+        "title": "서버리스",
+        "description": "기존 서버 없이 배포하세요"
+      },
+      "customizable_slug": {
+        "title": "사용자 지정 슬러그",
+        "description": "개인화된 슬러그, UTM 매개변수, 대소문자 구분을 지원합니다"
+      },
+      "ai_slug": {
+        "title": "AI 지원",
+        "description": "페이지 콘텐츠로부터 슬러그와 OpenGraph 메타데이터를 생성하세요"
+      },
+      "link_expiration": {
+        "title": "링크 제어",
+        "description": "만료일, 비밀번호, 안전하지 않은 링크 경고 페이지를 설정하세요"
+      },
+      "device_routing": {
+        "title": "스마트 라우팅",
+        "description": "기기 또는 국가별로 방문자를 리디렉션하세요"
+      },
+      "og_preview": {
+        "title": "소셜 미리보기",
+        "description": "제목, 설명, 이미지로 소셜 미리보기를 사용자 지정하세요"
+      },
+      "realtime_analytics": {
+        "title": "실시간 분석",
+        "description": "실시간 3D 지구본과 실시간 이벤트 로그"
+      },
+      "qr_code": {
+        "title": "QR 코드",
+        "description": "단축 링크용 QR 코드를 생성하세요"
+      },
+      "import_export": {
+        "title": "가져오기/내보내기",
+        "description": "JSON을 통한 대량 링크 마이그레이션 및 CSV를 통한 분석 접근"
+      },
+      "multi_language": {
+        "title": "다국어",
+        "description": "대시보드와 리디렉션 페이지에 대한 완전한 i18n 지원"
+      }
+    },
+    "cta": {
+      "title": "즉시 배포",
+      "description": "몇 번의 간단한 클릭만으로 비용 없이 배포를 시작할 수 있습니다",
+      "button": "배포 시작"
+    },
+    "logos": {
+      "title": "훌륭한 기술로 제작되었습니다"
+    },
+    "twitter": {
+      "follow": "X(트위터)에서 팔로우하기"
+    },
+    "stats": {
+      "title": "숫자로 보는 Sink",
+      "subtitle": "전 세계 개발자들이 신뢰합니다",
+      "stars": "GitHub 스타",
+      "forks": "포크"
+    },
+    "testimonials": {
+      "title": "사용자들의 사랑을 받고 있습니다",
+      "subtitle": "개발자들이 Sink에 대해 말하는 것을 확인하세요"
+    }
+  },
+  "dashboard": {
+    "title": "대시보드",
+    "visits": "방문",
+    "views": "조회수",
+    "visitors": "방문자",
+    "referers": "참조자",
+    "stats": "{slug}의 통계",
+    "trend": "추세",
+    "weekly_trend": "주간 추세",
+    "custom_date": "사용자 지정 날짜",
+    "date": "날짜",
+    "date_range": "날짜 범위",
+    "locations": "위치",
+    "details": "세부 정보",
+    "name": "이름",
+    "count": "개수",
+    "loading": "불러오는 중",
+    "no_data": "데이터 없음",
+    "none": "(없음)",
+    "filter_placeholder": "링크 필터링...",
+    "date_picker": {
+      "today": "오늘",
+      "last_24h": "지난 24시간",
+      "this_week": "이번 주",
+      "last_7d": "지난 7일",
+      "this_month": "이번 달",
+      "last_30d": "지난 30일",
+      "last_90d": "지난 90일",
+      "custom": "사용자 지정",
+      "custom_title": "사용자 지정 날짜",
+      "single_date": "날짜",
+      "date_range": "날짜 범위"
+    },
+    "metrics": {
+      "country": "국가",
+      "region": "지역",
+      "city": "도시",
+      "referer": "참조자",
+      "slug": "슬러그",
+      "language": "언어",
+      "timezone": "시간대",
+      "device": "기기",
+      "deviceType": "기기 유형",
+      "os": "OS",
+      "browser": "브라우저",
+      "browserType": "브라우저 유형"
+    },
+    "time_picker": {
+      "today": "오늘",
+      "last_5m": "지난 5분",
+      "last_10m": "지난 10분",
+      "last_30m": "지난 30분",
+      "last_1h": "지난 1시간",
+      "last_6h": "지난 6시간",
+      "last_12h": "지난 12시간",
+      "last_24h": "지난 24시간"
+    }
+  },
+  "links": {
+    "create": "링크 생성",
+    "edit": "링크 편집",
+    "delete_confirm_title": "정말 확실합니까?",
+    "delete_confirm_desc": "이 작업은 되돌릴 수 없습니다. 서버에서 링크가 완전히 삭제됩니다.",
+    "delete_success": "삭제되었습니다!",
+    "delete_failed": "삭제에 실패했습니다!",
+    "update_success": "링크가 성공적으로 업데이트되었습니다",
+    "create_success": "링크가 성공적으로 생성되었습니다",
+    "preview_mode_tip": "미리보기 모드 링크는 최대 5분간 유효합니다.",
+    "search_placeholder": "링크 검색...",
+    "no_results": "링크를 찾을 수 없습니다.",
+    "group_title": "링크",
+    "copy_success": "복사되었습니다!",
+    "created_at": "생성일",
+    "updated_at": "수정일",
+    "expires_at": "만료일",
+    "no_more": "더 이상 링크가 없습니다",
+    "load_failed": "링크를 불러오지 못했습니다,",
+    "download_qr_code": "QR 코드 다운로드",
+    "change_qr_color": "QR 코드 색상 변경",
+    "form": {
+      "url": "URL",
+      "slug": "슬러그",
+      "comment": "설명",
+      "expiration": "만료",
+      "expiration_description": "단축 링크는 만료되면 자동으로 삭제됩니다.",
+      "pick_date": "날짜 선택",
+      "device_redirect": "기기별 리디렉션",
+      "google_play": "Google Play URL",
+      "app_store": "App Store URL",
+      "link_settings": "링크 설정",
+      "redirect_with_query_label": "쿼리 매개변수와 함께 리디렉션",
+      "redirect_with_query_description": "단축 링크의 쿼리 매개변수를 대상 URL에 추가합니다. 전역 설정을 재정의합니다.",
+      "cloaking_label": "링크 클로킹 사용",
+      "cloaking_description": "대상 URL 대신 단축 링크를 브라우저 주소창에 표시합니다. iframe 삽입을 차단하는 사이트에서는 작동하지 않을 수 있습니다.",
+      "unsafe_label": "안전하지 않음으로 표시",
+      "unsafe_description": "리디렉션 전에 경고 페이지를 표시합니다. 방문자가 계속하려면 확인해야 합니다.",
+      "password_label": "비밀번호 보호",
+      "password_description": "이 단축 링크에 접근하려면 비밀번호가 필요합니다.",
+      "password_placeholder": "비워두면 비활성화됩니다",
+      "og_settings": "OpenGraph 설정",
+      "og_title": "제목",
+      "og_title_placeholder": "비워두면 URL 호스트명을 사용합니다",
+      "og_description": "설명",
+      "og_description_placeholder": "링크 설명",
+      "og_image": "이미지",
+      "geo_routing": "지역 리디렉션",
+      "add_geo_route": "지역 리디렉션 추가",
+      "country_code": "국가 코드 (예: US)",
+      "select_country": "국가 선택",
+      "search_country": "국가 검색...",
+      "no_country_found": "국가를 찾을 수 없습니다.",
+      "find_country_code": "국가 코드 찾기",
+      "advanced": "고급",
+      "more_options": "더 많은 옵션",
+      "image_invalid_type": "이미지 파일을 업로드해 주세요",
+      "image_size_limit": "이미지 크기는 5MB를 초과할 수 없습니다",
+      "image_upload_success": "이미지가 성공적으로 업로드되었습니다",
+      "image_upload_failed": "이미지 업로드에 실패했습니다",
+      "image_upload_hint": "클릭하거나 드래그하여 이미지 업로드",
+      "image_ratio_hint": "권장 크기: 1200×630",
+      "image_preview": "이미지 미리보기",
+      "slug_required": "먼저 슬러그를 입력해 주세요",
+      "utm_builder": "UTM 빌더",
+      "utm_description": "UTM 매개변수를 로컬에서 구성하여 대상 URL에 추가합니다.",
+      "utm_preview": "미리보기",
+      "utm_source": "UTM 소스",
+      "utm_medium": "UTM 매체",
+      "utm_campaign": "UTM 캠페인",
+      "utm_term": "UTM 검색어",
+      "utm_content": "UTM 콘텐츠",
+      "utm_apply": "적용",
+      "utm_clear": "지우기",
+      "utm_invalid_url": "UTM 매개변수를 미리보고 적용하려면 유효한 URL을 입력하세요.",
+      "ai_og_generate": "AI OpenGraph 생성",
+      "duplicate_url_hint": "이 URL은 이미 {shortLink}(으)로 존재합니다"
+    },
+    "sort": {
+      "newest": "최신순",
+      "oldest": "오래된순",
+      "az": "슬러그 A-Z",
+      "za": "슬러그 Z-A",
+      "tip": "참고: 불러온 링크에만 적용됩니다"
+    },
+    "update_failed": "링크 업데이트에 실패했습니다",
+    "create_failed": "링크 생성에 실패했습니다",
+    "ai_slug_failed": "AI 슬러그 생성에 실패했습니다",
+    "ai_og_failed": "AI OpenGraph 생성에 실패했습니다",
+    "ai_og_success": "AI OpenGraph가 성공적으로 생성되었습니다"
+  },
+  "check": {
+    "title": "링크 점검",
+    "description": "기존 대상 URL의 접속 가능 여부를 확인합니다. 결과만 표시되며 링크는 수정되지 않습니다.",
+    "config": {
+      "timeout": "제한 시간 (초)",
+      "timeout_description": "각 링크에 대한 제한 시간입니다. 기본값은 6초입니다.",
+      "batch_size": "일괄 처리 크기",
+      "batch_size_description": "요청당 확인할 링크 수입니다. 최대 10개입니다."
+    },
+    "actions": {
+      "start": "점검 시작",
+      "checking": "확인 중...",
+      "stop": "중지",
+      "reload": "링크 새로고침",
+      "loading": "불러오는 중...",
+      "clear": "결과 지우기",
+      "export": "CSV 내보내기",
+      "detail": "상세",
+      "original": "원본"
+    },
+    "stats": {
+      "total": "전체",
+      "checked": "확인됨",
+      "normal": "정상",
+      "abnormal": "비정상",
+      "network_error": "네트워크 오류"
+    },
+    "progress": {
+      "title": "진행률",
+      "description": "{total}개 중 {checked}개 링크 확인됨",
+      "stopped": "점검이 중지되었습니다"
+    },
+    "results": {
+      "title": "결과",
+      "description": "비정상 결과가 기본으로 표시됩니다. 탭을 사용하여 상태 코드별로 필터링하세요."
+    },
+    "tabs": {
+      "abnormal": "비정상 ({count})",
+      "status": "{status} ({count})",
+      "all": "전체 ({count})"
+    },
+    "table": {
+      "slug": "슬러그",
+      "url": "URL",
+      "status": "상태",
+      "result": "결과",
+      "duration": "소요 시간",
+      "error": "오류",
+      "action": "작업"
+    },
+    "result": {
+      "normal": "정상",
+      "broken": "손상됨",
+      "network_error": "네트워크 오류"
+    },
+    "empty": {
+      "not_started": "아직 결과가 없습니다.",
+      "no_broken_links": "손상된 링크가 없습니다.",
+      "no_matching_results": "일치하는 결과가 없습니다."
+    },
+    "messages": {
+      "load_failed": "링크를 불러오지 못했습니다",
+      "completed": "링크 점검이 완료되었습니다",
+      "stopped": "링크 점검이 중지되었습니다"
+    },
+    "duration_ms": "{duration}ms"
+  },
+  "migrate": {
+    "access_export": {
+      "title": "접속 데이터 내보내기",
+      "description": "접속 통계를 CSV 파일로 다운로드합니다",
+      "date_range": "날짜 범위",
+      "slug_label": "슬러그 필터",
+      "slug_description": "모든 슬러그를 내보내려면 비워두세요.",
+      "button": "CSV 내보내기",
+      "exporting": "내보내는 중...",
+      "success": "내보내기 성공",
+      "failed": "내보내기 실패"
+    },
+    "backup": {
+      "title": "수동 백업",
+      "description": "설정된 R2 버킷으로 모든 링크의 수동 백업을 실행합니다",
+      "button": "백업 시작",
+      "backing_up": "백업 중...",
+      "success": "백업 성공",
+      "failed": "백업 실패"
+    },
+    "export": {
+      "title": "링크 내보내기",
+      "description": "모든 링크를 JSON 파일로 다운로드합니다",
+      "button": "전체 내보내기",
+      "total_links": "전체 링크 수",
+      "success": "내보내기 성공",
+      "failed": "내보내기 실패"
+    },
+    "import": {
+      "title": "링크 가져오기",
+      "description": "링크를 가져오려면 JSON 파일을 업로드하세요",
+      "dropzone": "JSON 파일을 여기에 놓거나 클릭하여 업로드하세요",
+      "links_found": "개의 링크 발견",
+      "button": "가져오기 시작",
+      "importing": "가져오는 중...",
+      "import_more": "추가로 가져오기",
+      "download_success": "성공 항목 다운로드",
+      "download_skipped": "건너뛴 항목 다운로드",
+      "download_failed": "실패 항목 다운로드",
+      "result": {
+        "title": "가져오기 결과",
+        "success": "성공적으로 가져옴",
+        "skipped": "건너뜀 (이미 존재함)",
+        "failed": "실패",
+        "success_message": "{count}개의 링크를 성공적으로 가져왔습니다"
+      },
+      "errors": {
+        "invalid_json": "잘못된 JSON 파일입니다",
+        "invalid_format": "잘못된 파일 형식입니다. Sink에서 내보낸 파일을 사용해 주세요.",
+        "no_links": "파일에서 링크를 찾을 수 없습니다",
+        "parse_error": "파일 구문 분석에 실패했습니다"
+      }
+    }
+  }
+}

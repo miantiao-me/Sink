@@ -38,6 +38,7 @@ describe('/', () => {
 
     expect(response.status).toBe(301)
     expect(response.headers.get('Location')).toBe(apple)
+    expect(response.headers.get('Cache-Control')).toBeNull()
   })
 
   it('redirects to geo URL when cf.country matches', async () => {
@@ -76,6 +77,26 @@ describe('/', () => {
 
     expect(response.status).toBe(301)
     expect(response.headers.get('Location')).toBe(defaultUrl)
+    expect(response.headers.get('Cache-Control')).toBeNull()
+  })
+
+  it('redirects when Cloudflare reports the Tor country code', async () => {
+    const slug = `country-t1-${crypto.randomUUID()}`
+    const targetUrl = 'https://example.com/tor-target'
+
+    const createResponse = await postJson('/api/link/create', {
+      url: targetUrl,
+      slug,
+    })
+    expect(createResponse.status).toBe(201)
+    createdSlugs.push(slug)
+
+    const options: CfRequestInit = { redirect: 'manual', cf: { country: 'T1' } }
+    const response = await fetch(`/${slug}`, options as RequestInit)
+
+    expect(response.status).toBeGreaterThanOrEqual(300)
+    expect(response.status).toBeLessThan(400)
+    expect(response.headers.get('Location')).toBe(targetUrl)
   })
 
   it('shows geo URL in unsafe warning', async () => {
@@ -97,6 +118,29 @@ describe('/', () => {
 
     expect(response.status).toBe(200)
     expect(html).toContain(cnUrl)
+  })
+
+  it('adds viewport meta to cloaked links for mobile browsers (fixes #301)', async () => {
+    const slug = `cloaking-viewport-${crypto.randomUUID()}`
+    const targetUrl = 'https://example.com/mobile-target'
+
+    const createResponse = await postJson('/api/link/create', {
+      url: targetUrl,
+      slug,
+      cloaking: true,
+    })
+    expect(createResponse.status).toBe(201)
+    createdSlugs.push(slug)
+
+    const response = await fetch(`/${slug}`, { redirect: 'manual' })
+    const html = await response.text()
+
+    expect(response.status).toBe(200)
+    expect(html).toContain('<meta name="viewport" content="width=device-width,initial-scale=1">')
+    expect(html).toContain(`<iframe src="${targetUrl}"`)
+    expect(html).toContain('allow-top-navigation-by-user-activation')
+    expect(html).toContain('allow-downloads')
+    expect(html).toContain('allow-modals')
   })
 
   it('prefers device redirect over geo redirect', async () => {

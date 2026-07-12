@@ -2,9 +2,9 @@
 
 **A Simple / Speedy / Secure Link Shortener with Analytics, 100% run on Cloudflare.**
 
-<a href="https://trendshift.io/repositories/10421" target="_blank">
+<a href="https://trendshift.io/repositories/20331" target="_blank">
   <img
-    src="https://trendshift.io/api/badge/repositories/10421"
+    src="https://trendshift.io/api/badge/repositories/20331"
     alt="miantiao-me/Sink | Trendshift"
     width="250"
     height="55"

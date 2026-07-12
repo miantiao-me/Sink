@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import type { Link } from '@/types'
+import type { LinkSearchItem } from '@/types'
 import { createReusableTemplate, useMagicKeys, useMediaQuery } from '@vueuse/core'
 import { useFuse } from '@vueuse/integrations/useFuse'
+import { storeToRefs } from 'pinia'
 
 defineOptions({
   inheritAttrs: false,
@@ -12,10 +13,11 @@ const [SearchTemplate, SearchComponent] = createReusableTemplate()
 const isDesktop = useMediaQuery('(min-width: 640px)')
 
 const router = useRouter()
+const linksSearchStore = useDashboardLinksSearchStore()
+const { links } = storeToRefs(linksSearchStore)
 
 const isOpen = ref(false)
 const searchTerm = ref('')
-const links = ref<Link[]>([])
 
 const { results: filteredLinks } = useFuse(searchTerm, links, {
   fuseOptions: {
@@ -46,7 +48,7 @@ watch([Meta_K, Ctrl_K], (v) => {
     isOpen.value = true
 })
 
-function selectLink(link: Link | undefined) {
+function selectLink(link: LinkSearchItem | undefined) {
   if (!link)
     return
   isOpen.value = false
@@ -56,17 +58,8 @@ function selectLink(link: Link | undefined) {
   })
 }
 
-async function getLinks() {
-  try {
-    links.value = await useAPI<Link[]>('/api/link/search')
-  }
-  catch (error) {
-    console.error(error)
-  }
-}
-
 onMounted(() => {
-  getLinks()
+  linksSearchStore.loadLinks()
 })
 </script>
 
@@ -123,22 +116,22 @@ onMounted(() => {
         </CommandEmpty>
         <CommandGroup v-if="filteredLinks.length" :heading="$t('links.group_title')">
           <CommandItem
-            v-for="link in filteredLinks" :key="link.item?.id" class="
+            v-for="link in filteredLinks" :key="link.item.slug" class="
               cursor-pointer
             " :value="link.item" @select="selectLink(link.item)"
           >
             <div class="flex w-full gap-1">
               <div class="inline-flex flex-1 items-center gap-1 overflow-hidden">
                 <div class="text-sm font-medium">
-                  {{ link.item?.slug }}
+                  {{ link.item.slug }}
                 </div>
                 <div class="flex-1 truncate text-xs text-muted-foreground">
-                  ({{ link.item?.url }})
+                  ({{ link.item.url }})
                 </div>
               </div>
-              <Badge v-if="link.item?.comment" variant="secondary">
+              <Badge v-if="link.item.comment" variant="secondary">
                 <div class="max-w-24 truncate">
-                  {{ link.item?.comment }}
+                  {{ link.item.comment }}
                 </div>
               </Badge>
             </div>
