@@ -34,6 +34,8 @@ export const LinkSchema = z.object({
   comment: z.string().trim().max(2048).optional(),
   createdAt: z.number().int().safe().default(() => Math.floor(Date.now() / 1000)),
   updatedAt: z.number().int().safe().default(() => Math.floor(Date.now() / 1000)),
+  createdBy: z.string().trim().max(320).optional(),
+  updatedBy: z.string().trim().max(320).optional(),
   expiration: z.number().int().safe().refine(expiration => expiration > Math.floor(Date.now() / 1000), {
     message: 'expiration must be greater than current time',
     path: ['expiration'],

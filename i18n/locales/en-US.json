@@ -220,6 +220,8 @@
     "copy_success": "Copy successful!",
     "created_at": "Created At",
     "updated_at": "Updated At",
+    "created_by": "Created By",
+    "updated_by": "Updated By",
     "expires_at": "Expires At",
     "no_more": "No more links",
     "load_failed": "Loading links failed,",

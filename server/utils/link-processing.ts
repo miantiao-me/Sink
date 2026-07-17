@@ -25,6 +25,24 @@ export async function prepareIncomingLink(event: H3Event, link: Link): Promise<v
   await detectUnsafeLink(event, link)
 }
 
+export function getLinkActor(event: H3Event): string {
+  if (event.context.accessUserEmail)
+    return event.context.accessUserEmail
+  if (event.context.authMethod === 'site-token')
+    return 'site-token'
+  return 'unknown'
+}
+
+export function stampCreatedBy(event: H3Event, link: Link): void {
+  const actor = getLinkActor(event)
+  link.createdBy = actor
+  link.updatedBy = actor
+}
+
+export function stampUpdatedBy(event: H3Event, link: Link): void {
+  link.updatedBy = getLinkActor(event)
+}
+
 export async function detectUnsafeLink(event: H3Event, link: Pick<Link, 'url' | 'unsafe'>): Promise<void> {
   if (link.unsafe !== undefined)
     return
@@ -53,6 +71,7 @@ export function mergeEditableLink(existingLink: Link, link: Link): Link {
     ...linkWithoutPassword,
     id: existingLink.id,
     createdAt: existingLink.createdAt,
+    createdBy: existingLink.createdBy,
     updatedAt: Math.floor(Date.now() / 1000),
   }
 

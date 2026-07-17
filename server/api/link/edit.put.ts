@@ -61,6 +61,7 @@ export default eventHandler(async (event) => {
     await detectUnsafeLink(event, link)
 
   const newLink = mergeEditableLink(existingLink, link)
+  stampUpdatedBy(event, newLink)
   await applyEditableLinkPassword(newLink, link.password)
 
   await putLink(event, newLink)

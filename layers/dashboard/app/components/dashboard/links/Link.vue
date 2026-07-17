@@ -192,6 +192,12 @@ function copyLink() {
                 <TooltipContent>
                   <p>{{ $t('links.created_at') }}: {{ longDate(link.createdAt, locale) }}</p>
                   <p>{{ $t('links.updated_at') }}: {{ longDate(link.updatedAt, locale) }}</p>
+                  <p v-if="link.createdBy">
+                    {{ $t('links.created_by') }}: {{ link.createdBy }}
+                  </p>
+                  <p v-if="link.updatedBy">
+                    {{ $t('links.updated_by') }}: {{ link.updatedBy }}
+                  </p>
                 </TooltipContent>
               </Tooltip>
             </TooltipProvider>

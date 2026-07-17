@@ -1,6 +1,6 @@
 import type { H3Event } from 'h3'
 import type { JWTVerifyGetKey } from 'jose'
-import { createRemoteJWKSet, jwtVerify } from 'jose'
+import { createRemoteJWKSet, decodeJwt, jwtVerify } from 'jose'
 
 interface CloudflareAccessConfig {
   audience: string
@@ -53,8 +53,16 @@ export async function verifyCloudflareAccess(event: H3Event): Promise<boolean> {
     return false
 
   for (const token of getAccessTokens(event)) {
-    if (await verifyCloudflareAccessToken(token, { audience, issuer }))
+    if (await verifyCloudflareAccessToken(token, { audience, issuer })) {
+      // token is verified above; decode it to capture the email for attribution
+      try {
+        const { email } = decodeJwt(token)
+        if (typeof email === 'string')
+          event.context.accessUserEmail = email
+      }
+      catch {}
       return true
+    }
   }
 
   return false

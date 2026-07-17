@@ -41,6 +41,7 @@ export default eventHandler(async (event) => {
     return { ...buildLinkResponse(event, existingLink), status: 'existing' }
   }
 
+  stampCreatedBy(event, link)
   await hashLinkPasswordForCreate(link)
 
   await putLink(event, link)

@@ -58,6 +58,7 @@ export default eventHandler(async (event) => {
     })
   }
 
+  stampCreatedBy(event, link)
   await hashLinkPasswordForCreate(link)
 
   await putLink(event, link)
