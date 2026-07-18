@@ -37,7 +37,8 @@ export async function createCountryTexture(
   const { geoPath, geoEquirectangular } = await import('d3-geo')
 
   const maxSize = gl.getParameter(gl.MAX_TEXTURE_SIZE) as number
-  const width = Math.min(containerSize * 2, maxSize)
+  const targetWidth = Math.min(containerSize * 2, maxSize)
+  const width = Math.max(2, Math.floor(targetWidth / 2) * 2)
   const height = width / 2
   const hexSize = BASE_HEX_SIZE * (width / BASE_TEXTURE_WIDTH)
 
@@ -127,7 +128,7 @@ function drawHexGrid(
       const idx = (py * width + px) * 4
       const countryIdx = (lookupData[idx]! | (lookupData[idx + 1]! << 8)) - 1
 
-      if (countryIdx < 0)
+      if (countryIdx < 0 || countryIdx >= countryColorMap.size)
         continue
 
       const color = countryColorMap.get(countryIdx) || noDataColor

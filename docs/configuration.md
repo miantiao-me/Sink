@@ -34,6 +34,10 @@ Cache links can speed up access, but setting them too long may result in slow ch
 
 URL parameters are not carried during link redirection by default and it is not recommended to enable this feature. This is the global default; individual links can override this via the **Redirect with Query Parameters** toggle in **Link Settings**.
 
+## `NUXT_REDIRECT_NO_STORE`
+
+Defaults to `false`. Set to `true` to prevent browsers and CDNs from caching short-link redirects, allowing link edits and deletions to take effect promptly.
+
 ## `NUXT_HOME_URL`
 
 > If you are using Worker deployment, this variable needs to be configured in **Settings** -> **Build** -> **Variables and Secrets** and **Settings** -> **Variables and Secrets**.
@@ -95,6 +99,16 @@ This feature requires:
 
 Backups are stored in R2 with the path `backups/links-{timestamp}.json` and run daily at 00:00 UTC.
 
+## `NUXT_CF_ACCESS_TEAM_DOMAIN`
+
+Optional Cloudflare Access team domain, for example `https://your-team.cloudflareaccess.com`.
+Set this together with `NUXT_CF_ACCESS_AUD` to allow a valid Cloudflare Access session to authenticate API requests as an alternative to `NUXT_SITE_TOKEN`.
+
+## `NUXT_CF_ACCESS_AUD`
+
+Optional Application Audience (AUD) tag from the Cloudflare Access application that protects the dashboard.
+Cloudflare Access authentication is enabled only when both Access variables are configured. Refer to [Cloudflare Access Authentication](cloudflare-access.md) for the required application and cookie settings.
+
 ## `NUXT_SAFE_BROWSING_DOH`
 
 Set to a DNS over HTTPS (DoH) endpoint URL to enable automatic unsafe link detection when creating or editing links. When enabled, Sink queries the DoH service to check if the destination domain is flagged as malicious. If the domain resolves to `0.0.0.0`, the link is automatically marked as unsafe and visitors will see a warning page before being redirected.
@@ -110,3 +124,48 @@ Default is empty (disabled). Users can still manually mark links as unsafe in th
 
 Optional custom redirect target when a slug is not found.
 If this is not set, Sink will fall back to its default 404 page.
+
+## Click Webhooks
+
+Set `NUXT_WEBHOOK_URL` to send a best-effort webhook for each click included in access statistics. An empty URL disables webhooks. Bot clicks skipped by `NUXT_DISABLE_BOT_ACCESS_LOG` are also skipped by webhooks.
+
+`NUXT_WEBHOOK_URL` must use HTTP or HTTPS. HTTPS is strongly recommended in production. `NUXT_WEBHOOK_SECRET` is optional. When configured, it must start with `whsec_`; the suffix is a Base64-encoded HMAC key between 24 and 64 bytes. Generate a 32-byte key with:
+
+```sh
+printf 'whsec_%s\n' "$(openssl rand -base64 32)"
+```
+
+Sink sends a Dub-style payload:
+
+```json
+{
+  "id": "evt_...",
+  "event": "link.clicked",
+  "createdAt": "2026-07-11T12:00:00.000Z",
+  "data": {
+    "click": {
+      "id": "clk_...",
+      "timestamp": "2026-07-11T12:00:00.000Z",
+      "country": "US",
+      "region": "California",
+      "city": "San Francisco",
+      "device": "mobile",
+      "browser": "Mobile Safari",
+      "os": "iOS",
+      "referer": "example.com"
+    },
+    "link": {
+      "id": "link-id",
+      "slug": "example"
+    }
+  }
+}
+```
+
+The click location fields contain the raw Cloudflare country code, region, and city. The device field prefers the parsed device category (such as `mobile`) and falls back to the device model.
+
+Every request includes the Standard Webhooks headers `webhook-id` and `webhook-timestamp`. When a secret is configured, Sink also sends `webhook-signature`. The signature is `v1,<base64>` for HMAC-SHA256 over `<webhook-id>.<webhook-timestamp>.<raw-body>`, using the decoded secret suffix as the key. An invalid non-empty secret fails delivery and never falls back to unsigned delivery.
+
+Without `NUXT_WEBHOOK_SECRET`, delivery is unauthenticated and unsigned. This mode is not recommended over untrusted networks; configure a secret whenever the receiver supports signature verification.
+
+Webhook payloads exclude IP addresses, coordinates, full user agents, query parameters, passwords, and destination URLs. Delivery has a 10-second timeout, accepts only 2xx responses, does not follow redirects, and is asynchronous. Failures do not affect redirects and are not retried.

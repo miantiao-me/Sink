@@ -1,21 +1,24 @@
+import type { VerifyResponse } from '@/types'
+
 export default defineNuxtRouteMiddleware(async (to) => {
   if (import.meta.server)
     return
 
-  const { getToken } = useAuthToken()
+  if (!to.path.startsWith('/dashboard'))
+    return
 
-  if (to.path.startsWith('/dashboard') && to.path !== '/dashboard/login') {
-    if (!getToken())
-      return navigateTo('/dashboard/login')
-  }
+  const { setAuthSession, clearAuthSession } = useAuthSession()
 
-  if (to.path === '/dashboard/login') {
-    try {
-      await useAPI('/api/verify')
+  try {
+    const response = await useAPI<VerifyResponse>('/api/verify')
+    setAuthSession(response)
+
+    if (to.path === '/dashboard/login')
       return navigateTo('/dashboard')
-    }
-    catch (e) {
-      console.warn(e)
-    }
+  }
+  catch {
+    clearAuthSession()
+    if (to.path !== '/dashboard/login')
+      return abortNavigation()
   }
 })
