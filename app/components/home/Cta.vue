@@ -1,17 +1,24 @@
 <script setup lang="ts">
-const { github } = useAppConfig()
+const { documentation } = useAppConfig()
 </script>
 
 <template>
-  <section class="py-16">
+  <section
+    class="
+      bg-background py-16 text-foreground
+      md:py-24
+    "
+  >
     <div class="mx-auto max-w-6xl px-6">
-      <div
-        class="
-          mx-auto max-w-3xl rounded-xl border px-6 py-10
-          md:py-12
-        "
+      <Card
+        class="mx-auto max-w-3xl"
       >
-        <div class="text-center">
+        <CardContent
+          class="
+            py-4 text-center
+            md:py-6
+          "
+        >
           <h2
             class="text-3xl font-semibold text-balance"
           >
@@ -27,8 +34,9 @@ const { github } = useAppConfig()
               size="lg"
             >
               <a
-                :href="`${github}?tab=readme-ov-file#%EF%B8%8F-deployment`"
+                :href="`${documentation}/guide/getting-started`"
                 target="_blank"
+                rel="noopener noreferrer"
                 :title="$t('home.cta.button')"
               >
                 {{ $t('home.cta.button') }}
@@ -45,8 +53,8 @@ const { github } = useAppConfig()
               </NuxtLink>
             </Button>
           </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
     </div>
   </section>
 </template>

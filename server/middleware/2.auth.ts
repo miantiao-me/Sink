@@ -7,12 +7,18 @@ export default eventHandler(async (event) => {
   const token = getHeader(event, 'Authorization')?.replace(/^Bearer\s+/, '')
   if (await verifySiteToken(token, useRuntimeConfig(event).siteToken)) {
     event.context.authMethod = 'site-token'
+    event.context.userID = 'root'
+    event.context.userEmail = `root@${getRequestURL(event).hostname}`
     return
   }
 
-  if (await verifyCloudflareAccess(event)) {
+  const accessIdentity = await verifyCloudflareAccess(event)
+  if (accessIdentity) {
     if (isCloudflareAccessRequestAllowed(event)) {
-      event.context.authMethod = 'cloudflare-access'
+      Object.assign(
+        event.context,
+        mapCloudflareAccessIdentity(accessIdentity, getRequestURL(event).hostname),
+      )
       return
     }
 

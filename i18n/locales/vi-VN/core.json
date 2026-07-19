@@ -1,0 +1,22 @@
+{
+  "common": {
+    "i18n": "Đa ngôn ngữ",
+    "abbreviations": "Vi",
+    "current_language": "Tiếng Việt",
+    "try_again": "Thử lại",
+    "cancel": "Hủy",
+    "continue": "Tiếp tục",
+    "close": "Đóng",
+    "save": "Lưu",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "delete_success": "Xóa thành công!",
+    "search": "Tìm kiếm"
+  },
+  "theme": {
+    "toggle": "Chuyển đổi giao diện",
+    "light": "Sáng",
+    "dark": "Tối",
+    "system": "Hệ thống"
+  }
+}

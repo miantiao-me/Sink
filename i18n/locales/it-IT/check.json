@@ -1,0 +1,76 @@
+{
+  "check": {
+    "title": "Verifica dei link",
+    "description": "Verifica che gli URL di destinazione esistenti siano raggiungibili. I risultati vengono solo visualizzati e non modificano i link.",
+    "config": {
+      "timeout": "Timeout (secondi)",
+      "timeout_description": "Timeout per ogni link. Il valore predefinito è 6 secondi.",
+      "batch_size": "Dimensione batch",
+      "batch_size_description": "Link verificati per richiesta. Massimo 10."
+    },
+    "actions": {
+      "start": "Avvia verifica",
+      "checking": "Verifica in corso...",
+      "stop": "Interrompi",
+      "reload": "Ricarica link",
+      "loading": "Caricamento...",
+      "clear": "Cancella risultati",
+      "export": "Esporta CSV",
+      "detail": "Dettagli",
+      "original": "Originale"
+    },
+    "stats": {
+      "total": "Totale",
+      "checked": "Verificati",
+      "normal": "Normali",
+      "abnormal": "Anomali",
+      "network_error": "Errore di rete"
+    },
+    "progress": {
+      "title": "Avanzamento",
+      "description": "{checked} link su {total} verificati",
+      "stopped": "Verifica interrotta"
+    },
+    "results": {
+      "title": "Risultati",
+      "description": "Per impostazione predefinita vengono mostrati i risultati anomali. Usa le schede per filtrare in base al codice di stato."
+    },
+    "tabs": {
+      "abnormal": "Anomali ({count})",
+      "status": "{status} ({count})",
+      "all": "Tutti ({count})"
+    },
+    "table": {
+      "slug": "Slug",
+      "url": "URL",
+      "status": "Stato",
+      "result": "Risultato",
+      "duration": "Durata",
+      "error": "Errore",
+      "action": "Azione"
+    },
+    "result": {
+      "normal": "Normale",
+      "broken": "Non funzionante",
+      "network_error": "Errore di rete"
+    },
+    "empty": {
+      "not_started": "Nessun risultato.",
+      "no_broken_links": "Nessun link non funzionante trovato.",
+      "no_matching_results": "Nessun risultato corrispondente."
+    },
+    "messages": {
+      "load_failed": "Impossibile caricare i link",
+      "completed": "Verifica dei link completata",
+      "stopped": "Verifica dei link interrotta"
+    },
+    "dialogs": {
+      "clear": {
+        "title": "Cancellare i risultati?",
+        "description": "Rimuove tutti i risultati di questo controllo.",
+        "action": "Cancella risultati"
+      }
+    },
+    "duration_ms": "{duration} ms"
+  }
+}

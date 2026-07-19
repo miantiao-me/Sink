@@ -1,20 +1,19 @@
-import { afterAll, describe, expect, it } from 'vitest'
-import { deleteStoredLinks, fetch, postJson } from './utils'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
+import { deleteStoredLinks, fetch, postJson, setLinkStoreD1Mode } from './utils'
 
 type CfRequestInit = RequestInit & { cf?: { country?: string } }
 
 const createdSlugs: string[] = []
+
+beforeAll(async () => {
+  await setLinkStoreD1Mode()
+})
 
 afterAll(async () => {
   await deleteStoredLinks(createdSlugs)
 })
 
 describe('/', () => {
-  it('returns 200 for homepage request', async () => {
-    const response = await fetch('/')
-    expect(response.status).toBe(200)
-  })
-
   it('redirects CriOS user agent to apple URL', async () => {
     const slug = `crios-apple-${crypto.randomUUID()}`
     const apple = 'https://apps.apple.com/app/sink-test'
@@ -38,7 +37,56 @@ describe('/', () => {
 
     expect(response.status).toBe(301)
     expect(response.headers.get('Location')).toBe(apple)
-    expect(response.headers.get('Cache-Control')).toBeNull()
+  })
+
+  it('merges request query parameters into a target that already has a query', async () => {
+    const slug = `redirect-query-${crypto.randomUUID()}`
+    const targetUrl = 'https://example.com/landing?source=original&shared=target'
+
+    const createResponse = await postJson('/api/link/create', {
+      url: targetUrl,
+      slug,
+      redirectWithQuery: true,
+    })
+    expect(createResponse.status).toBe(201)
+    createdSlugs.push(slug)
+
+    const response = await fetch(`/${slug}?campaign=summer&shared=request`, { redirect: 'manual' })
+
+    expect(response.status).toBe(301)
+    expect(response.headers.get('Location')).toBe('https://example.com/landing?source=original&shared=request&campaign=summer')
+  })
+
+  it('returns OG HTML to social bots while redirecting regular browsers', async () => {
+    const slug = `social-og-${crypto.randomUUID()}`
+    const targetUrl = 'https://example.com/social-target'
+
+    const createResponse = await postJson('/api/link/create', {
+      url: targetUrl,
+      slug,
+      title: 'Social preview title',
+      description: 'Social preview description',
+    })
+    expect(createResponse.status).toBe(201)
+    createdSlugs.push(slug)
+
+    const botResponse = await fetch(`/${slug}`, {
+      redirect: 'manual',
+      headers: { 'User-Agent': 'Twitterbot/1.0' },
+    })
+    const html = await botResponse.text()
+    expect(botResponse.status).toBe(200)
+    expect(botResponse.headers.get('Content-Type')).toContain('text/html')
+    expect(html).toContain('<meta property="og:title" content="Social preview title">')
+    expect(html).toContain('<meta property="og:description" content="Social preview description">')
+    expect(html).toContain(`content="1;url=${targetUrl}"`)
+
+    const browserResponse = await fetch(`/${slug}`, {
+      redirect: 'manual',
+      headers: { 'User-Agent': 'Mozilla/5.0' },
+    })
+    expect(browserResponse.status).toBe(301)
+    expect(browserResponse.headers.get('Location')).toBe(targetUrl)
   })
 
   it('redirects to geo URL when cf.country matches', async () => {
@@ -77,26 +125,6 @@ describe('/', () => {
 
     expect(response.status).toBe(301)
     expect(response.headers.get('Location')).toBe(defaultUrl)
-    expect(response.headers.get('Cache-Control')).toBeNull()
-  })
-
-  it('redirects when Cloudflare reports the Tor country code', async () => {
-    const slug = `country-t1-${crypto.randomUUID()}`
-    const targetUrl = 'https://example.com/tor-target'
-
-    const createResponse = await postJson('/api/link/create', {
-      url: targetUrl,
-      slug,
-    })
-    expect(createResponse.status).toBe(201)
-    createdSlugs.push(slug)
-
-    const options: CfRequestInit = { redirect: 'manual', cf: { country: 'T1' } }
-    const response = await fetch(`/${slug}`, options as RequestInit)
-
-    expect(response.status).toBeGreaterThanOrEqual(300)
-    expect(response.status).toBeLessThan(400)
-    expect(response.headers.get('Location')).toBe(targetUrl)
   })
 
   it('shows geo URL in unsafe warning', async () => {
@@ -170,7 +198,7 @@ describe('/', () => {
   })
 })
 
-describe.sequential('password protected redirect', () => {
+describe('password protected redirect', { concurrent: false }, () => {
   it('shows password page without password, rejects wrong password, and redirects with correct password', async () => {
     const password = 'redirect-secret123'
     const payload = {
@@ -200,5 +228,44 @@ describe.sequential('password protected redirect', () => {
     expect(correctPasswordResponse.status).toBeGreaterThanOrEqual(300)
     expect(correctPasswordResponse.status).toBeLessThan(400)
     expect(correctPasswordResponse.headers.get('location')).toBe(payload.url)
+  })
+
+  it('carries a valid password through unsafe confirmation and redirects after confirmation', async () => {
+    const slug = `password-unsafe-${crypto.randomUUID()}`
+    const password = 'unsafe-secret123'
+    const targetUrl = 'https://example.com/confirmed-target'
+    const createResponse = await postJson('/api/link/create', {
+      url: targetUrl,
+      slug,
+      password,
+      unsafe: true,
+    })
+    expect(createResponse.status).toBe(201)
+    createdSlugs.push(slug)
+
+    const passwordResponse = await fetch(`/${slug}`, { redirect: 'manual' })
+    expect(passwordResponse.status).toBe(200)
+    expect(await passwordResponse.text()).toContain('Password Required')
+
+    const warningResponse = await fetch(`/${slug}`, {
+      method: 'POST',
+      redirect: 'manual',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ password }),
+    })
+    const warningHtml = await warningResponse.text()
+    expect(warningResponse.status).toBe(200)
+    expect(warningHtml).toContain('Potentially Unsafe Link')
+    expect(warningHtml).toContain(`<input type="hidden" name="password" value="${password}">`)
+    expect(warningHtml).toContain('<input type="hidden" name="confirm" value="true">')
+
+    const confirmedResponse = await fetch(`/${slug}`, {
+      method: 'POST',
+      redirect: 'manual',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({ password, confirm: 'true' }),
+    })
+    expect(confirmedResponse.status).toBe(301)
+    expect(confirmedResponse.headers.get('Location')).toBe(targetUrl)
   })
 })

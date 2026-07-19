@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1783782935271,
+      "tag": "0000_workable_killraven",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1783784817546,
+      "tag": "0001_parched_strong_guy",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1783821450112,
+      "tag": "0002_chilly_aaron_stack",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "6",
+      "when": 1784369840025,
+      "tag": "0003_hesitant_namora",
+      "breakpoints": true
+    }
+  ]
+}

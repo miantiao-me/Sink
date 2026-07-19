@@ -1,34 +1,70 @@
 import type { H3Event } from 'h3'
-import { ofetch } from 'ofetch'
+import { getHeader } from 'h3'
+
+const MAX_RESPONSE_BYTES = 256 * 1024
+const MAX_MARKDOWN_LENGTH = 4096
+
+async function readLimitedBody(response: Response): Promise<string | null> {
+  const reader = response.body?.getReader()
+  if (!reader)
+    return null
+
+  const decoder = new TextDecoder()
+  let body = ''
+  let bytesRead = 0
+
+  while (bytesRead < MAX_RESPONSE_BYTES) {
+    const { done, value } = await reader.read()
+    if (done) {
+      body += decoder.decode()
+      return body || null
+    }
+
+    const chunk = value.subarray(0, MAX_RESPONSE_BYTES - bytesRead)
+    bytesRead += chunk.byteLength
+    body += decoder.decode(chunk, { stream: true })
+
+    if (bytesRead === MAX_RESPONSE_BYTES) {
+      // Cancel at the byte cap to bound memory and upstream transfer.
+      await reader.cancel()
+      body += decoder.decode()
+      return body || null
+    }
+  }
+
+  return body || null
+}
 
 export async function fetchPageMarkdown(event: H3Event, url: string, AI: Ai): Promise<string | null> {
-  const reqHeaders = Object.fromEntries(
-    Object.entries(getHeaders(event)).filter(([_, v]) => v !== undefined),
-  ) as Record<string, string>
+  const controller = new AbortController()
+  const timeout = setTimeout(() => controller.abort(), 5000)
 
   try {
-    const response = await ofetch.raw(url, {
-      headers: {
-        ...reqHeaders,
-        Accept: 'text/markdown, text/html;q=0.9, */*;q=0.8',
-      },
-      timeout: 5000,
-      responseType: 'text',
+    const target = new URL(url)
+    if (target.protocol !== 'http:' && target.protocol !== 'https:')
+      return null
+
+    const headers = new Headers({
+      Accept: 'text/markdown, text/html;q=0.9, */*;q=0.8',
     })
+    const acceptLanguage = getHeader(event, 'accept-language')
+    if (acceptLanguage)
+      headers.set('Accept-Language', acceptLanguage)
+
+    const response = await fetch(target, { headers, signal: controller.signal })
+    if (!response.ok)
+      throw new Error(`HTTP ${response.status}`)
 
     const contentType = response.headers.get('content-type') || ''
-    const body = response._data as string
-
+    const body = await readLimitedBody(response)
     if (!body) {
       return null
     }
 
-    // Markdown for Agents: site returns markdown directly
     if (contentType.includes('text/markdown')) {
-      return body.slice(0, 4096)
+      return body.slice(0, MAX_MARKDOWN_LENGTH)
     }
 
-    // Fallback: convert HTML to markdown via AI.toMarkdown()
     if (contentType.includes('text/html')) {
       try {
         const result = await AI.toMarkdown({
@@ -36,7 +72,7 @@ export async function fetchPageMarkdown(event: H3Event, url: string, AI: Ai): Pr
           blob: new Blob([body], { type: 'text/html' }),
         })
         if (result.format === 'markdown' && result.data) {
-          return result.data.slice(0, 4096)
+          return result.data.slice(0, MAX_MARKDOWN_LENGTH)
         }
       }
       catch (err) {
@@ -46,6 +82,9 @@ export async function fetchPageMarkdown(event: H3Event, url: string, AI: Ai): Pr
   }
   catch (err) {
     console.warn(`[markdown] Failed to fetch ${url}:`, err)
+  }
+  finally {
+    clearTimeout(timeout)
   }
 
   return null

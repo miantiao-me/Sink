@@ -1,0 +1,80 @@
+{
+  "home": {
+    "hero": {
+      "github_repo": "Repository GitHub"
+    },
+    "features": {
+      "title": "Funzionalità",
+      "subtitle": "Funzionalità semplici e sufficienti",
+      "url_shortening": {
+        "title": "Accorciamento URL",
+        "description": "Comprimi i tuoi URL alla lunghezza minima"
+      },
+      "analytics": {
+        "title": "Analisi",
+        "description": "Monitora le analisi dei link e raccogli statistiche utili"
+      },
+      "serverless": {
+        "title": "Serverless",
+        "description": "Distribuisci senza bisogno di server tradizionali"
+      },
+      "customizable_slug": {
+        "title": "Slug Personalizzabile",
+        "description": "Crea slug personalizzati e aggiungi parametri UTM"
+      },
+      "ai_slug": {
+        "title": "Assistenza IA",
+        "description": "Genera slug e metadati OpenGraph dai contenuti della pagina"
+      },
+      "link_expiration": {
+        "title": "Controllo Link",
+        "description": "Imposta scadenze, password e avvisi per link non sicuri"
+      },
+      "device_routing": {
+        "title": "Routing Intelligente",
+        "description": "Reindirizza i visitatori per dispositivo o paese"
+      },
+      "og_preview": {
+        "title": "Anteprima Social",
+        "description": "Personalizza anteprime con titoli, descrizioni e immagini"
+      },
+      "realtime_analytics": {
+        "title": "Analisi quasi in tempo reale",
+        "description": "Globo 3D e log eventi basati su polling periodico e riproduzione lato client"
+      },
+      "qr_code": {
+        "title": "Codice QR",
+        "description": "Genera codici QR per i tuoi link brevi"
+      },
+      "import_export": {
+        "title": "Importa/Esporta",
+        "description": "Trasferisci link in blocco tramite JSON ed esporta le analisi degli accessi in CSV"
+      },
+      "multi_language": {
+        "title": "Multilingua",
+        "description": "Supporto i18n completo per dashboard e pagine di reindirizzamento"
+      }
+    },
+    "cta": {
+      "title": "Distribuisci Sink",
+      "description": "Segui la guida introduttiva per configurare e distribuire Sink su Cloudflare",
+      "button": "Vedi la guida al deploy"
+    },
+    "logos": {
+      "title": "Costruito con tecnologie eccezionali"
+    },
+    "twitter": {
+      "follow": "Segui su X(Twitter)"
+    },
+    "stats": {
+      "title": "Sink in Numeri",
+      "subtitle": "Affidabile per sviluppatori in tutto il mondo",
+      "stars": "Stelle su GitHub",
+      "forks": "Fork"
+    },
+    "testimonials": {
+      "title": "Amato dagli Utenti",
+      "subtitle": "Scopri cosa dicono gli sviluppatori su Sink"
+    }
+  }
+}

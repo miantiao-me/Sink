@@ -1,0 +1,80 @@
+{
+  "home": {
+    "hero": {
+      "github_repo": "GitHub Repo"
+    },
+    "features": {
+      "title": "Features",
+      "subtitle": "Simple and sufficient functionality",
+      "url_shortening": {
+        "title": "URL Shortening",
+        "description": "Compress your URLs to their minimal length"
+      },
+      "analytics": {
+        "title": "Analytics",
+        "description": "Monitor link analytics and gather insightful statistics"
+      },
+      "serverless": {
+        "title": "Serverless",
+        "description": "Deploy without the need for traditional servers"
+      },
+      "customizable_slug": {
+        "title": "Customizable Slug",
+        "description": "Create custom slugs and add UTM parameters"
+      },
+      "ai_slug": {
+        "title": "AI Assistance",
+        "description": "Generate slugs and OpenGraph metadata from page content"
+      },
+      "link_expiration": {
+        "title": "Link Control",
+        "description": "Set expirations, passwords, and unsafe-link warning pages"
+      },
+      "device_routing": {
+        "title": "Smart Routing",
+        "description": "Redirect visitors by device or country"
+      },
+      "og_preview": {
+        "title": "Social Preview",
+        "description": "Customize social previews with titles, descriptions, and images"
+      },
+      "realtime_analytics": {
+        "title": "Near-real-time Analytics",
+        "description": "3D globe and event logs updated by periodic polling and client-side replay"
+      },
+      "qr_code": {
+        "title": "QR Code",
+        "description": "Generate QR codes for your short links"
+      },
+      "import_export": {
+        "title": "Import/Export",
+        "description": "Transfer links in bulk with JSON and export access analytics as CSV"
+      },
+      "multi_language": {
+        "title": "Multi-language",
+        "description": "Full i18n support for dashboard and redirect pages"
+      }
+    },
+    "cta": {
+      "title": "Deploy Sink",
+      "description": "Follow the getting started guide to configure and deploy Sink on Cloudflare",
+      "button": "Read Deployment Guide"
+    },
+    "logos": {
+      "title": "Built with awesome technologies"
+    },
+    "twitter": {
+      "follow": "Follow on X(Twitter)"
+    },
+    "stats": {
+      "title": "Sink in Numbers",
+      "subtitle": "Trusted by developers around the world",
+      "stars": "Stars on GitHub",
+      "forks": "Forks"
+    },
+    "testimonials": {
+      "title": "Loved by Users",
+      "subtitle": "See what developers are saying about Sink"
+    }
+  }
+}

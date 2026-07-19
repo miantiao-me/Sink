@@ -23,6 +23,7 @@ node_modules
 .env.*
 !.env.example
 .wrangler
+wrangler.deploy.jsonc
 site
 cache
 public/world.json
@@ -32,4 +33,10 @@ public/world.json
 .claude
 .opencode
 .agents
+skills
+!skills/sink
+
 opencode.json
+
+# Local deepwork session state
+.slim/deepwork/
