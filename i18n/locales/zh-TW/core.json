@@ -1,0 +1,22 @@
+{
+  "common": {
+    "i18n": "多語言",
+    "abbreviations": "繁",
+    "current_language": "繁體中文",
+    "try_again": "重試",
+    "cancel": "取消",
+    "continue": "繼續",
+    "close": "關閉",
+    "save": "保存",
+    "edit": "編輯",
+    "delete": "刪除",
+    "delete_success": "刪除成功！",
+    "search": "搜尋"
+  },
+  "theme": {
+    "toggle": "切換主题",
+    "light": "淺色",
+    "dark": "深色",
+    "system": "跟隨系統"
+  }
+}

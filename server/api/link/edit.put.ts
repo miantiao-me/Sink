@@ -1,9 +1,5 @@
-import type { z } from 'zod'
-import { EditLinkPasswordSchema, LinkSchema } from '#shared/schemas/link'
-
-const EditLinkSchema = LinkSchema.extend({
-  password: EditLinkPasswordSchema,
-})
+import type { Link } from '#shared/schemas/link'
+import { EditLinkSchema } from '#shared/schemas/link'
 
 defineRouteMeta({
   openAPI: {
@@ -31,6 +27,7 @@ defineRouteMeta({
               password: { type: 'string', description: 'Password protection for the link' },
               unsafe: { type: 'boolean', description: 'Mark link as unsafe, showing a warning page before redirect' },
               geo: { type: 'object', additionalProperties: { type: 'string' }, description: 'Geo-routing rules (country code to URL)' },
+              tags: { type: 'array', items: { type: 'string' }, description: 'Up to 10 normalized link tags, each 1-32 characters' },
             },
           },
         },
@@ -48,8 +45,9 @@ export default eventHandler(async (event) => {
     })
   }
   const link = await readValidatedBody(event, EditLinkSchema.parse)
+  link.slug = normalizeSlug(event, link.slug)
 
-  const existingLink: z.infer<typeof LinkSchema> | null = await getLink(event, link.slug)
+  const existingLink: Link | null = await getAnyAuthoritativeLink(event, link.slug)
   if (!existingLink) {
     throw createError({
       status: 404,
@@ -63,7 +61,12 @@ export default eventHandler(async (event) => {
   const newLink = mergeEditableLink(existingLink, link)
   await applyEditableLinkPassword(newLink, link.password)
 
-  await putLink(event, newLink)
+  if (!await updateLink(event, newLink, { id: existingLink.id, updatedAt: existingLink.updatedAt })) {
+    throw createError({
+      status: 409,
+      statusText: 'Link was modified or replaced',
+    })
+  }
   setResponseStatus(event, 201)
   return buildLinkResponse(event, newLink)
 })

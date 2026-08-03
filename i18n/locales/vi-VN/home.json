@@ -1,0 +1,80 @@
+{
+  "home": {
+    "hero": {
+      "github_repo": "Kho GitHub"
+    },
+    "features": {
+      "title": "Tính năng",
+      "subtitle": "Đơn giản và đủ dùng",
+      "url_shortening": {
+        "title": "Rút gọn URL",
+        "description": "Rút gọn liên kết đến độ dài tối thiểu"
+      },
+      "analytics": {
+        "title": "Phân tích",
+        "description": "Theo dõi dữ liệu và thu thập thống kê hữu ích"
+      },
+      "serverless": {
+        "title": "Không máy chủ",
+        "description": "Triển khai mà không cần máy chủ truyền thống"
+      },
+      "customizable_slug": {
+        "title": "Slug tùy chỉnh",
+        "description": "Tạo slug tùy chỉnh và thêm tham số UTM"
+      },
+      "ai_slug": {
+        "title": "Trợ lý AI",
+        "description": "Tạo slug và metadata OpenGraph từ nội dung trang"
+      },
+      "link_expiration": {
+        "title": "Kiểm soát liên kết",
+        "description": "Đặt hết hạn, mật khẩu và cảnh báo liên kết không an toàn"
+      },
+      "device_routing": {
+        "title": "Điều hướng thông minh",
+        "description": "Chuyển hướng khách truy cập theo thiết bị hoặc quốc gia"
+      },
+      "og_preview": {
+        "title": "Xem trước mạng xã hội",
+        "description": "Tùy chỉnh bản xem trước với tiêu đề, mô tả và hình ảnh"
+      },
+      "realtime_analytics": {
+        "title": "Phân tích gần thời gian thực",
+        "description": "Địa cầu 3D và nhật ký sự kiện qua thăm dò định kỳ và phát lại phía máy khách"
+      },
+      "qr_code": {
+        "title": "Mã QR",
+        "description": "Tạo mã QR cho liên kết rút gọn"
+      },
+      "import_export": {
+        "title": "Nhập/Xuất",
+        "description": "Chuyển liên kết hàng loạt bằng JSON và xuất phân tích truy cập dưới dạng CSV"
+      },
+      "multi_language": {
+        "title": "Đa ngôn ngữ",
+        "description": "Hỗ trợ i18n đầy đủ cho bảng điều khiển và trang chuyển hướng"
+      }
+    },
+    "cta": {
+      "title": "Triển khai Sink",
+      "description": "Xem hướng dẫn bắt đầu để cấu hình và triển khai Sink trên Cloudflare",
+      "button": "Xem hướng dẫn triển khai"
+    },
+    "logos": {
+      "title": "Xây dựng bằng những công nghệ tuyệt vời"
+    },
+    "twitter": {
+      "follow": "Theo dõi tôi trên X (Twitter)"
+    },
+    "stats": {
+      "title": "Số liệu Sink",
+      "subtitle": "Được tin dùng bởi các nhà phát triển trên toàn thế giới",
+      "stars": "Stars trên GitHub",
+      "forks": "Forks"
+    },
+    "testimonials": {
+      "title": "Người dùng yêu thích",
+      "subtitle": "Xem các nhà phát triển nói gì về Sink"
+    }
+  }
+}

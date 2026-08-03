@@ -1,0 +1,19 @@
+{
+  "name": "@sink/docs",
+  "type": "module",
+  "private": true,
+  "packageManager": "pnpm@11.11.0",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "vitepress dev .",
+    "build": "vitepress build .",
+    "preview": "vitepress preview .",
+    "deploy": "pnpm build && wrangler deploy --config ./wrangler.jsonc"
+  },
+  "devDependencies": {
+    "vitepress": "^1.6.4",
+    "wrangler": "^4.110.0"
+  }
+}

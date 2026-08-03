@@ -1,0 +1,22 @@
+{
+  "common": {
+    "i18n": "다국어",
+    "abbreviations": "한",
+    "current_language": "한국어",
+    "try_again": "다시 시도",
+    "cancel": "취소",
+    "continue": "계속",
+    "close": "닫기",
+    "save": "저장",
+    "edit": "편집",
+    "delete": "삭제",
+    "delete_success": "삭제되었습니다!",
+    "search": "검색"
+  },
+  "theme": {
+    "toggle": "테마 전환",
+    "light": "라이트",
+    "dark": "다크",
+    "system": "시스템"
+  }
+}

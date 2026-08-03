@@ -1,0 +1,46 @@
+{
+  "layouts": {
+    "footer": {
+      "social": {
+        "email": "信箱",
+        "telegram": "Telegram",
+        "blog": "部落格",
+        "twitter": "Twitter",
+        "mastodon": "Mastodon",
+        "github": "GitHub"
+      }
+    },
+    "header": {
+      "select_language": "選擇語言",
+      "toggle_menu_aria_label": "切換選單"
+    },
+    "links": {
+      "documentation": "文件",
+      "api_reference": "API 參考",
+      "documentation_aria_label": "開啟 Sink 文件（在新分頁中開啟）",
+      "resources_aria_label": "資源",
+      "skip_to_content": "跳到主要內容",
+      "home_aria_label": "首頁",
+      "github_aria_label": "GitHub 上的 Sink"
+    }
+  },
+  "nav": {
+    "links": "連結",
+    "analysis": "分析",
+    "realtime": "即時",
+    "check": "檢查",
+    "migrate": "匯入/匯出"
+  },
+  "sidebar": {
+    "subtitle": "縮網址服務",
+    "platform": "平台",
+    "settings": "設定",
+    "import": "匯入",
+    "export": "匯出",
+    "coffee": "請我喝杯咖啡",
+    "github": "GitHub",
+    "releases": "版本發佈",
+    "stars": "Stars",
+    "update": "新版本 {version} 可用（當前: {current}）"
+  }
+}

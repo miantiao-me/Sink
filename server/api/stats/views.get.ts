@@ -1,8 +1,7 @@
 import type { H3Event } from 'h3'
-import { QuerySchema } from '#shared/schemas/query'
+import { sql } from 'kysely'
 import { z } from 'zod'
-
-const { select } = SqlBricks
+import { QuerySchema } from '#shared/schemas/query'
 
 const unitMap: { [x: string]: string } = {
   minute: '%Y-%m-%d %H:%i',
@@ -18,13 +17,21 @@ const ViewsQuerySchema = QuerySchema.extend({
     .default('Etc/UTC'),
 })
 
-function query2sql(query: z.infer<typeof ViewsQuerySchema>, event: H3Event): string {
-  const filter = query2filter(query)
+function query2sql(query: z.infer<typeof ViewsQuerySchema>, event: H3Event) {
+  const filter = buildAnalyticsFilter(query)
   const { dataset } = useRuntimeConfig(event)
   const timezone = getSafeTimezone(query.clientTimezone)
-  const sql = select(`formatDateTime(timestamp, '${unitMap[query.unit]}', '${timezone}') as time, SUM(_sample_interval) as visits, COUNT(DISTINCT ${logsMap.ip}) as visitors`).from(dataset).where(filter).groupBy('time').orderBy('time')
-  appendTimeFilter(sql, query)
-  return sql.toString()
+  const analyticsQuery = createAnalyticsQuery(dataset)
+  const filteredQuery = filter ? analyticsQuery.where(filter) : analyticsQuery
+
+  return filteredQuery
+    .select([
+      sql<string>`formatDateTime(${sql.ref('timestamp')}, ${sql.lit(unitMap[query.unit]!)}, ${sql.lit(timezone)})`.as('time'),
+      sql<number>`SUM(_sample_interval)`.as('visits'),
+      sql<number>`COUNT(DISTINCT ${sql.ref(logsMap.ip!)})`.as('visitors'),
+    ])
+    .groupBy('time')
+    .orderBy('time')
 }
 
 export default eventHandler(async (event) => {

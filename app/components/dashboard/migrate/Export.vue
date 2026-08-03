@@ -1,0 +1,97 @@
+<script setup lang="ts">
+import type { Link } from '@/types'
+import { Download, Loader } from '@lucide/vue'
+import { toast } from 'vue-sonner'
+import { createExportFilename } from '#shared/utils/export-file'
+
+interface ExportResponse {
+  version: string
+  exportedAt: string
+  count: number
+  links: Link[]
+  cursor?: string
+  list_complete: boolean
+}
+
+const { t } = useI18n()
+const isExporting = ref(false)
+const exportedCount = ref(0)
+
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+async function handleExport() {
+  isExporting.value = true
+  exportedCount.value = 0
+
+  try {
+    const allLinks: Link[] = []
+    let cursor: string | undefined
+    let listComplete = false
+
+    while (!listComplete) {
+      const params = cursor ? `?cursor=${encodeURIComponent(cursor)}` : ''
+      const data = await useAPI<ExportResponse>(`/api/link/export${params}`)
+
+      allLinks.push(...data.links)
+      exportedCount.value = allLinks.length
+      listComplete = data.list_complete
+      cursor = data.cursor
+
+      if (!listComplete) {
+        await sleep(1000)
+      }
+    }
+
+    const exportData = {
+      version: '1.0',
+      exportedAt: new Date().toISOString(),
+      count: allLinks.length,
+      links: allLinks,
+    }
+
+    saveAsJson(exportData, createExportFilename('sink-links', 'json'))
+
+    toast.success(t('migrate.export.success'))
+  }
+  catch (error) {
+    toast.error(t('migrate.export.failed'), {
+      description: error instanceof Error ? error.message : String(error),
+    })
+  }
+  finally {
+    isExporting.value = false
+    exportedCount.value = 0
+  }
+}
+</script>
+
+<template>
+  <Card class="h-fit">
+    <CardHeader>
+      <CardTitle><h2>{{ $t('migrate.export.title') }}</h2></CardTitle>
+      <CardDescription>{{ $t('migrate.export.description') }}</CardDescription>
+    </CardHeader>
+    <CardContent>
+      <Button
+        class="tabular-nums"
+        :disabled="isExporting"
+        :aria-busy="isExporting"
+        @click="handleExport"
+      >
+        <Loader
+          v-if="isExporting" aria-hidden="true" class="
+            size-4
+            motion-safe:animate-spin
+          "
+        />
+        <Download v-else aria-hidden="true" class="size-4" />
+        <template v-if="isExporting && exportedCount > 0">
+          {{ exportedCount }} {{ $t('migrate.export.total_links') }}…
+        </template>
+        <template v-else>
+          {{ $t('migrate.export.button') }}
+        </template>
+      </Button>
+    </CardContent>
+  </Card>
+</template>

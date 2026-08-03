@@ -1,0 +1,1 @@
+CREATE INDEX `links_created_at_desc_slug_idx` ON `links` ("created_at" desc,`slug`);

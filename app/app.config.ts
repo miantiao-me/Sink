@@ -1,5 +1,6 @@
 export default defineAppConfig({
   title: 'Sink',
+  documentation: 'https://docs.sink.cool',
   github: 'https://github.com/miantiao-me/sink',
   coffee: 'https://sink.cool/coffee',
   twitter: 'https://sink.cool/x',

@@ -1,8 +1,9 @@
 <script setup lang="ts">
+import { CheckIcon } from '@lucide/vue';
+
 import type { ContextMenuCheckboxItemEmits, ContextMenuCheckboxItemProps } from "reka-ui"
 import type { HTMLAttributes } from "vue"
 import { reactiveOmit } from "@vueuse/core"
-import { Check } from "lucide-vue-next"
 import {
   ContextMenuCheckboxItem,
   ContextMenuItemIndicator,
@@ -23,14 +24,14 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     data-slot="context-menu-checkbox-item"
     v-bind="forwarded"
     :class="cn(
-      'focus:bg-accent focus:text-accent-foreground relative flex cursor-default items-center gap-2 rounded-sm py-1.5 pr-2 pl-8 text-sm outline-hidden select-none data-[disabled]:pointer-events-none data-[disabled]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*=\'size-\'])]:size-4',
+      'focus:bg-accent focus:text-accent-foreground gap-2 rounded-xl py-2 pr-8 pl-3 text-sm data-inset:pl-9.5 [&_svg:not([class*=size-])]:size-4 relative flex cursor-default items-center outline-hidden select-none data-disabled:pointer-events-none data-disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0',
       props.class,
     )"
   >
-    <span class="pointer-events-none absolute left-2 flex size-3.5 items-center justify-center">
+    <span class="absolute right-2 pointer-events-none">
       <ContextMenuItemIndicator>
         <slot name="indicator-icon">
-          <Check class="size-4" />
+          <CheckIcon />
         </slot>
       </ContextMenuItemIndicator>
     </span>
