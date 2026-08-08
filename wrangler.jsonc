@@ -37,15 +37,15 @@
   "kv_namespaces": [
     {
       "binding": "KV",
-      "preview_id": "ef93d42dc4b34969bab404d2e80f8dd3", // Override with DEPLOY_KV_PREVIEW_NAMESPACE_ID (falls back to DEPLOY_KV_NAMESPACE_ID)
-      "id": "ef93d42dc4b34969bab404d2e80f8dd3" // Override with DEPLOY_KV_NAMESPACE_ID
+      "preview_id": "be58e65bc9d34430b2f87416c022f1d4", // Override with DEPLOY_KV_PREVIEW_NAMESPACE_ID (falls back to DEPLOY_KV_NAMESPACE_ID)
+      "id": "be58e65bc9d34430b2f87416c022f1d4" // Override with DEPLOY_KV_NAMESPACE_ID
     }
   ],
   "d1_databases": [
     {
       "binding": "DB",
       "database_name": "sink", // Override with DEPLOY_D1_DATABASE_NAME (default: sink)
-      "database_id": "ef964055-65bf-4b78-b109-ac9c9290ae62", // Override with DEPLOY_D1_DATABASE_ID (required for CLI deploy)
+      "database_id": "99325873-8f76-4aae-8ce9-e8c42309c552", // Override with DEPLOY_D1_DATABASE_ID (required for CLI deploy)
       "migrations_dir": "drizzle"
     }
   ],
