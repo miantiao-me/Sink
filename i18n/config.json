@@ -3,7 +3,6 @@
     "core",
     "auth",
     "shell",
-    "home",
     "dashboard",
     "links",
     "check",

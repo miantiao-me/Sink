@@ -81,6 +81,9 @@ export default defineNuxtConfig({
   compatibilityDate: '2026-07-13',
   nitro: {
     preset: import.meta.env.CF_PAGES !== '1' ? 'cloudflare-module' : undefined,
+    prerender: {
+      routes: ['/dashboard/login', '/dashboard/links'],
+    },
     experimental: {
       openAPI: true,
     },
