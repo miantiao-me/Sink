@@ -1,5 +1,6 @@
 <script setup lang="ts">
-const { data: oidcConfig } = useFetch<{ enabled: boolean }>('/api/auth/config')
+const { data: oidcConfig, status } = useFetch<{ enabled: boolean }>('/api/auth/config')
+const loginMode = computed(() => resolveLoginMode(status.value, oidcConfig.value?.enabled))
 </script>
 
 <template>
@@ -10,17 +11,21 @@ const { data: oidcConfig } = useFetch<{ enabled: boolean }>('/api/auth/config')
           {{ $t('login.title') }}
         </h1>
       </CardTitle>
-      <CardDescription>
+      <CardDescription v-if="loginMode === 'single-user'">
         {{ $t('login.description') }}
       </CardDescription>
     </CardHeader>
     <CardContent class="grid gap-4">
-      <template v-if="oidcConfig?.enabled">
+      <Skeleton v-if="loginMode === 'loading'" class="h-9 w-full" />
+      <template v-else-if="loginMode === 'oidc'">
         <Button type="button" class="w-full" @click="signInWithOidc()">
           {{ $t('login.oidc_submit') }}
         </Button>
       </template>
-      <LoginForm v-else />
+      <LoginForm v-else-if="loginMode === 'single-user'" />
+      <Alert v-else variant="destructive" role="alert">
+        <AlertTitle>{{ $t('login.failed') }}</AlertTitle>
+      </Alert>
     </CardContent>
   </Card>
 </template>
