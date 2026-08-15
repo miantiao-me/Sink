@@ -1,0 +1,74 @@
+{
+  "migrate": {
+    "d1": {
+      "title": "KV 到 D1 迁移",
+      "description": "将链接记录从 Workers KV 复制到 D1，并保留 D1 中已有的记录。",
+      "status_title": "迁移状态",
+      "status_pending": "迁移尚未完成。",
+      "status_completed": "迁移已完成。",
+      "completed_at": "完成于 {date}",
+      "run_again": "再次迁移",
+      "running": "迁移中…",
+      "success": "迁移已成功完成。",
+      "failed": "迁移失败",
+      "scanned": "已扫描",
+      "inserted": "已写入",
+      "skipped": "已跳过",
+      "expired": "已过期",
+      "failed_count": "失败",
+      "no_marker": "未找到迁移完成标记。"
+    },
+    "access_export": {
+      "title": "导出访问数据",
+      "description": "将访问统计数据下载为 CSV 文件",
+      "date_range": "日期范围",
+      "slug_label": "Slug 筛选",
+      "slug_description": "留空将导出全部 Slug。",
+      "button": "导出 CSV",
+      "exporting": "正在导出...",
+      "success": "导出成功",
+      "failed": "导出失败"
+    },
+    "backup": {
+      "title": "手动备份",
+      "description": "手动触发所有链接到已配置 R2 存储桶的备份",
+      "button": "开始备份",
+      "backing_up": "备份中...",
+      "success": "备份成功",
+      "failed": "备份失败"
+    },
+    "export": {
+      "title": "导出链接",
+      "description": "将所有链接下载为 JSON 文件",
+      "button": "导出全部",
+      "total_links": "链接总数",
+      "success": "导出成功",
+      "failed": "导出失败"
+    },
+    "import": {
+      "title": "导入链接",
+      "description": "上传 JSON 文件以导入链接",
+      "dropzone": "拖拽 JSON 文件到此处或点击上传",
+      "links_found": "{count} 条链接可导入",
+      "button": "开始导入",
+      "importing": "导入中...",
+      "import_more": "继续导入",
+      "download_success": "下载 {count} 条已导入链接",
+      "download_skipped": "下载 {count} 条已跳过链接",
+      "download_failed": "下载 {count} 条失败链接",
+      "result": {
+        "title": "导入结果",
+        "success": "成功导入",
+        "skipped": "已跳过（已存在）",
+        "failed": "失败",
+        "success_message": "成功导入 {count} 条链接"
+      },
+      "errors": {
+        "invalid_json": "无效的 JSON 文件",
+        "invalid_format": "文件格式无效，请使用从 Sink 导出的文件",
+        "parse_error": "文件解析失败",
+        "batch_failed": "此批链接导入失败。"
+      }
+    }
+  }
+}

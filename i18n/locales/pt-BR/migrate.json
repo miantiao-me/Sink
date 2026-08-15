@@ -1,0 +1,74 @@
+{
+  "migrate": {
+    "d1": {
+      "title": "Migração de KV para D1",
+      "description": "Copie os links do Workers KV para o D1 preservando os registros existentes.",
+      "status_title": "Status da migração",
+      "status_pending": "A migração não foi concluída.",
+      "status_completed": "Migração concluída.",
+      "completed_at": "Concluída em {date}",
+      "run_again": "Executar novamente",
+      "running": "Migrando…",
+      "success": "Migração concluída com sucesso.",
+      "failed": "Falha na migração",
+      "scanned": "Verificados",
+      "inserted": "Inseridos",
+      "skipped": "Ignorados",
+      "expired": "Expirados",
+      "failed_count": "Falhas",
+      "no_marker": "Nenhum marcador de conclusão encontrado."
+    },
+    "access_export": {
+      "title": "Exportar dados de acesso",
+      "description": "Baixe as estatísticas de acesso como um arquivo CSV",
+      "date_range": "Intervalo de datas",
+      "slug_label": "Filtro de slug",
+      "slug_description": "Deixe em branco para exportar todos os slugs.",
+      "button": "Exportar CSV",
+      "exporting": "Exportando...",
+      "success": "Exportação concluída",
+      "failed": "Falha na exportação"
+    },
+    "backup": {
+      "title": "Backup manual",
+      "description": "Acione um backup manual de todos os links para o bucket R2 configurado",
+      "button": "Iniciar backup",
+      "backing_up": "Fazendo backup...",
+      "success": "Backup realizado com sucesso",
+      "failed": "Falha no backup"
+    },
+    "export": {
+      "title": "Exportar links",
+      "description": "Baixe todos os seus links como um arquivo JSON",
+      "button": "Exportar tudo",
+      "total_links": "Total de links",
+      "success": "Exportação bem-sucedida",
+      "failed": "Falha na exportação"
+    },
+    "import": {
+      "title": "Importar links",
+      "description": "Envie um arquivo JSON para importar links",
+      "dropzone": "Arraste o arquivo JSON aqui ou clique para enviar",
+      "links_found": "{count} links prontos para importar",
+      "button": "Iniciar importação",
+      "importing": "Importando...",
+      "import_more": "Importar mais",
+      "download_success": "Baixar {count} links importados",
+      "download_skipped": "Baixar {count} links ignorados",
+      "download_failed": "Baixar {count} links com falha",
+      "result": {
+        "title": "Resultado da importação",
+        "success": "Importado com sucesso",
+        "skipped": "Ignorado (já existe)",
+        "failed": "Falhou",
+        "success_message": "{count} links importados com sucesso"
+      },
+      "errors": {
+        "invalid_json": "Arquivo JSON inválido",
+        "invalid_format": "Formato de arquivo inválido. Por favor, use um arquivo exportado do Sink.",
+        "parse_error": "Falha ao analisar o arquivo",
+        "batch_failed": "Este lote de importação falhou."
+      }
+    }
+  }
+}

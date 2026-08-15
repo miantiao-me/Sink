@@ -1,13 +1,20 @@
-import type { Link } from '#shared/schemas/link'
 import type { DateValue } from '@internationalized/date'
 import type { AnyFieldApi } from '@tanstack/vue-form'
+import type { Link } from '#shared/schemas/link'
 
 export type { Link }
 
 export type LinkUpdateType = 'create' | 'edit' | 'delete'
 
+export interface LinkSearchItem {
+  slug: string
+  url: string
+  comment?: string
+  tags?: string[]
+}
+
 // Form data derived from Link, with DateValue for expiration and required strings for optional fields
-type LinkFormFields = Omit<Link, 'id' | 'createdAt' | 'updatedAt' | 'expiration' | 'geo'> & {
+type LinkFormFields = Omit<Link, 'id' | 'createdAt' | 'updatedAt' | 'expiration' | 'geo' | 'tags'> & {
   expiration: DateValue | undefined
   geo: { country: string, url: string }[]
 }
@@ -25,3 +32,4 @@ export interface LinkListResponse {
 }
 
 export type LinkSortBy = 'newest' | 'oldest' | 'az' | 'za'
+export type LinkStatus = 'active' | 'expired' | 'all'

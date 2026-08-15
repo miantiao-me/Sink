@@ -14,10 +14,18 @@ defineOptions({
   inheritAttrs: false,
 })
 
-const props = defineProps<AlertDialogContentProps & { class?: HTMLAttributes["class"] }>()
+const props = withDefaults(
+  defineProps<AlertDialogContentProps & {
+    class?: HTMLAttributes["class"]
+    size?: "default" | "sm"
+  }>(),
+  {
+    size: "default",
+  },
+)
 const emits = defineEmits<AlertDialogContentEmits>()
 
-const delegatedProps = reactiveOmit(props, "class")
+const delegatedProps = reactiveOmit(props, "class", "size")
 
 const forwarded = useForwardPropsEmits(delegatedProps, emits)
 </script>
@@ -26,14 +34,15 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
   <AlertDialogPortal>
     <AlertDialogOverlay
       data-slot="alert-dialog-overlay"
-      class="data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-black/80"
+      class="data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 bg-black/80 duration-100 supports-backdrop-filter:backdrop-blur-xs fixed inset-0 z-50"
     />
     <AlertDialogContent
       data-slot="alert-dialog-content"
+      :data-size="size"
       v-bind="{ ...$attrs, ...forwarded }"
       :class="
         cn(
-          'bg-background data-[state=open]:animate-in data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-full max-w-[calc(100%-2rem)] translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border p-6 shadow-lg duration-200 sm:max-w-lg',
+          'data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 data-closed:zoom-out-95 data-open:zoom-in-95 bg-popover text-popover-foreground ring-foreground/5 gap-6 rounded-4xl p-6 ring-1 duration-100 data-[size=default]:max-w-xs data-[size=sm]:max-w-xs data-[size=default]:sm:max-w-md group/alert-dialog-content fixed top-1/2 left-1/2 z-50 grid w-full -translate-x-1/2 -translate-y-1/2 outline-none',
           props.class,
         )
       "

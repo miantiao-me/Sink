@@ -1,0 +1,22 @@
+{
+  "common": {
+    "i18n": "Multi idioma",
+    "abbreviations": "Pt",
+    "current_language": "Português (PT)",
+    "try_again": "Tenta novamente",
+    "cancel": "Cancelar",
+    "continue": "Continuar",
+    "close": "Fechar",
+    "save": "Guardar",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "delete_success": "Eliminado com sucesso!",
+    "search": "Pesquisar"
+  },
+  "theme": {
+    "toggle": "Alternar tema",
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Sistema"
+  }
+}

@@ -2,6 +2,17 @@ import type { Link } from '#shared/schemas/link'
 import { escape } from 'es-toolkit/string'
 import { parseURL } from 'ufo'
 
+const CLOAKING_IFRAME_SANDBOX = [
+  'allow-scripts',
+  'allow-same-origin',
+  'allow-forms',
+  'allow-popups',
+  'allow-popups-to-escape-sandbox',
+  'allow-top-navigation-by-user-activation',
+  'allow-downloads',
+  'allow-modals',
+].join(' ')
+
 function buildMetaTags(link: Link, baseUrl: string) {
   const { host: hostname } = parseURL(link.url)
   const title = link.title || hostname || 'Link'
@@ -34,11 +45,12 @@ export function generateCloakingHtml(link: Link, targetUrl: string, baseUrl: str
 <html>
 <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>${escape(title)}</title>
     ${tags}
 </head>
 <body style="margin:0;overflow:hidden">
-    <iframe src="${escape(targetUrl)}" style="width:100vw;height:100vh;border:none" sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox" allowfullscreen referrerpolicy="no-referrer"></iframe>
+    <iframe src="${escape(targetUrl)}" style="width:100%;height:100%;width:100vw;height:100vh;border:none" sandbox="${CLOAKING_IFRAME_SANDBOX}" allowfullscreen referrerpolicy="no-referrer"></iframe>
     <noscript><meta http-equiv="refresh" content="0;url=${escape(targetUrl)}"></noscript>
 </body>
 </html>`

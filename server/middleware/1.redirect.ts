@@ -50,7 +50,7 @@ function hasOgConfig(link: Link): boolean {
 export default eventHandler(async (event) => {
   const { pathname: slug } = parsePath(event.path.replace(/^\/|\/$/g, ''))
   const { slugRegex, reserveSlug } = useAppConfig()
-  const { homeURL, linkCacheTtl, caseSensitive, redirectWithQuery, redirectStatusCode } = useRuntimeConfig(event)
+  const { homeURL, linkCacheTtl, caseSensitive, redirectWithQuery, redirectStatusCode, redirectNoStore } = useRuntimeConfig(event)
   const { cloudflare } = event.context
 
   if (event.path === '/' && homeURL)
@@ -144,14 +144,33 @@ export default eventHandler(async (event) => {
       }
 
       event.context.link = link
+      let accessLogResult: AccessLogResult | undefined
       try {
-        await useAccessLog(event)
+        accessLogResult = collectAccessLog(event)
       }
-      catch (error) {
-        console.error('Failed write access log:', error)
+      catch {
+        console.error({ event: 'access_log.collection.failed' })
+      }
+
+      if (accessLogResult) {
+        try {
+          writeAccessLog(event, accessLogResult.logs)
+        }
+        catch {
+          console.error({ event: 'access_log.write.failed' })
+        }
+
+        try {
+          queueLinkClickedWebhook(event, accessLogResult.click, link)
+        }
+        catch {
+          console.error({ event: 'webhook.scheduling.failed' })
+        }
       }
 
       if (deviceRedirectUrl) {
+        if (redirectNoStore)
+          setHeader(event, 'Cache-Control', 'no-store')
         return sendRedirect(event, finalTargetUrl, +redirectStatusCode)
       }
 
@@ -170,6 +189,8 @@ export default eventHandler(async (event) => {
         return html
       }
 
+      if (redirectNoStore)
+        setHeader(event, 'Cache-Control', 'no-store')
       return sendRedirect(event, finalTargetUrl, +redirectStatusCode)
     }
     else {

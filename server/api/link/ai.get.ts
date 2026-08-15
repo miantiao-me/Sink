@@ -1,8 +1,7 @@
 import type { H3Event } from 'h3'
 import type { AiChatResponse } from '../../utils/ai'
-import { destr } from 'destr'
 import { z } from 'zod'
-import { stripCodeFence } from '../../utils/ai'
+import { parseAiResponse } from '../../utils/ai'
 
 defineRouteMeta({
   openAPI: {
@@ -42,7 +41,7 @@ function fallbackSlug(event: H3Event, url: string): string {
 
 export default eventHandler(async (event) => {
   const url = (await getValidatedQuery(event, z.object({
-    url: z.string().url(),
+    url: z.url(),
   }).parse)).url
   const { cloudflare } = event.context
   const { AI } = cloudflare.env
@@ -77,26 +76,23 @@ export default eventHandler(async (event) => {
     { role: 'user', content: userContent },
   ]
 
-  const response = await AI.run(aiModel as keyof AiModels, {
-    messages,
-    chat_template_kwargs: {
-      enable_thinking: false,
-      thinking: false,
-    },
-  }) as AiChatResponse
-
-  const content = response.response ?? response.choices?.[0]?.message?.content ?? ''
-
-  if (content.trim() === '') {
+  let response: AiChatResponse
+  try {
+    // @ts-expect-error Workers AI supports model-specific chat template options at runtime.
+    response = await AI.run(aiModel as keyof AiModels, {
+      messages,
+      chat_template_kwargs: {
+        enable_thinking: false,
+        thinking: false,
+      },
+    }) as AiChatResponse
+  }
+  catch (error) {
+    console.warn('Workers AI slug generation failed; using fallback.', error)
     return { slug: fallbackSlug(event, url) }
   }
 
-  const parsed = destr(stripCodeFence(content))
-  if (typeof parsed !== 'object' || parsed === null || Array.isArray(parsed)) {
-    return { slug: fallbackSlug(event, url) }
-  }
-
-  const result = parsed as Record<string, unknown>
+  const result = parseAiResponse(response)
   const slug = String(result.slug ?? '').trim()
   if (!slug) {
     return { slug: fallbackSlug(event, url) }
