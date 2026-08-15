@@ -8,6 +8,8 @@ import { LINK_PASSWORD_HASH_PREFIX, LINK_PASSWORD_MASK_PREFIX } from '../shared/
 
 export const db = drizzle(env.DB)
 
+export const TEST_OIDC_ISSUER = 'http://oidc.test'
+
 export function fetchWithAuth(path: string, options?: RequestInit): Promise<Response> {
   const request = new Request(`http://localhost${path}`, {
     ...options,

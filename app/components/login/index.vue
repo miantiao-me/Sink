@@ -1,3 +1,7 @@
+<script setup lang="ts">
+const { data: oidcConfig } = useFetch<{ enabled: boolean }>('/api/auth/config')
+</script>
+
 <template>
   <Card class="w-full max-w-sm">
     <CardHeader>
@@ -11,7 +15,12 @@
       </CardDescription>
     </CardHeader>
     <CardContent class="grid gap-4">
-      <LoginForm />
+      <template v-if="oidcConfig?.enabled">
+        <Button type="button" class="w-full" @click="signInWithOidc()">
+          {{ $t('login.oidc_submit') }}
+        </Button>
+      </template>
+      <LoginForm v-else />
     </CardContent>
   </Card>
 </template>

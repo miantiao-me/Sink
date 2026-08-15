@@ -52,11 +52,31 @@ description: Sink 支持的全部环境变量——做什么、填在哪、什�
 如果留空，Sink 可能在构建时随机生成密码，下次部署可能变化。
 :::
 
-| 变量                     | 时机           | 放哪里                       | 用途                           |
-| ------------------------ | -------------- | ---------------------------- | ------------------------------ |
-| `NUXT_SITE_TOKEN`        | 运行时（密钥） | Workers 或 Pages 的加密密钥  | 登录 + API 密码                |
-| `DEPLOY_D1_DATABASE_ID`  | 构建时         | Workers Builds 或 Pages 变量 | D1 数据库 ID（在 D1 详情页）   |
-| `DEPLOY_KV_NAMESPACE_ID` | 构建时         | Workers Builds 或 Pages 变量 | KV 命名空间 ID（在 KV 详情页） |
+| 变量                            | 时机           | 放哪里                       | 用途                                       |
+| ------------------------------- | -------------- | ---------------------------- | ------------------------------------------ |
+| `NUXT_SITE_TOKEN`               | 运行时（密钥） | Workers 或 Pages 的加密密钥  | 单用户登录 + API 密码                      |
+| `NUXT_OIDC_ISSUER`              | 运行时         | Worker 或 Pages 变量         | 可选的 OpenID Connect 签发者 URL           |
+| `NUXT_OIDC_CLIENT_ID`           | 运行时         | Worker 或 Pages 变量         | 机密 Web 客户端 ID                         |
+| `NUXT_OIDC_CLIENT_SECRET`       | 运行时（密钥） | Workers 或 Pages 的加密密钥  | 机密 Web 客户端密钥                        |
+| `NUXT_OIDC_REDIRECT_URI`        | 运行时         | Worker 或 Pages 变量         | 以 `/api/auth/callback` 结尾的精确回调 URL |
+| `NUXT_OIDC_SESSION_SECRET`      | 运行时（密钥） | Workers 或 Pages 的加密密钥  | 至少 32 字符的随机 Session 签名密钥        |
+| `NUXT_OIDC_SESSION_TTL_SECONDS` | 运行时         | Worker 或 Pages 变量         | 本地 Session 上限，默认 `28800`            |
+| `DEPLOY_D1_DATABASE_ID`         | 构建时         | Workers Builds 或 Pages 变量 | D1 数据库 ID（在 D1 详情页）               |
+| `DEPLOY_KV_NAMESPACE_ID`        | 构建时         | Workers Builds 或 Pages 变量 | KV 命名空间 ID（在 KV 详情页）             |
+
+### 认证模式
+
+Sink 同一时间只使用一种认证模式：
+
+- 未配置 OIDC 时，Sink 保持单用户模式。站点令牌和 Cloudflare Access 共用 `root` owner。
+- 配置 OIDC 后启用多用户模式。浏览器和 API 都必须使用 OIDC Session；站点令牌和 Cloudflare Access 不再能认证受保护的 API。
+- 只配置部分 OIDC 必填项时会以失败关闭。签发者、客户端 ID、客户端密钥和 Session 密钥必须一起配置完整。
+
+### 用户数据归属
+
+在 OIDC 多用户模式下，每个通过验证的身份都有相互隔离的链接、标签和访问分析数据，Sink 使用身份提供方稳定的 subject 标识作为 owner ID。在单用户模式下，通过站点令牌或 Cloudflare Access 创建的链接，以及从旧版本升级的现有链接，都属于共享的 `root` owner。
+
+由于同一主机名下的公开跳转共用短码命名空间，短码仍然全局唯一。如果其他用户已经占用了指定短码，当前用户只会收到冲突响应，无法访问对方的链接。
 
 ## 推荐配置（访问分析）
 

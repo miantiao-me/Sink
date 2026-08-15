@@ -7,6 +7,8 @@ description: 为 Sink 仪表盘启用可选的 Zero Trust 登录，同时保持�
 
 Cloudflare Access 是**可选**功能。适合希望用公司身份（Google、邮箱 OTP、SSO 等）登录仪表盘，而不是只靠分享 `NUXT_SITE_TOKEN` 的场景。
 
+此集成只适用于 Sink 的单用户模式。配置 OIDC 后会进入独立的多用户模式，此时受保护的 API 只接受 OIDC Session，不再使用 Cloudflare Access 身份或站点令牌。
+
 无论是否启用 Access，短链接都保持公开。Access 只影响谁能打开仪表盘、谁能调用 API。
 
 ## 启用后会发生什么

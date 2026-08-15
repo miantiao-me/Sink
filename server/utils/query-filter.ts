@@ -1,7 +1,9 @@
+import type { H3Event } from 'h3'
 import type { RawBuilder } from 'kysely'
 import type { Query } from '#shared/schemas/query'
 import type { BlobsKey } from './access-log'
 import { sql } from 'kysely'
+import { d1ListOwnedLinkIds } from '../services/link-store/d1'
 import { blobsMap } from './access-log'
 
 export type { Query }
@@ -52,4 +54,14 @@ export function buildAnalyticsFilter(query: Query): RawBuilder<boolean> | undefi
   }
 
   return filters.length ? sql<boolean>`${sql.join(filters, sql` and `)}` : undefined
+}
+
+export async function buildOwnedAnalyticsFilter(event: H3Event, query: Query): Promise<RawBuilder<boolean>> {
+  return buildOwnedAnalyticsFilterForLinkIds(query, await d1ListOwnedLinkIds(event))
+}
+
+export function buildOwnedAnalyticsFilterForLinkIds(query: Query, linkIds: string[]): RawBuilder<boolean> {
+  const ownerFilter = inFilter('index1', linkIds) ?? sql<boolean>`0 = 1`
+  const queryFilter = buildAnalyticsFilter(query)
+  return queryFilter ? sql<boolean>`${ownerFilter} and ${queryFilter}` : ownerFilter
 }

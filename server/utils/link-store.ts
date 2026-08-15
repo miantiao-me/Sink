@@ -12,6 +12,7 @@ import {
   d1GetActiveLinkVersions,
   d1GetAnyLink,
   d1GetLinkWithMetadata,
+  d1GetOwnedActiveLink,
   d1HasActiveLinkVersion,
   d1IterateAllLinks,
   d1ListLinks,
@@ -58,7 +59,7 @@ export async function getLink(event: H3Event, slug: string, cacheTtl?: number): 
 }
 
 export async function getAuthoritativeLink(event: H3Event, slug: string): Promise<Link | null> {
-  return (await d1GetActiveLink(event, slug))?.link ?? null
+  return await d1GetOwnedActiveLink(event, slug)
 }
 
 export async function getAnyAuthoritativeLink(event: H3Event, slug: string): Promise<Link | null> {
@@ -141,7 +142,8 @@ export async function updateLink(event: H3Event, link: Link, expected?: Expected
 }
 
 export async function deleteLink(event: H3Event, slug: string): Promise<void> {
-  await d1DeleteLink(event, slug)
+  if (!await d1DeleteLink(event, slug))
+    return
   await deleteLinkCache(event, slug)
 }
 
