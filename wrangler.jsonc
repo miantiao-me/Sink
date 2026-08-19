@@ -25,10 +25,13 @@
     "binding": "AI",
     "remote": true
   },
+  // Values marked with DEPLOY_* below are placeholders for local/dev.
+  // CLI deploy (pnpm deploy:worker / deploy:config) rewrites them into gitignored wrangler.deploy.jsonc.
+  // Prefer setting DEPLOY_* in .env or Workers Builds / Pages variables — do not hardcode production IDs here.
   "analytics_engine_datasets": [
     {
       "binding": "ANALYTICS",
-      "dataset": "sink"
+      "dataset": "sink" // Override with DEPLOY_ANALYTICS_DATASET (default: sink). Keep in sync with NUXT_DATASET at runtime.
     }
   ],
   "kv_namespaces": [

@@ -1,0 +1,76 @@
+{
+  "check": {
+    "title": "Verificação de links",
+    "description": "Verifique se as URLs de destino existentes estão acessíveis. Os resultados são apenas exibidos e não alteram os links.",
+    "config": {
+      "timeout": "Tempo limite (segundos)",
+      "timeout_description": "Tempo limite para cada link. O padrão é 6 segundos.",
+      "batch_size": "Tamanho do lote",
+      "batch_size_description": "Links verificados por solicitação. O máximo é 10."
+    },
+    "actions": {
+      "start": "Iniciar verificação",
+      "checking": "Verificando...",
+      "stop": "Parar",
+      "reload": "Recarregar links",
+      "loading": "Carregando...",
+      "clear": "Limpar resultados",
+      "export": "Exportar CSV",
+      "detail": "Detalhes",
+      "original": "Original"
+    },
+    "stats": {
+      "total": "Total",
+      "checked": "Verificados",
+      "normal": "Normal",
+      "abnormal": "Anormais",
+      "network_error": "Erro de rede"
+    },
+    "progress": {
+      "title": "Progresso",
+      "description": "{checked} de {total} links verificados",
+      "stopped": "Verificação interrompida"
+    },
+    "results": {
+      "title": "Resultados",
+      "description": "Os resultados anormais são exibidos por padrão. Use as abas para filtrar pelo código de status."
+    },
+    "tabs": {
+      "abnormal": "Anormais ({count})",
+      "status": "{status} ({count})",
+      "all": "Todos ({count})"
+    },
+    "table": {
+      "slug": "Slug",
+      "url": "URL",
+      "status": "Status",
+      "result": "Resultado",
+      "duration": "Duração",
+      "error": "Erro",
+      "action": "Ação"
+    },
+    "result": {
+      "normal": "Normal",
+      "broken": "Quebrado",
+      "network_error": "Erro de rede"
+    },
+    "empty": {
+      "not_started": "Nenhum resultado ainda.",
+      "no_broken_links": "Nenhum link quebrado encontrado.",
+      "no_matching_results": "Nenhum resultado correspondente."
+    },
+    "messages": {
+      "load_failed": "Falha ao carregar os links",
+      "completed": "Verificação de links concluída",
+      "stopped": "Verificação de links interrompida"
+    },
+    "dialogs": {
+      "clear": {
+        "title": "Limpar resultados?",
+        "description": "Todos os resultados desta verificação serão removidos.",
+        "action": "Limpar resultados"
+      }
+    },
+    "duration_ms": "{duration} ms"
+  }
+}

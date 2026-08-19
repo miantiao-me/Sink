@@ -5,11 +5,11 @@ export default defineNitroPlugin((nitroApp) => {
     const config = useRuntimeConfig()
 
     if (config.disableAutoBackup) {
-      console.info('[backup:kv] Auto backup is disabled by configuration')
+      console.info('[backup] Auto backup is disabled by configuration')
       return
     }
 
     const env = event.env as Cloudflare.Env
-    await backupKVToR2(env)
+    await backupLinksToR2(env)
   })
 })

@@ -1,0 +1,1 @@
+CREATE INDEX `link_migration_runs_status_updated_at_desc_created_at_desc_id_desc_idx` ON `link_migration_runs` (`status`,"updated_at" desc,"created_at" desc,"id" desc);

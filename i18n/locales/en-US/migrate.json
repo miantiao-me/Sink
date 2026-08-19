@@ -1,0 +1,74 @@
+{
+  "migrate": {
+    "d1": {
+      "title": "KV to D1 Migration",
+      "description": "Copy link records from Workers KV to D1. Existing D1 records are preserved.",
+      "status_title": "Migration status",
+      "status_pending": "Migration has not completed.",
+      "status_completed": "Migration completed.",
+      "completed_at": "Completed {date}",
+      "run_again": "Run again",
+      "running": "Migrating…",
+      "success": "Migration completed successfully.",
+      "failed": "Migration failed",
+      "scanned": "Scanned",
+      "inserted": "Inserted",
+      "skipped": "Skipped",
+      "expired": "Expired",
+      "failed_count": "Failed",
+      "no_marker": "No completion marker found."
+    },
+    "access_export": {
+      "title": "Export Access Data",
+      "description": "Download access statistics as a CSV file",
+      "date_range": "Date Range",
+      "slug_label": "Slug Filter",
+      "slug_description": "Leave empty to export all slugs.",
+      "button": "Export CSV",
+      "exporting": "Exporting…",
+      "success": "Export successful",
+      "failed": "Export failed"
+    },
+    "backup": {
+      "title": "Manual Backup",
+      "description": "Trigger a manual backup of all links to the configured R2 bucket",
+      "button": "Start Backup",
+      "backing_up": "Backing up…",
+      "success": "Backup successful",
+      "failed": "Backup failed"
+    },
+    "export": {
+      "title": "Export Links",
+      "description": "Download all your links as a JSON file",
+      "button": "Export All",
+      "total_links": "Total links",
+      "success": "Export successful",
+      "failed": "Export failed"
+    },
+    "import": {
+      "title": "Import Links",
+      "description": "Upload a JSON file to import links",
+      "dropzone": "Drop JSON file here or click to upload",
+      "links_found": "{count} links ready to import",
+      "button": "Start Import",
+      "importing": "Importing…",
+      "import_more": "Import More",
+      "download_success": "Download {count} imported links",
+      "download_skipped": "Download {count} skipped links",
+      "download_failed": "Download {count} failed links",
+      "result": {
+        "title": "Import Result",
+        "success": "Successfully imported",
+        "skipped": "Skipped (already exists)",
+        "failed": "Failed",
+        "success_message": "{count} links imported successfully"
+      },
+      "errors": {
+        "invalid_json": "Invalid JSON file",
+        "invalid_format": "Invalid file format. Please use a file exported from Sink.",
+        "parse_error": "Failed to parse file",
+        "batch_failed": "This import batch failed."
+      }
+    }
+  }
+}

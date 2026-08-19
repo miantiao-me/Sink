@@ -2,7 +2,7 @@ import { Buffer } from 'node:buffer'
 import { writeFileSync } from 'node:fs'
 import { join } from 'node:path'
 
-import { createOctahedronSphere } from '../layers/dashboard/app/composables/globe/sphere.ts'
+import { createOctahedronSphere } from '../app/composables/globe/sphere.ts'
 
 /**
  * Binary format:

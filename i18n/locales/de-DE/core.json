@@ -1,0 +1,22 @@
+{
+  "common": {
+    "i18n": "Mehrsprachigkeit",
+    "abbreviations": "De",
+    "current_language": "Deutsch",
+    "try_again": "Erneut versuchen",
+    "cancel": "Abbrechen",
+    "continue": "Weiter",
+    "close": "Schließen",
+    "save": "Speichern",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "delete_success": "Erfolgreich gelöscht!",
+    "search": "Suchen"
+  },
+  "theme": {
+    "toggle": "Theme wechseln",
+    "light": "Hell",
+    "dark": "Dunkel",
+    "system": "System"
+  }
+}

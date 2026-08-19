@@ -1,20 +1,72 @@
-# Deployment on Cloudflare Workers
+---
+title: Deploy on Cloudflare Workers
+description: Deploy Sink on Cloudflare Workers through Git integration.
+---
 
-1. [Fork](https://github.com/miantiao-me/Sink/fork) the repository to your GitHub account.
-2. Create a [KV namespace](https://developers.cloudflare.com/kv/) (under **Storage & Databases** -> **KV**), and copy the namespace ID.
-3. Update the `kv_namespaces` ID in `wrangler.jsonc` with your own namespace ID.
-4. (_Optional_) For OpenGraph image upload, create an [R2 bucket](https://developers.cloudflare.com/r2/) named `sink` (or run `wrangler r2 bucket create sink`). If you don't need this feature, comment out the `r2_buckets` section in `wrangler.jsonc`.
-5. Create a project in [Cloudflare Workers](https://developers.cloudflare.com/workers/).
-6. Select the `Sink` repository and use the following build and deploy commands:
-   - **Build command**: `pnpm run build` or `npm run build`
-   - **Deploy command**: `npx wrangler deploy`
+# Deploy on Cloudflare Workers
 
-7. Save and deploy the project.
-8. After deployment, go to **Settings** -> **Variables and Secrets** -> **Add**, and configure the following environment variables:
-   - `NUXT_SITE_TOKEN`: Must be at least **8** characters long. This token grants access to your dashboard.
-   - `NUXT_CF_ACCOUNT_ID`: Find your [account ID](https://developers.cloudflare.com/fundamentals/setup/find-account-and-zone-ids/).
-   - `NUXT_CF_API_TOKEN`: Create a [Cloudflare API token](https://developers.cloudflare.com/fundamentals/api/get-started/create-token/) with at least `Account.Account Analytics` permission. [See reference.](https://developers.cloudflare.com/analytics/analytics-engine/sql-api/#authentication)
+## 1. Fork Sink and create resources
 
-9. Enable Analytics Engine. In **Workers & Pages**, go to **Account details** in the right panel, locate **Analytics Engine**, and click **Set up** to enable the free tier. Name them `sink` and `ANALYTICS`, or else overwrite it with `NUXT_DATASET` and update your `wrangler.jsonc` accordingly
-10. Redeploy the project.
-11. To update your code, refer to the official GitHub documentation: [Syncing a fork branch from the web UI](https://docs.github.com/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork#syncing-a-fork-branch-from-the-web-ui 'GitHub: Syncing a fork').
+Create a [fork of the Sink repository](https://github.com/miantiao-me/Sink/fork). In the [Cloudflare dashboard](https://dash.cloudflare.com/), create:
+
+| Binding name | Product                  | Required?   | What it is                |
+| ------------ | ------------------------ | ----------- | ------------------------- |
+| `DB`         | D1 database              | Yes         | Stores links              |
+| `KV`         | KV namespace             | Yes         | Speeds up redirects       |
+| `ANALYTICS`  | Analytics Engine dataset | Recommended | Visit stats               |
+| `R2`         | R2 bucket                | Optional    | Backups and social images |
+| `AI`         | Workers AI               | Optional    | AI suggestions            |
+
+Copy the **D1 database ID** and **KV namespace ID** from each resource’s detail page.
+
+Analytics is optional — short links still work without it. Setup: [Analytics and Realtime](/features/analytics).
+
+## 2. Connect Git (Workers Builds)
+
+In the Cloudflare dashboard, create a Worker with **Git integration** and connect your fork:
+
+- **Production branch:** `master`
+- **Build command:** `pnpm build`
+- **Deploy command:** `pnpm deploy:worker`
+
+Add these **build variables** (do **not** put production IDs into tracked `wrangler.jsonc` — set `DEPLOY_*` instead):
+
+| Variable                         | Value                                                                                      |
+| -------------------------------- | ------------------------------------------------------------------------------------------ |
+| `DEPLOY_D1_DATABASE_ID`          | Your D1 database ID (from the D1 detail page)                                              |
+| `DEPLOY_KV_NAMESPACE_ID`         | Your KV namespace ID (from the KV detail page) → `kv_namespaces[].id`                      |
+| `DEPLOY_KV_PREVIEW_NAMESPACE_ID` | Optional Wrangler preview KV → `preview_id` (defaults to `DEPLOY_KV_NAMESPACE_ID`)         |
+| `DEPLOY_R2_BUCKET_NAME`          | Your R2 bucket name (only if you use R2; omit to skip R2) → `bucket_name`                  |
+| `DEPLOY_R2_PREVIEW_BUCKET_NAME`  | Optional Wrangler preview R2 → `preview_bucket_name` (defaults to `DEPLOY_R2_BUCKET_NAME`) |
+| `DEPLOY_D1_DATABASE_NAME`        | Optional; default `sink`                                                                   |
+| `DEPLOY_ANALYTICS_DATASET`       | Optional; default `sink` (keep in sync with `NUXT_DATASET` if you change it)               |
+
+`pnpm deploy:worker` generates gitignored `wrangler.deploy.jsonc` from these values, updates the D1 schema, then deploys. When you connect the repo, Cloudflare creates a deploy token — no extra credential to paste.
+
+## 3. App settings (login password and more)
+
+Under **Settings → Variables and Secrets**, add:
+
+| Variable             | Type             | Purpose                                                                           |
+| -------------------- | ---------------- | --------------------------------------------------------------------------------- |
+| `NUXT_SITE_TOKEN`    | Encrypted secret | Dashboard login password and API password (at least 8 characters, keep it stable) |
+| `NUXT_CF_ACCOUNT_ID` | Variable         | Recommended for analytics                                                         |
+| `NUXT_CF_API_TOKEN`  | Encrypted secret | Recommended for analytics                                                         |
+
+Analytics details: [Analytics and Realtime](/features/analytics). Full list: [configuration](/configuration/).
+
+Confirm bindings use the exact names `DB`, `KV`, `ANALYTICS`, `R2`, and `AI`.
+
+## 4. Deploy and first use
+
+Start a build from `master` and wait until it finishes.
+
+1. Open `/dashboard` and sign in with `NUXT_SITE_TOKEN`
+2. Open **Dashboard → Links** once (one-time storage setup)
+3. Create a link
+
+::: tip First open of Links
+Until storage setup finishes, creating links may fail with “storage not ready” (HTTP 423).
+:::
+
+Later upgrades: [Upgrading Sink](./upgrading).

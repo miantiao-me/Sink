@@ -1,0 +1,80 @@
+{
+  "home": {
+    "hero": {
+      "github_repo": "GitHub-Repository"
+    },
+    "features": {
+      "title": "Funktionen",
+      "subtitle": "Einfache und effektive Funktionalität.",
+      "url_shortening": {
+        "title": "URL-Verkürzung",
+        "description": "Komprimiere deine URLs auf ihre minimale Länge"
+      },
+      "analytics": {
+        "title": "Analysen",
+        "description": "Überwache Link-Analysen und sammle aufschlussreiche Statistiken"
+      },
+      "serverless": {
+        "title": "Serverless",
+        "description": "Deployment ohne herkömmliche Server"
+      },
+      "customizable_slug": {
+        "title": "Anpassbarer Slug",
+        "description": "Erstelle eigene Slugs und füge UTM-Parameter hinzu"
+      },
+      "ai_slug": {
+        "title": "KI-Unterstützung",
+        "description": "Generiere Slugs und OpenGraph-Metadaten aus Seiteninhalten"
+      },
+      "link_expiration": {
+        "title": "Link-Steuerung",
+        "description": "Lege Ablaufdaten, Passwörter und Warnseiten für unsichere Links fest"
+      },
+      "device_routing": {
+        "title": "Smart Routing",
+        "description": "Leite Besucher nach Gerät oder Land weiter"
+      },
+      "og_preview": {
+        "title": "Social Preview",
+        "description": "Passe Social Previews mit Titeln, Beschreibungen und Bildern an"
+      },
+      "realtime_analytics": {
+        "title": "Nahezu Echtzeit-Analysen",
+        "description": "3D-Globus und Ereignisprotokolle durch regelmäßige Abfragen und clientseitige Wiedergabe"
+      },
+      "qr_code": {
+        "title": "QR-Code",
+        "description": "Generiere QR-Codes für deine Kurzlinks"
+      },
+      "import_export": {
+        "title": "Import/Export",
+        "description": "Übertrage Links gesammelt per JSON und exportiere Zugriffsanalysen als CSV"
+      },
+      "multi_language": {
+        "title": "Mehrsprachig",
+        "description": "Vollständige i18n-Unterstützung für Dashboard und Weiterleitungsseiten"
+      }
+    },
+    "cta": {
+      "title": "Sink bereitstellen",
+      "description": "Folge der Anleitung für die ersten Schritte, um Sink auf Cloudflare einzurichten und bereitzustellen",
+      "button": "Deployment-Anleitung öffnen"
+    },
+    "logos": {
+      "title": "Entwickelt mit großartigen Technologien"
+    },
+    "twitter": {
+      "follow": "Folge mir auf X (Twitter)"
+    },
+    "stats": {
+      "title": "Sink in Zahlen",
+      "subtitle": "Von Entwicklern weltweit vertraut",
+      "stars": "Stars auf GitHub",
+      "forks": "Forks"
+    },
+    "testimonials": {
+      "title": "Von Nutzern geliebt",
+      "subtitle": "Erfahre, was Entwickler über Sink sagen"
+    }
+  }
+}

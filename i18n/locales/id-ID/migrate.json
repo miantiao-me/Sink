@@ -1,0 +1,74 @@
+{
+  "migrate": {
+    "d1": {
+      "title": "Migrasi KV ke D1",
+      "description": "Salin data tautan dari Workers KV ke D1 tanpa mengganti data D1 yang ada.",
+      "status_title": "Status migrasi",
+      "status_pending": "Migrasi belum selesai.",
+      "status_completed": "Migrasi selesai.",
+      "completed_at": "Selesai {date}",
+      "run_again": "Jalankan lagi",
+      "running": "Memigrasikan…",
+      "success": "Migrasi berhasil diselesaikan.",
+      "failed": "Migrasi gagal",
+      "scanned": "Dipindai",
+      "inserted": "Ditambahkan",
+      "skipped": "Dilewati",
+      "expired": "Kedaluwarsa",
+      "failed_count": "Gagal",
+      "no_marker": "Penanda penyelesaian tidak ditemukan."
+    },
+    "access_export": {
+      "title": "Ekspor Data Akses",
+      "description": "Unduh statistik akses sebagai file CSV",
+      "date_range": "Rentang Tanggal",
+      "slug_label": "Filter Slug",
+      "slug_description": "Kosongkan untuk mengekspor semua slug.",
+      "button": "Ekspor CSV",
+      "exporting": "Mengekspor...",
+      "success": "Ekspor berhasil",
+      "failed": "Ekspor gagal"
+    },
+    "backup": {
+      "title": "Cadangan Manual",
+      "description": "Picu pencadangan manual semua tautan ke bucket R2 yang dikonfigurasi",
+      "button": "Mulai Pencadangan",
+      "backing_up": "Mencadangkan...",
+      "success": "Pencadangan berhasil",
+      "failed": "Pencadangan gagal"
+    },
+    "export": {
+      "title": "Ekspor Tautan",
+      "description": "Unduh semua tautan Anda sebagai file JSON",
+      "button": "Ekspor Semua",
+      "total_links": "Total tautan",
+      "success": "Ekspor berhasil",
+      "failed": "Ekspor gagal"
+    },
+    "import": {
+      "title": "Impor Tautan",
+      "description": "Unggah file JSON untuk mengimpor tautan",
+      "dropzone": "Jatuhkan file JSON di sini atau klik untuk mengunggah",
+      "links_found": "{count} tautan siap diimpor",
+      "button": "Mulai Impor",
+      "importing": "Mengimpor...",
+      "import_more": "Impor Lagi",
+      "download_success": "Unduh {count} tautan yang diimpor",
+      "download_skipped": "Unduh {count} tautan yang dilewati",
+      "download_failed": "Unduh {count} tautan yang gagal",
+      "result": {
+        "title": "Hasil Impor",
+        "success": "Berhasil diimpor",
+        "skipped": "Dilewati (sudah ada)",
+        "failed": "Gagal",
+        "success_message": "{count} tautan berhasil diimpor"
+      },
+      "errors": {
+        "invalid_json": "File JSON tidak valid",
+        "invalid_format": "Format file tidak valid. Gunakan file yang diekspor dari Sink.",
+        "parse_error": "Gagal mengurai file",
+        "batch_failed": "Batch impor ini gagal."
+      }
+    }
+  }
+}

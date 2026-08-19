@@ -1,0 +1,80 @@
+{
+  "home": {
+    "hero": {
+      "github_repo": "Repositori GitHub"
+    },
+    "features": {
+      "title": "Fitur",
+      "subtitle": "Fungsi sederhana dan cukup",
+      "url_shortening": {
+        "title": "Pemendek URL",
+        "description": "Ringkas URL Anda menjadi lebih pendek"
+      },
+      "analytics": {
+        "title": "Analitik",
+        "description": "Pantau analitik tautan dan kumpulkan statistik"
+      },
+      "serverless": {
+        "title": "Serverless",
+        "description": "Deploy tanpa perlu server tradisional"
+      },
+      "customizable_slug": {
+        "title": "Slug Kustom",
+        "description": "Buat slug khusus dan tambahkan parameter UTM"
+      },
+      "ai_slug": {
+        "title": "Bantuan AI",
+        "description": "Buat slug dan metadata OpenGraph dari konten halaman"
+      },
+      "link_expiration": {
+        "title": "Kontrol Tautan",
+        "description": "Atur kedaluwarsa, kata sandi, dan peringatan tautan tidak aman"
+      },
+      "device_routing": {
+        "title": "Routing Cerdas",
+        "description": "Alihkan pengunjung berdasarkan perangkat atau negara"
+      },
+      "og_preview": {
+        "title": "Pratinjau Sosial",
+        "description": "Sesuaikan pratinjau dengan judul, deskripsi, dan gambar"
+      },
+      "realtime_analytics": {
+        "title": "Analitik hampir real-time",
+        "description": "Globe 3D dan log peristiwa dari polling berkala dan pemutaran ulang di klien"
+      },
+      "qr_code": {
+        "title": "Kode QR",
+        "description": "Buat kode QR untuk tautan pendek"
+      },
+      "import_export": {
+        "title": "Impor/Ekspor",
+        "description": "Transfer tautan secara massal dengan JSON dan ekspor analitik akses sebagai CSV"
+      },
+      "multi_language": {
+        "title": "Multibahasa",
+        "description": "Dukungan penuh i18n untuk dashboard dan halaman pengalihan"
+      }
+    },
+    "cta": {
+      "title": "Deploy Sink",
+      "description": "Ikuti panduan memulai untuk mengonfigurasi dan men-deploy Sink di Cloudflare",
+      "button": "Baca Panduan Deploy"
+    },
+    "logos": {
+      "title": "Dibangun dengan teknologi terbaik"
+    },
+    "twitter": {
+      "follow": "Ikuti di X (Twitter)"
+    },
+    "stats": {
+      "title": "Sink dalam Angka",
+      "subtitle": "Dipercaya oleh developer di seluruh dunia",
+      "stars": "Bintang di GitHub",
+      "forks": "Fork"
+    },
+    "testimonials": {
+      "title": "Disukai Pengguna",
+      "subtitle": "Lihat apa kata developer tentang Sink"
+    }
+  }
+}
