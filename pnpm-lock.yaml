@@ -130,6 +130,9 @@ importers:
       nuxt:
         specifier: ^4.4.8
         version: 4.4.8(@babel/plugin-syntax-jsx@7.29.7(@babel/core@7.29.7))(@babel/plugin-syntax-typescript@7.29.7(@babel/core@7.29.7))(@parcel/watcher@2.5.6)(@types/node@26.1.1)(@vue/compiler-sfc@3.5.39)(cac@6.7.14)(db0@0.3.4(drizzle-orm@0.45.2(kysely@0.29.3)))(drizzle-orm@0.45.2(kysely@0.29.3))(esbuild@0.28.1)(eslint@10.7.0(jiti@2.7.0))(ioredis@5.11.1)(lightningcss@1.32.0)(magicast@0.5.3)(optionator@0.9.4)(pinia@3.0.4(typescript@5.9.3)(vue@3.5.39(typescript@5.9.3)))(rolldown@1.1.5)(rollup-plugin-visualizer@7.0.1(rolldown@1.1.5)(rollup@4.62.2))(rollup@4.62.2)(srvx@0.11.21)(stylus@0.57.0)(terser@5.49.0)(tsx@4.23.0)(typescript@5.9.3)(vite@8.1.4(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(stylus@0.57.0)(terser@5.49.0)(tsx@4.23.0)(yaml@2.9.0))(vue-tsc@3.3.7(typescript@5.9.3))(yaml@2.9.0)
+      openid-client:
+        specifier: 6.8.5
+        version: 6.8.5
       pinia:
         specifier: ^3.0.4
         version: 3.0.4(typescript@5.9.3)(vue@3.5.39(typescript@5.9.3))
@@ -172,6 +175,9 @@ importers:
       ufo:
         specifier: ^1.6.4
         version: 1.6.4
+      undici:
+        specifier: 7.28.0
+        version: 7.28.0
       vaul-vue:
         specifier: ^0.4.1
         version: 0.4.1(reka-ui@2.10.1(vue@3.5.39(typescript@5.9.3)))(vue@3.5.39(typescript@5.9.3))
@@ -187,6 +193,9 @@ importers:
       vitest:
         specifier: ^4.1.10
         version: 4.1.10(@types/node@26.1.1)(vite@8.1.4(@types/node@26.1.1)(esbuild@0.28.1)(jiti@2.7.0)(stylus@0.57.0)(terser@5.49.0)(tsx@4.23.0)(yaml@2.9.0))
+      vue:
+        specifier: 3.5.39
+        version: 3.5.39(typescript@5.9.3)
       vue-input-otp:
         specifier: ^0.3.2
         version: 0.3.2(typescript@5.9.3)(vue@3.5.39(typescript@5.9.3))
@@ -733,11 +742,11 @@ packages:
 
   '@esbuild-kit/core-utils@3.3.2':
     resolution: {integrity: sha512-sPRAnw9CdSsRmEtnsl2WXWdyquogVpB3yZ3dgwJfe8zrOzTsV7cJvmwrKVa+0ma5BoiGJ+BoqkMvawbayKUsqQ==}
-    deprecated: 'Merged into tsx: https://tsx.is'
+    deprecated: 'Merged into tsx: https://tsx.hirok.io'
 
   '@esbuild-kit/esm-loader@2.6.5':
     resolution: {integrity: sha512-FxEMIkJKnodyA1OaCUoEvbYRkoZlLZ4d/eXFu9Fh8CbBBgP5EmZxrfTRyN0qpXZ4vOvqnE5YdRdcrmUUXuU+dA==}
-    deprecated: 'Merged into tsx: https://tsx.is'
+    deprecated: 'Merged into tsx: https://tsx.hirok.io'
 
   '@esbuild/aix-ppc64@0.21.3':
     resolution: {integrity: sha512-yTgnwQpFVYfvvo4SvRFB0SwrW8YjOxEoT7wfMT7Ol5v7v5LDNvSGo67aExmxOb87nQNeWPVvaGBNfQ7BXcrZ9w==}
@@ -1710,9 +1719,6 @@ packages:
 
   '@jridgewell/sourcemap-codec@1.4.14':
     resolution: {integrity: sha512-XPSJHWmi394fuUuzDnGz1wiKqWfo1yXecHQMRf2l6hztTO+nPru658AyDngaBe7isIxEkRsPR3FZh+s7iVa4Uw==}
-
-  '@jridgewell/sourcemap-codec@1.5.0':
-    resolution: {integrity: sha512-gv3ZRaISU3fjPAgNsriBRqGWQL6quFx04YMPW/zD8XMLsU32mhCCbfbO6KZFLjvYpCZ8zyDEgqsgf+PwPaM7GQ==}
 
   '@jridgewell/sourcemap-codec@1.5.5':
     resolution: {integrity: sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==}
@@ -5953,6 +5959,7 @@ packages:
   glob@11.1.0:
     resolution: {integrity: sha512-vuNwKSaKiqm7g0THUBu2x7ckSs3XJLXE+2ssL7/MfTGPLLcrJQ/4Uq1CjPTtO5cCIiRxqvN6Twy1qOwhL0Xjcw==}
     engines: {node: 20 || >=22}
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
     hasBin: true
 
   glob@13.0.6:
@@ -6049,10 +6056,6 @@ packages:
   html-void-elements@3.0.0:
     resolution: {integrity: sha512-bEqo66MRXsUGxWHV5IP0PUiAWwoEjba4VCzg0LjFJBpchPaTfyfCKTG6bc5F8ucKec3q5y6qOdGyYTSBEvhCrg==}
 
-  http-errors@2.0.0:
-    resolution: {integrity: sha512-FtwrG/euBzaEjYeRqOgly7G0qviiXoJWnvEH2Z1plBdXgbyjv34pHTSb9zoeHMyDy33+DWy5Wt9Wo+TURtOYSQ==}
-    engines: {node: '>= 0.8'}
-
   http-errors@2.0.1:
     resolution: {integrity: sha512-4FbRdAX+bSdmo4AUFuS0WNiPz8NgFt+r8ThgNWmlrjQjt1Q7ZR9+zTlce2859x4KSXrwIsaeTqDoKQmtP8pLmQ==}
     engines: {node: '>= 0.8'}
@@ -6078,10 +6081,6 @@ packages:
 
   iconv-lite@0.6.0:
     resolution: {integrity: sha512-43ZpGYZ9QtuutX5l6WC1DSO8ane9N+Ct5qPLF2OV7vM9abM69gnAbVkh66ibaZd3aOGkoP1ZmringlKhLBkw2Q==}
-    engines: {node: '>=0.10.0'}
-
-  iconv-lite@0.6.3:
-    resolution: {integrity: sha512-4fCk79wshMdzMp2rH06qWrJE4iolqLhCUH+OiuIgU++RB0+94NlDL81atO7GX55uUKueo0txHNtvEyI6D7WdMw==}
     engines: {node: '>=0.10.0'}
 
   iconv-lite@0.7.3:
@@ -6304,6 +6303,9 @@ packages:
 
   jose@6.2.3:
     resolution: {integrity: sha512-YYVDInQKFJfR/xa3ojUTl8c2KoTwiL1R5Wg9YCydwH0x0B9grbzlg5HC7mMjCtUJjbQ/YnGEZIhI5tCgfTb4Hw==}
+
+  jose@6.2.8:
+    resolution: {integrity: sha512-Bsdjwm3Qsd/P0jR+BHDe3LytDfY7WBq2HmCCLIwuVRHMuEC9ae7/R474GIUdF1NgCyZjzVo/A9DOiOBtXq8ZoQ==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -6971,6 +6973,9 @@ packages:
     engines: {node: '>=18'}
     hasBin: true
 
+  oauth4webapi@3.8.7:
+    resolution: {integrity: sha512-4RxcKxXjuItDFZ20RRPf4YTw3kpeXJyCgJFxVzJ068A7PNJ18st2Dg90tlC1LkSDS0GecroagCLHYEIVUhCAkw==}
+
   object-assign@4.1.1:
     resolution: {integrity: sha512-rJgTQnkUnH1sFw8yT6VSU3zD3sWmu6sZhIseY8VX+GRu3P6F7Fu+JNDoXfklElbLJSnc3FUQHVe4cU5hj+BcUg==}
     engines: {node: '>=0.10.0'}
@@ -7036,6 +7041,9 @@ packages:
   open@8.4.2:
     resolution: {integrity: sha512-7x81NCL719oNbsq/3mh+hVrAWmFuEYUqrq/Iw3kUzH8ReypT9QQ0BLoJS7/G9k6N81XjW4qHWtjWwe/9eLy1EQ==}
     engines: {node: '>=12'}
+
+  openid-client@6.8.5:
+    resolution: {integrity: sha512-jNGC/5wnTYwCcEUe2ss0IRUmVRQcgxM0A1nLb3eX/9llqNbMWOQd2xd+qDAgfVCpA5Qh96Y1cdnkfbva6+bSdA==}
 
   optionator@0.9.4:
     resolution: {integrity: sha512-6IpQ7mKUxRcZNLIObR0hz7lxsapSSIYNZJwXPGeF0mTVqGKFIXj1DQcMoT22S3ROcLyY/rz0PWaWZ9ayWmad9g==}
@@ -7539,10 +7547,6 @@ packages:
     resolution: {integrity: sha512-hek2mFQpPuI4E1BBKrSto+BU3e3x4xuarsbiwr3+lf7p44juvFMV0XFWQAP3xUyqXA4RrXLIoaSUGbSt056ZMw==}
     engines: {node: '>= 0.6'}
 
-  raw-body@3.0.0:
-    resolution: {integrity: sha512-RmkhL8CAyCRPXCE28MMH0z2PNWQBNk2Q09ZdxM9IOOXwxwZbN+qbWaatPkdkWIKL2ZVDImrN/pK5HTRz2PcS4g==}
-    engines: {node: '>= 0.8'}
-
   raw-body@3.0.2:
     resolution: {integrity: sha512-K5zQjDllxWkf7Z5xJdV0/B0WTNqx6vxG70zJE4N0kBs4LovmEYWJzQGxC9bS9RAKu3bgM40lrd5zoLJ12MQ5BA==}
     engines: {node: '>= 0.10'}
@@ -7893,10 +7897,6 @@ packages:
   standard-as-callback@2.1.0:
     resolution: {integrity: sha512-qoRRSyROncaz1z0mvYqIE4lCd9p2R90i6GxW3uZv5ucSu8tU7B5HXUP1gG8pVZsYNVaXjk8ClXHPttLyxAL48A==}
 
-  statuses@2.0.1:
-    resolution: {integrity: sha512-RwNA9Z/7PrK06rYLIzFMlaF+l73iwpzsqRIFgbMLbTcLD6cOao82TaWefPXQvB2fOC4AjuYSEndS7N/mTCbkdQ==}
-    engines: {node: '>= 0.8'}
-
   statuses@2.0.2:
     resolution: {integrity: sha512-DvEy55V3DB7uknRo+4iOGT5fP1slR8wQohVdknigZPMpMstaKJQWhwiYBACJE3Ul2pTnATihhBYnRhZQHGBiRw==}
     engines: {node: '>= 0.8'}
@@ -7914,10 +7914,6 @@ packages:
   string-argv@0.3.2:
     resolution: {integrity: sha512-aqD2Q0144Z+/RqG52NeHEkZauTAUWJO8c6yTftGJKO3Tja5tUgIfmIl6kExvhtxSDP7fXB6DvzkfMpCd/F3G+Q==}
     engines: {node: '>=0.6.19'}
-
-  string-width@4.2.0:
-    resolution: {integrity: sha512-zUz5JD+tgqtuDjMhwIg5uFVV3dtqZ9yQJlZVfq4I01/K5Paj5UHj7VyrQOJvzawSVlKpObApbfD0Ed6yJc+1eg==}
-    engines: {node: '>=8'}
 
   string-width@4.2.3:
     resolution: {integrity: sha512-wKyQRQpjJ0sIp62ErSZdGsjMJWsap5oRNihHhu6G7JVO/9jIB6UyevL+tXuOqrng8j/cxKTWyWUwvSTriiZz/g==}
@@ -10248,7 +10244,7 @@ snapshots:
   '@isaacs/cliui@8.0.2':
     dependencies:
       string-width: 5.1.2
-      string-width-cjs: string-width@4.2.0
+      string-width-cjs: string-width@4.2.3
       strip-ansi: 7.2.0
       strip-ansi-cjs: strip-ansi@6.0.1
       wrap-ansi: 8.1.0
@@ -10262,7 +10258,7 @@ snapshots:
 
   '@jridgewell/gen-mapping@0.3.12':
     dependencies:
-      '@jridgewell/sourcemap-codec': 1.5.0
+      '@jridgewell/sourcemap-codec': 1.5.5
       '@jridgewell/trace-mapping': 0.3.31
 
   '@jridgewell/gen-mapping@0.3.5':
@@ -10282,14 +10278,12 @@ snapshots:
 
   '@jridgewell/source-map@0.3.11':
     dependencies:
-      '@jridgewell/gen-mapping': 0.3.5
+      '@jridgewell/gen-mapping': 0.3.12
       '@jridgewell/trace-mapping': 0.3.31
 
   '@jridgewell/sourcemap-codec@1.4.10': {}
 
   '@jridgewell/sourcemap-codec@1.4.14': {}
-
-  '@jridgewell/sourcemap-codec@1.5.0': {}
 
   '@jridgewell/sourcemap-codec@1.5.5': {}
 
@@ -10370,10 +10364,10 @@ snapshots:
       express: 5.2.1
       express-rate-limit: 8.5.2(express@5.2.1)
       hono: 4.12.29
-      jose: 6.2.3
+      jose: 6.2.8
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.0
-      raw-body: 3.0.0
+      raw-body: 3.0.2
       zod: 3.25.76
       zod-to-json-schema: 3.25.2(zod@3.25.76)
     transitivePeerDependencies:
@@ -10392,10 +10386,10 @@ snapshots:
       express: 5.2.1
       express-rate-limit: 8.5.2(express@5.2.1)
       hono: 4.12.29
-      jose: 6.2.3
+      jose: 6.2.8
       json-schema-typed: 8.0.2
       pkce-challenge: 5.0.0
-      raw-body: 3.0.0
+      raw-body: 3.0.2
       zod: 4.4.3
       zod-to-json-schema: 3.25.2(zod@4.4.3)
     transitivePeerDependencies:
@@ -14630,14 +14624,6 @@ snapshots:
 
   html-void-elements@3.0.0: {}
 
-  http-errors@2.0.0:
-    dependencies:
-      depd: 2.0.0
-      inherits: 2.0.4
-      setprototypeof: 1.2.0
-      statuses: 2.0.1
-      toidentifier: 1.0.1
-
   http-errors@2.0.1:
     dependencies:
       depd: 2.0.0
@@ -14662,10 +14648,6 @@ snapshots:
   human-signals@5.0.0: {}
 
   iconv-lite@0.6.0:
-    dependencies:
-      safer-buffer: 2.1.2
-
-  iconv-lite@0.6.3:
     dependencies:
       safer-buffer: 2.1.2
 
@@ -14848,6 +14830,8 @@ snapshots:
   jiti@2.7.0: {}
 
   jose@6.2.3: {}
+
+  jose@6.2.8: {}
 
   js-tokens@4.0.0: {}
 
@@ -15950,6 +15934,8 @@ snapshots:
       pathe: 2.0.3
       tinyexec: 1.2.4
 
+  oauth4webapi@3.8.7: {}
+
   object-assign@4.1.1: {}
 
   object-deep-merge@2.0.1: {}
@@ -16019,6 +16005,11 @@ snapshots:
       define-lazy-prop: 2.0.0
       is-docker: 2.2.1
       is-wsl: 2.2.0
+
+  openid-client@6.8.5:
+    dependencies:
+      jose: 6.2.8
+      oauth4webapi: 3.8.7
 
   optionator@0.9.4:
     dependencies:
@@ -16639,13 +16630,6 @@ snapshots:
 
   range-parser@1.3.0: {}
 
-  raw-body@3.0.0:
-    dependencies:
-      bytes: 3.1.2
-      http-errors: 2.0.0
-      iconv-lite: 0.6.3
-      unpipe: 1.0.0
-
   raw-body@3.0.2:
     dependencies:
       bytes: 3.1.2
@@ -17134,8 +17118,6 @@ snapshots:
 
   standard-as-callback@2.1.0: {}
 
-  statuses@2.0.1: {}
-
   statuses@2.0.2: {}
 
   std-env@4.2.0: {}
@@ -17152,12 +17134,6 @@ snapshots:
       - react-native-b4a
 
   string-argv@0.3.2: {}
-
-  string-width@4.2.0:
-    dependencies:
-      emoji-regex: 8.0.0
-      is-fullwidth-code-point: 3.0.0
-      strip-ansi: 6.0.1
 
   string-width@4.2.3:
     dependencies:
@@ -18102,7 +18078,7 @@ snapshots:
   wrap-ansi@7.0.0:
     dependencies:
       ansi-styles: 4.3.0
-      string-width: 4.2.0
+      string-width: 4.2.3
       strip-ansi: 6.0.1
 
   wrap-ansi@8.1.0:

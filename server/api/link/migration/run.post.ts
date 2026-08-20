@@ -79,6 +79,7 @@ function completedResult(): LinkMigrationRunResult {
 }
 
 export default eventHandler(async (event): Promise<LinkMigrationRunResult> => {
+  assertSiteAdministrator(event)
   const body = await readBody<Record<string, unknown> | null>(event)
   const input = LinkMigrationRunSchema.parse(Object.assign({}, getQuery(event), body))
   const { DB, KV } = event.context.cloudflare.env

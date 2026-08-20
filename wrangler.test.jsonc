@@ -1,0 +1,36 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "sink-test",
+  "main": ".output/server/index.mjs",
+  "compatibility_date": "2025-05-08",
+  "compatibility_flags": ["nodejs_compat"],
+  "ai": {
+    "binding": "AI"
+  },
+  "kv_namespaces": [
+    {
+      "binding": "KV",
+      "id": "00000000000000000000000000000000"
+    }
+  ],
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "sink-test",
+      "database_id": "00000000-0000-0000-0000-000000000000",
+      "migrations_dir": "drizzle"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "R2",
+      "bucket_name": "sink-test"
+    }
+  ],
+  "analytics_engine_datasets": [
+    {
+      "binding": "ANALYTICS",
+      "dataset": "sink-test"
+    }
+  ]
+}

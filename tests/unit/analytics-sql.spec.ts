@@ -2,7 +2,7 @@ import type { Query } from '../../shared/schemas/query'
 import { sql } from 'kysely'
 import { describe, expect, it, vi } from 'vitest'
 import { compileAnalyticsQuery, createAnalyticsQuery } from '../../server/utils/analytics-sql'
-import { buildAnalyticsFilter } from '../../server/utils/query-filter'
+import { buildAnalyticsFilter, buildOwnedAnalyticsFilterForLinkIds } from '../../server/utils/query-filter'
 
 vi.mock('../../server/utils/access-log', () => ({
   blobsMap: {
@@ -129,5 +129,20 @@ describe('analytics filters', () => {
       .toThrow('Analytics filters must not contain control characters')
     expect(() => buildAnalyticsFilter({ ...baseQuery, id: 'safe\u007Funsafe' }))
       .toThrow('Analytics filters must not contain control characters')
+  })
+
+  it('limits analytics to links owned by the authenticated user', () => {
+    const filter = buildOwnedAnalyticsFilterForLinkIds({ ...baseQuery, country: 'US' }, ['first', 'second'])
+    const compiled = compileAnalyticsQuery(createAnalyticsQuery('events').selectAll().where(filter))
+
+    expect(compiled).toContain('index1 in (\'first\', \'second\')')
+    expect(compiled).toContain('blob6 in (\'US\')')
+  })
+
+  it('returns no analytics when the user owns no links', () => {
+    const filter = buildOwnedAnalyticsFilterForLinkIds(baseQuery, [])
+    const compiled = compileAnalyticsQuery(createAnalyticsQuery('events').selectAll().where(filter))
+
+    expect(compiled).toContain('where 0 = 1')
   })
 })

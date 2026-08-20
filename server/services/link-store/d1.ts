@@ -7,6 +7,7 @@ import { drizzle } from 'drizzle-orm/d1'
 import { createError } from 'h3'
 import { parseURL, stringifyParsedURL } from 'ufo'
 import { links, linkTags, linkTombstones, tags } from '../../database/schema'
+import { getCurrentLinkOwnerId, getCurrentLinkOwnerIds } from '../../utils/link-owner'
 import { getExpiration } from '../../utils/time'
 
 const D1_CURSOR_PREFIX = 'd1:v1:'
@@ -70,6 +71,10 @@ function statusCondition(status: LinkStatus, now = Math.floor(Date.now() / 1000)
   if (status === 'expired')
     return and(isNotNull(links.effectiveExpiresAt), lte(links.effectiveExpiresAt, now))
   return undefined
+}
+
+function ownerCondition(event: H3Event) {
+  return inArray(links.ownerId, getCurrentLinkOwnerIds(event))
 }
 
 function exactTagCondition(db: ReturnType<typeof getDatabase>, tag: string | undefined) {
@@ -137,6 +142,7 @@ export function buildD1LinkValues(event: H3Event, link: Link, effectiveExpiresAt
   return {
     slug: link.slug,
     id: link.id,
+    ownerId: getCurrentLinkOwnerId(event),
     url: link.url,
     comment: link.comment ?? null,
     createdAt: link.createdAt,
@@ -166,13 +172,22 @@ export async function d1GetActiveLink(event: H3Event, slug: string): Promise<{ l
   return link ? { link, effectiveExpiresAt: row.effectiveExpiresAt } : null
 }
 
+export async function d1GetOwnedActiveLink(event: H3Event, slug: string): Promise<Link | null> {
+  const rows = await getDatabase(event).select().from(links).where(and(
+    eq(links.slug, slug),
+    ownerCondition(event),
+    activeCondition(),
+  )).limit(1)
+  return rows[0] ? (await rowsToLinks(event, rows))[0] ?? null : null
+}
+
 export async function d1GetAnyLink(event: H3Event, slug: string): Promise<Link | null> {
-  const rows = await getDatabase(event).select().from(links).where(eq(links.slug, slug)).limit(1)
+  const rows = await getDatabase(event).select().from(links).where(and(eq(links.slug, slug), ownerCondition(event))).limit(1)
   return rows[0] ? (await rowsToLinks(event, rows))[0] ?? null : null
 }
 
 export async function d1GetLinkWithMetadata(event: H3Event, slug: string): Promise<{ link: Link | null, metadata: Record<string, unknown> | null }> {
-  const rows = await getDatabase(event).select().from(links).where(eq(links.slug, slug)).limit(1)
+  const rows = await getDatabase(event).select().from(links).where(and(eq(links.slug, slug), ownerCondition(event))).limit(1)
   const row = rows[0]
   const link = row ? (await rowsToLinks(event, [row]))[0] ?? null : null
   return {
@@ -270,11 +285,13 @@ export async function d1UpdateLink(event: H3Event, link: Link, expected?: Expect
   const db = getDatabase(event)
   const update = db.update(links).set(values).where(and(
     eq(links.slug, link.slug),
+    ownerCondition(event),
     expected ? eq(links.id, expected.id) : undefined,
     expected ? eq(links.updatedAt, expected.updatedAt) : undefined,
   )).returning({ slug: links.slug })
   const currentVersion = and(
     eq(links.slug, link.slug),
+    ownerCondition(event),
     expected ? eq(links.id, expected.id) : undefined,
     expected ? eq(links.updatedAt, expected.updatedAt) : undefined,
   )
@@ -291,16 +308,18 @@ export async function d1UpdateLink(event: H3Event, link: Link, expected?: Expect
   return { updated: updated.length > 0, effectiveExpiresAt: values.effectiveExpiresAt }
 }
 
-export async function d1DeleteLink(event: H3Event, slug: string): Promise<void> {
+export async function d1DeleteLink(event: H3Event, slug: string): Promise<boolean> {
   const db = getDatabase(event)
   const now = Math.floor(Date.now() / 1000)
-  await db.batch([
-    db.delete(links).where(eq(links.slug, slug)),
-    db.insert(linkTombstones).values({ slug, deletedAt: now }).onConflictDoUpdate({
-      target: linkTombstones.slug,
-      set: { deletedAt: now },
-    }),
-  ])
+  const deleted = await db.delete(links).where(and(eq(links.slug, slug), ownerCondition(event))).returning({ slug: links.slug })
+  if (!deleted.length)
+    return false
+
+  await db.insert(linkTombstones).values({ slug, deletedAt: now }).onConflictDoUpdate({
+    target: linkTombstones.slug,
+    set: { deletedAt: now },
+  })
+  return true
 }
 
 function encodeCursor(cursor: D1Cursor): string {
@@ -351,7 +370,7 @@ export async function d1ListLinks(event: H3Event, options: ListLinksOptions): Pr
   }
 
   const tagCondition = exactTagCondition(db, options.tag)
-  const rows = await db.select().from(links).where(and(statusCondition(status), tagCondition, cursorCondition)).orderBy(...order).limit(options.limit + 1)
+  const rows = await db.select().from(links).where(and(ownerCondition(event), statusCondition(status), tagCondition, cursorCondition)).orderBy(...order).limit(options.limit + 1)
   const hasMore = rows.length > options.limit
   const page = hasMore ? rows.slice(0, options.limit) : rows
   const last = page.at(-1)
@@ -392,9 +411,9 @@ export async function* d1IterateAllLinks(env: Cloudflare.Env): AsyncIterable<Lin
   } while (lastSlug)
 }
 
-function linkFilterCondition(db: ReturnType<typeof getDatabase>, options: LinkFilterOptions) {
+function linkFilterCondition(event: H3Event, db: ReturnType<typeof getDatabase>, options: LinkFilterOptions) {
   const status = options.status ?? 'active'
-  const conditions = [statusCondition(status)]
+  const conditions = [ownerCondition(event), statusCondition(status)]
   if (options.tag)
     conditions.push(exactTagCondition(db, options.tag))
   if (options.url)
@@ -414,7 +433,7 @@ function linkFilterCondition(db: ReturnType<typeof getDatabase>, options: LinkFi
 
 export async function d1SearchLinks(event: H3Event, options: SearchLinksOptions): Promise<LinkSearchItem[]> {
   const db = getDatabase(event)
-  let query = db.select({ slug: links.slug, url: links.normalizedUrl, comment: links.comment }).from(links).where(linkFilterCondition(db, options)).orderBy(asc(links.slug)).$dynamic()
+  let query = db.select({ slug: links.slug, url: links.normalizedUrl, comment: links.comment }).from(links).where(linkFilterCondition(event, db, options)).orderBy(asc(links.slug)).$dynamic()
   if (options.limit)
     query = query.limit(options.limit)
   const rows = await query
@@ -424,7 +443,7 @@ export async function d1SearchLinks(event: H3Event, options: SearchLinksOptions)
 
 export async function d1CountLinks(event: H3Event, options: LinkFilterOptions): Promise<number> {
   const db = getDatabase(event)
-  const [result] = await db.select({ count: count() }).from(links).where(linkFilterCondition(db, options))
+  const [result] = await db.select({ count: count() }).from(links).where(linkFilterCondition(event, db, options))
   return result?.count ?? 0
 }
 
@@ -433,6 +452,16 @@ export async function d1ListTags(event: H3Event): Promise<{ name: string, count:
     .select({ name: tags.name, count: count(linkTags.linkSlug) })
     .from(tags)
     .innerJoin(linkTags, eq(linkTags.tagName, tags.name))
+    .innerJoin(links, eq(links.slug, linkTags.linkSlug))
+    .where(ownerCondition(event))
     .groupBy(tags.name)
     .orderBy(asc(tags.name))
+}
+
+export async function d1ListOwnedLinkIds(event: H3Event): Promise<string[]> {
+  const rows = await getDatabase(event)
+    .select({ id: links.id })
+    .from(links)
+    .where(ownerCondition(event))
+  return rows.map(row => row.id)
 }

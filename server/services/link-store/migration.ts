@@ -38,16 +38,17 @@ export async function insertMigratedKvLink(event: H3Event, link: Link, effective
   const { DB } = event.context.cloudflare.env
   const insert = DB.prepare(`
     INSERT INTO links (
-      slug, id, url, comment, created_at, updated_at, expiration, title,
+      slug, id, owner_id, url, comment, created_at, updated_at, expiration, title,
       description, image, apple, google, cloaking, redirect_with_query,
       password, unsafe, geo, normalized_url, effective_expires_at
     )
-    SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
     WHERE NOT EXISTS (SELECT 1 FROM link_tombstones WHERE slug = ?)
     ON CONFLICT(slug) DO NOTHING
   `).bind(
     values.slug,
     values.id,
+    values.ownerId,
     values.url,
     values.comment,
     values.createdAt,

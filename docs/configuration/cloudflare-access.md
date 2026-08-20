@@ -7,6 +7,8 @@ description: Optional Zero Trust login for the Sink dashboard, while keeping sho
 
 Cloudflare Access is **optional**. Use it when you want people to sign in to the dashboard with your company identity (Google, email OTP, SSO, and so on) instead of only sharing `NUXT_SITE_TOKEN`.
 
+This integration applies to Sink's single-user mode. Configuring OIDC selects the separate multi-user mode, where protected APIs accept only OIDC sessions and ignore both Cloudflare Access identity and the site token.
+
 Short links stay public either way. Access only affects who can open the dashboard and call the API.
 
 ## What changes after you enable it

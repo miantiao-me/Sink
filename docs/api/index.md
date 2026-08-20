@@ -23,7 +23,7 @@ Send your site password in the `Authorization` header:
 Authorization: Bearer YOUR_SITE_TOKEN
 ```
 
-(`Bearer` means “here is the token”.) It must match `NUXT_SITE_TOKEN` exactly (at least 8 characters). With [Cloudflare Access](/configuration/cloudflare-access) enabled, browsers can also authenticate with a verified Access login.
+(`Bearer` means “here is the token”.) In single-user mode it must match `NUXT_SITE_TOKEN` exactly (at least 8 characters). In OIDC multi-user mode, protected APIs require the browser's OIDC session and reject the site token. OIDC access and ID tokens remain on the server and are never stored by the browser.
 
 ## CORS
 
