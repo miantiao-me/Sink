@@ -76,6 +76,7 @@ Workers 要在 Builds 和运行时填相同值。Pages 只填一次，然后重�
 | `NUXT_PUBLIC_PREVIEW_MODE`        | 空   | `true` = 演示模式（链接只活 5 分钟） |
 | `NUXT_PUBLIC_SLUG_DEFAULT_LENGTH` | `6`  | 自动生成短链码的长度                 |
 | `NUXT_PUBLIC_KV_BATCH_LIMIT`      | `50` | 导出每页条数；导入每次最多一半       |
+| `NUXT_PUBLIC_MAX_URL_LENGTH`      | `16384` | 目标 URL 最大字符数（256-24000）     |
 
 ## 可选配置
 

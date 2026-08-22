@@ -52,6 +52,10 @@
     },
     "form": {
       "url": "URL",
+      "url_description": "https://example.com과 같은 완전한 URL을 입력하세요. 최대 {max}자입니다.",
+      "url_required": "URL을 입력하세요.",
+      "url_invalid": "URL 형식이 올바르지 않습니다. https://example.com과 같은 완전한 URL을 입력하세요.",
+      "url_too_long": "URL이 {length}자이지만 제한은 {max}자입니다.",
       "slug": "슬러그",
       "comment": "설명",
       "tags": "태그",

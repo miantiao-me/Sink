@@ -5,7 +5,7 @@ import { useForm } from '@tanstack/vue-form'
 import { useDebounceFn } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 import { z } from 'zod'
-import { nanoid, SlugSchema, UrlSchema } from '#shared/schemas/link'
+import { MAX_URL_LENGTH, nanoid, SlugSchema } from '#shared/schemas/link'
 
 const props = defineProps<{
   link: Partial<DashboardLink>
@@ -23,10 +23,8 @@ const { t } = useI18n()
 const linksSearchStore = useDashboardLinksSearchStore()
 const requestUrl = useRequestURL()
 
-const urlValidator = UrlSchema
 const slugValidator = SlugSchema
 const commentValidator = z.string().max(500).optional()
-const optionalUrlValidator = z.string().trim().url().max(2048).optional().or(z.literal(''))
 
 const generateSlug = nanoid()
 
@@ -62,10 +60,29 @@ const tagsInput = useTemplateRef<{ commit: () => boolean }>('tagsInput')
 watch(isSubmitting, value => emit('update:submitting', value), { immediate: true })
 watch(isDirty, value => emit('update:dirty', value), { immediate: true })
 
-const validateUrl = makeZodValidator(urlValidator)
 const validateSlug = makeZodValidator(slugValidator)
 const validateComment = makeZodValidator(commentValidator)
-const validateOptionalUrl = makeZodValidator(optionalUrlValidator)
+
+function validateUrl({ value }: { value: unknown }): string | undefined {
+  return validateUrlValue(value, false)
+}
+
+function validateOptionalUrl({ value }: { value: unknown }): string | undefined {
+  return validateUrlValue(value, true)
+}
+
+function validateUrlValue(value: unknown, optional: boolean): string | undefined {
+  const error = getLinkUrlValidationError(value, MAX_URL_LENGTH, optional)
+  if (!error)
+    return undefined
+  if (error.kind === 'too_long') {
+    return t('links.form.url_too_long', {
+      length: error.length.toLocaleString(),
+      max: MAX_URL_LENGTH.toLocaleString(),
+    })
+  }
+  return t(`links.form.url_${error.kind}`)
+}
 
 const utmBuilderOpen = ref(false)
 const advancedSections = ref<string[]>([])
@@ -255,6 +272,9 @@ defineExpose({ initializeRandomSlug })
               @blur="field.handleBlur"
               @input="field.handleChange(($event.target as HTMLInputElement).value)"
             />
+            <FieldDescription v-if="!isInvalid(field) && !duplicateLink">
+              {{ $t('links.form.url_description', { max: MAX_URL_LENGTH.toLocaleString() }) }}
+            </FieldDescription>
             <FieldDescription
               v-if="!isInvalid(field) && duplicateLink"
               class="flex items-center gap-2"

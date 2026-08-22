@@ -2,6 +2,7 @@ import { CalendarDate } from '@internationalized/date'
 import { describe, expect, it, vi } from 'vitest'
 import {
   createLinkFormInitialValues,
+  getLinkUrlValidationError,
   normalizeLinkFormSubmitPayload,
 } from '../../app/utils/link-form'
 import { LINK_PASSWORD_MASK_PREFIX } from '../../shared/utils/link-password'
@@ -42,6 +43,22 @@ describe('link form values', () => {
       { country: 'us', url: ' https://us.example.com ' },
       { country: 'CA', url: 'https://ca.example.com' },
     ])
+  })
+})
+
+describe('link URL validation', () => {
+  it('distinguishes required, invalid, and over-limit URLs', () => {
+    expect(getLinkUrlValidationError('  ', 20)).toEqual({ kind: 'required' })
+    expect(getLinkUrlValidationError('not a URL', 20)).toEqual({ kind: 'invalid' })
+    expect(getLinkUrlValidationError('https://example.com/long', 20)).toEqual({
+      kind: 'too_long',
+      length: 24,
+    })
+  })
+
+  it('accepts complete URLs and optional empty values', () => {
+    expect(getLinkUrlValidationError('https://example.com', 100)).toBeUndefined()
+    expect(getLinkUrlValidationError('', 100, true)).toBeUndefined()
   })
 })
 

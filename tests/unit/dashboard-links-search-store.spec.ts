@@ -60,6 +60,20 @@ describe('dashboard links search store', () => {
     expect(store.requestStatus).toBe('idle')
   })
 
+  it('checks exact URL duplicates in a request body', async () => {
+    const store = useDashboardLinksSearchStore()
+
+    await store.findDuplicateLink('https://example.com/path?ignored=1')
+
+    expect(useAPIMock).toHaveBeenLastCalledWith('/api/link/search', {
+      method: 'POST',
+      body: {
+        url: 'https://example.com/path',
+        limit: 20,
+      },
+    })
+  })
+
   it('distinguishes idle, loading, successful empty, and error states', async () => {
     const store = useDashboardLinksSearchStore()
     let resolveSearch: ((value: []) => void) | undefined

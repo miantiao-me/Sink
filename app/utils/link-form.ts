@@ -2,6 +2,28 @@ import type { DashboardLink, DashboardLinkFormData } from '@/types/dashboard-lin
 import { isMaskedLinkPassword } from '#shared/utils/link-password'
 import { date2unix, unix2date } from './time'
 
+export type LinkUrlValidationError
+  = | { kind: 'required' }
+    | { kind: 'invalid' }
+    | { kind: 'too_long', length: number }
+
+export function getLinkUrlValidationError(
+  value: unknown,
+  maxUrlLength: number,
+  optional = false,
+): LinkUrlValidationError | undefined {
+  if (typeof value !== 'string')
+    return { kind: 'invalid' }
+
+  const url = value.trim()
+  if (!url)
+    return optional ? undefined : { kind: 'required' }
+  if (url.length > maxUrlLength)
+    return { kind: 'too_long', length: url.length }
+
+  return URL.canParse(url) ? undefined : { kind: 'invalid' }
+}
+
 export function createLinkFormInitialValues(link: Partial<DashboardLink>): DashboardLinkFormData {
   return {
     url: link.url ?? '',

@@ -46,6 +46,7 @@ export default defineNuxtConfig({
       previewMode: '',
       slugDefaultLength: '6',
       kvBatchLimit: '50',
+      maxUrlLength: '16384',
     },
   },
   routeRules: {
