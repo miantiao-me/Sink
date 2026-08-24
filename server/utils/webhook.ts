@@ -1,6 +1,6 @@
+import type { H3Event } from 'h3'
 import type { Link } from '#shared/schemas/link'
 import type { LinkClickedWebhook } from '#shared/schemas/webhook'
-import type { H3Event } from 'h3'
 import type { WebhookClickContext } from './access-log'
 
 const WEBHOOK_TIMEOUT_MS = 10_000

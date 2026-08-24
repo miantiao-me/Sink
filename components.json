@@ -1,6 +1,6 @@
 {
   "$schema": "https://shadcn-vue.com/schema.json",
-  "style": "new-york",
+  "style": "reka-maia",
   "typescript": true,
   "tailwind": {
     "config": "",
@@ -17,5 +17,10 @@
     "lib": "@/lib",
     "composables": "@/composables"
   },
+  "font": "ibm-plex-sans",
+  "rtl": false,
+  "pointer": true,
+  "menuColor": "default",
+  "menuAccent": "subtle",
   "registries": {}
 }

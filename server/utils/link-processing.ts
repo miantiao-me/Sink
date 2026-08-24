@@ -1,5 +1,5 @@
-import type { Link } from '#shared/schemas/link'
 import type { H3Event } from 'h3'
+import type { EditLink, Link } from '#shared/schemas/link'
 
 const editableOptionalLinkFields = [
   'comment',
@@ -13,6 +13,7 @@ const editableOptionalLinkFields = [
   'expiration',
   'unsafe',
   'geo',
+  'tags',
 ] as const satisfies readonly (keyof Link)[]
 
 interface LinkResponse {
@@ -46,14 +47,14 @@ export function buildLinkResponse(event: H3Event, link: Link): LinkResponse {
   }
 }
 
-export function mergeEditableLink(existingLink: Link, link: Link): Link {
+export function mergeEditableLink(existingLink: Link, link: EditLink): Link {
   const { password: _password, ...linkWithoutPassword } = link
   const newLink = {
     ...existingLink,
     ...linkWithoutPassword,
     id: existingLink.id,
     createdAt: existingLink.createdAt,
-    updatedAt: Math.floor(Date.now() / 1000),
+    updatedAt: Math.max(Math.floor(Date.now() / 1000), existingLink.updatedAt + 1),
   }
 
   cleanupOptionalLinkFields(newLink, link)
@@ -73,7 +74,7 @@ export async function applyEditableLinkPassword(newLink: Link, password?: string
   }
 }
 
-function cleanupOptionalLinkFields(newLink: Link, link: Link): void {
+function cleanupOptionalLinkFields(newLink: Link, link: EditLink): void {
   for (const field of editableOptionalLinkFields) {
     if (link[field] === undefined)
       delete newLink[field]

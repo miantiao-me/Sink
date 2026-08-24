@@ -1,0 +1,76 @@
+{
+  "check": {
+    "title": "連結檢測",
+    "description": "檢測既有連結的目標 URL 是否可存取。結果僅供顯示，不會修改連結。",
+    "config": {
+      "timeout": "逾時時間（秒）",
+      "timeout_description": "單個連結的逾時時間，預設 6 秒。",
+      "batch_size": "批次大小",
+      "batch_size_description": "每次請求檢測的連結數量，最多 10。"
+    },
+    "actions": {
+      "start": "開始檢測",
+      "checking": "檢測中...",
+      "stop": "停止",
+      "reload": "重新載入連結",
+      "loading": "載入中...",
+      "clear": "清空結果",
+      "export": "匯出 CSV",
+      "detail": "詳細資料",
+      "original": "原連結"
+    },
+    "stats": {
+      "total": "總數",
+      "checked": "已檢測",
+      "normal": "正常",
+      "abnormal": "異常",
+      "network_error": "網路異常"
+    },
+    "progress": {
+      "title": "進度",
+      "description": "已檢測 {checked} / {total} 個連結",
+      "stopped": "檢測已停止"
+    },
+    "results": {
+      "title": "檢測結果",
+      "description": "預設顯示異常結果，可透過標籤依狀態碼快速篩選。"
+    },
+    "tabs": {
+      "abnormal": "異常 ({count})",
+      "status": "{status} ({count})",
+      "all": "全部 ({count})"
+    },
+    "table": {
+      "slug": "短連結",
+      "url": "目標 URL",
+      "status": "狀態碼",
+      "result": "結果",
+      "duration": "耗時",
+      "error": "錯誤",
+      "action": "操作"
+    },
+    "result": {
+      "normal": "正常",
+      "broken": "異常",
+      "network_error": "網路異常"
+    },
+    "empty": {
+      "not_started": "暫無檢測結果。",
+      "no_broken_links": "未發現異常連結。",
+      "no_matching_results": "沒有符合的結果。"
+    },
+    "messages": {
+      "load_failed": "連結載入失敗",
+      "completed": "連結檢測完成",
+      "stopped": "連結檢測已停止"
+    },
+    "dialogs": {
+      "clear": {
+        "title": "清除檢查結果？",
+        "description": "這將清除此輪檢查的全部結果。",
+        "action": "清除結果"
+      }
+    },
+    "duration_ms": "{duration} 毫秒"
+  }
+}

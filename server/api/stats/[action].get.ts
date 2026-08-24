@@ -1,10 +1,10 @@
 import type { H3Event } from 'h3'
+import type { RawBuilder } from 'kysely'
+import { sql } from 'kysely'
+import { z } from 'zod'
 import { QuerySchema } from '#shared/schemas/query'
 import { generateCsv } from '#shared/utils/csv'
 import { createExportFilename } from '#shared/utils/export-file'
-import { z } from 'zod'
-
-const { select } = SqlBricks
 
 const CsvColumns = ['slug', 'url', 'viewer', 'views', 'referer'] as const
 
@@ -26,31 +26,31 @@ const StatsExportQuerySchema = QuerySchema.superRefine((query, ctx) => {
   }
 })
 
-function weightedDistinct(column: string): string {
-  return `ROUND(COUNT(DISTINCT ${column}) * SUM(_sample_interval) / COUNT())`
+function weightedDistinct(column: string): RawBuilder<number> {
+  return sql<number>`ROUND(COUNT(DISTINCT ${sql.ref(column)}) * SUM(_sample_interval) / COUNT())`
 }
 
-function weightedReferers(column: string): string {
-  return `ROUND((COUNT(DISTINCT ${column}) - MAX(if(${column} = '', 1, 0))) * SUM(_sample_interval) / COUNT())`
+function weightedReferers(column: string): RawBuilder<number> {
+  const reference = sql.ref(column)
+  return sql<number>`ROUND((COUNT(DISTINCT ${reference}) - MAX(if(${reference} = ${sql.lit('')}, ${sql.lit(1)}, ${sql.lit(0)}))) * SUM(_sample_interval) / COUNT())`
 }
 
-function query2sql(query: z.infer<typeof StatsExportQuerySchema>, event: H3Event): string {
-  const filter = query2filter(query)
+function query2sql(query: z.infer<typeof StatsExportQuerySchema>, event: H3Event) {
+  const filter = buildAnalyticsFilter(query)
   const { dataset } = useRuntimeConfig(event)
-  const sql = select([
-    `${logsMap.slug} as slug`,
-    `${logsMap.url} as url`,
-    `${weightedDistinct(logsMap.ip!)} as viewer`,
-    'SUM(_sample_interval) as views',
-    `${weightedReferers(logsMap.referer!)} as referer`,
-  ].join(', '))
-    .from(dataset)
-    .where(filter)
-    .groupBy('slug', 'url')
-    .orderBy('views DESC')
+  const analyticsQuery = createAnalyticsQuery(dataset)
+  const filteredQuery = filter ? analyticsQuery.where(filter) : analyticsQuery
 
-  appendTimeFilter(sql, query)
-  return sql.toString()
+  return filteredQuery
+    .select([
+      sql.ref(logsMap.slug!).as('slug'),
+      sql.ref(logsMap.url!).as('url'),
+      weightedDistinct(logsMap.ip!).as('viewer'),
+      sql<number>`SUM(_sample_interval)`.as('views'),
+      weightedReferers(logsMap.referer!).as('referer'),
+    ])
+    .groupBy(['slug', 'url'])
+    .orderBy('views', 'desc')
 }
 
 function toCsv(rows: AccessExportRow[]): string {

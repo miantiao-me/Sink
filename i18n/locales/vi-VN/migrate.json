@@ -1,0 +1,74 @@
+{
+  "migrate": {
+    "d1": {
+      "title": "Di chuyển KV sang D1",
+      "description": "Sao chép liên kết từ Workers KV sang D1 và giữ nguyên dữ liệu D1 hiện có.",
+      "status_title": "Trạng thái di chuyển",
+      "status_pending": "Quá trình di chuyển chưa hoàn tất.",
+      "status_completed": "Di chuyển đã hoàn tất.",
+      "completed_at": "Hoàn tất lúc {date}",
+      "run_again": "Chạy lại",
+      "running": "Đang di chuyển…",
+      "success": "Di chuyển hoàn tất thành công.",
+      "failed": "Di chuyển thất bại",
+      "scanned": "Đã quét",
+      "inserted": "Đã thêm",
+      "skipped": "Đã bỏ qua",
+      "expired": "Đã hết hạn",
+      "failed_count": "Thất bại",
+      "no_marker": "Không tìm thấy dấu hoàn tất."
+    },
+    "access_export": {
+      "title": "Xuất dữ liệu truy cập",
+      "description": "Tải xuống số liệu thống kê truy cập dưới dạng tệp CSV",
+      "date_range": "Khoảng thời gian",
+      "slug_label": "Bộ lọc slug",
+      "slug_description": "Để trống để xuất tất cả slug.",
+      "button": "Xuất CSV",
+      "exporting": "Đang xuất...",
+      "success": "Xuất thành công",
+      "failed": "Xuất thất bại"
+    },
+    "backup": {
+      "title": "Sao lưu thủ công",
+      "description": "Kích hoạt sao lưu thủ công tất cả liên kết sang bộ chứa R2 đã được cấu hình",
+      "button": "Bắt đầu sao lưu",
+      "backing_up": "Đang sao lưu...",
+      "success": "Sao lưu thành công",
+      "failed": "Sao lưu thất bại"
+    },
+    "export": {
+      "title": "Xuất liên kết",
+      "description": "Tải xuống tất cả liên kết dưới dạng tệp JSON",
+      "button": "Xuất tất cả",
+      "total_links": "Tổng liên kết",
+      "success": "Xuất thành công",
+      "failed": "Xuất thất bại"
+    },
+    "import": {
+      "title": "Nhập liên kết",
+      "description": "Tải lên tệp JSON để nhập liên kết",
+      "dropzone": "Kéo thả tệp JSON vào đây hoặc nhấp để tải lên",
+      "links_found": "{count} liên kết sẵn sàng nhập",
+      "button": "Bắt đầu nhập",
+      "importing": "Đang nhập...",
+      "import_more": "Nhập thêm",
+      "download_success": "Tải {count} liên kết đã nhập",
+      "download_skipped": "Tải {count} liên kết đã bỏ qua",
+      "download_failed": "Tải {count} liên kết thất bại",
+      "result": {
+        "title": "Kết quả nhập",
+        "success": "Nhập thành công",
+        "skipped": "Đã bỏ qua (đã tồn tại)",
+        "failed": "Thất bại",
+        "success_message": "Đã nhập thành công {count} liên kết"
+      },
+      "errors": {
+        "invalid_json": "Tệp JSON không hợp lệ",
+        "invalid_format": "Định dạng tệp không hợp lệ. Vui lòng sử dụng tệp được xuất từ Sink.",
+        "parse_error": "Không thể phân tích tệp",
+        "batch_failed": "Lô nhập này đã thất bại."
+      }
+    }
+  }
+}

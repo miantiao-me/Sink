@@ -12,4 +12,6 @@ export interface LinkCheckResult extends LinkCheckTarget {
 
 export interface LinkCheckResponse {
   results: LinkCheckResult[]
+  cursor?: string
+  list_complete: boolean
 }

@@ -1,16 +1,16 @@
+import { randomBytes } from 'node:crypto'
 import process from 'node:process'
 import tailwindcss from '@tailwindcss/vite'
 import { currentLocales } from './i18n/i18n'
 
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  extends: ['./layers/dashboard'],
+  ssr: false,
   modules: [
     '@nuxtjs/color-mode',
     '@nuxtjs/i18n',
     '@nuxt/eslint',
     '@pinia/nuxt',
-    '@vueuse/motion/nuxt',
     'shadcn-nuxt',
   ],
   devtools: { enabled: true },
@@ -19,7 +19,7 @@ export default defineNuxtConfig({
     classSuffix: '',
   },
   runtimeConfig: {
-    siteToken: process.env.NUXT_SITE_TOKEN || crypto.randomUUID(),
+    siteToken: process.env.NUXT_SITE_TOKEN || randomBytes(32).toString('base64url'),
     cfAccessTeamDomain: '',
     cfAccessAud: '',
     redirectStatusCode: '301',
@@ -34,6 +34,7 @@ export default defineNuxtConfig({
     aiPrompt: `You are a URL shortening assistant, please shorten the URL provided by the user into a SLUG. The SLUG information should be derived from the URL and page content (if provided). Do not make any assumptions beyond the given information. A SLUG is human-readable and should not exceed three words and can be validated using regular expressions {slugRegex} . Only the best one is returned, the format must be JSON reference {"slug": "example-slug"}`,
     aiOgPrompt: `You are an OpenGraph metadata assistant. Please summarize the page content provided by the user into a perfect title and description for an OpenGraph preview. Do not make any assumptions beyond the given information. Only the best one is returned, the format must be JSON reference {"title": "Example Title", "description": "Example description that summarizes the page accurately."}`,
     caseSensitive: false,
+    importRequestLimit: 100,
     listQueryLimit: 500,
     disableBotAccessLog: false,
     disableAutoBackup: false,
@@ -48,14 +49,17 @@ export default defineNuxtConfig({
     },
   },
   routeRules: {
-    '/': {
-      prerender: true,
+    '/dashboard': {
+      redirect: '/dashboard/links',
     },
     '/api/**': {
       cors: process.env.NUXT_API_CORS === 'true',
     },
+    '/_docs/**': {
+      headers: { 'X-Robots-Tag': 'noindex, follow' },
+    },
     '/sphere.bin': {
-      headers: { 'Cache-Control': 'public, max-age=2592000, immutable' },
+      headers: { 'Cache-Control': 'public, max-age=0, must-revalidate' },
     },
     '/*.json': {
       headers: { 'Cache-Control': 'public, max-age=2592000, immutable' },
@@ -74,9 +78,9 @@ export default defineNuxtConfig({
       },
     },
   },
-  compatibilityDate: 'latest',
+  compatibilityDate: '2026-07-13',
   nitro: {
-    preset: !import.meta.env.CI ? 'cloudflare-module' : undefined,
+    preset: import.meta.env.CF_PAGES !== '1' ? 'cloudflare-module' : undefined,
     experimental: {
       openAPI: true,
     },
@@ -85,7 +89,7 @@ export default defineNuxtConfig({
       production: 'runtime',
       meta: {
         title: 'Sink API',
-        description: 'A Simple / Speedy / Secure Link Shortener with Analytics, 100% run on Cloudflare.',
+        description: 'A Simple / Speedy / Secure Link Shortener with Analytics, 100% run on Cloudflare.\n\n[Return to this Sink instance](/) · [Read the documentation](https://docs.sink.cool)',
       },
       route: '/_docs/openapi.json',
       ui: {
@@ -104,6 +108,33 @@ export default defineNuxtConfig({
     ],
     worker: {
       format: 'es',
+    },
+    optimizeDeps: {
+      include: [
+        '@internationalized/date',
+        '@lucide/vue',
+        '@number-flow/vue',
+        '@tanstack/vue-form',
+        '@unovis/vue',
+        '@vue/devtools-core',
+        '@vue/devtools-kit',
+        '@vueuse/core',
+        'class-variance-authority',
+        'clsx',
+        'd3-geo',
+        'd3-scale',
+        'nanoid',
+        'qr-code-styling', // CJS
+        'reka-ui',
+        'reka-ui/date',
+        'tailwind-merge',
+        'twgl.js',
+        'vaul-vue',
+        'virtua/vue',
+        'vue-sonner',
+        'vue3-simple-icons',
+        'zod',
+      ],
     },
   },
   eslint: {

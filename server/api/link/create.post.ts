@@ -1,4 +1,4 @@
-import { LinkSchema } from '#shared/schemas/link'
+import { CreateLinkSchema } from '#shared/schemas/link'
 
 defineRouteMeta({
   openAPI: {
@@ -37,6 +37,7 @@ defineRouteMeta({
               password: { type: 'string', description: 'Password protection for the link' },
               unsafe: { type: 'boolean', description: 'Mark link as unsafe, showing a warning page before redirect' },
               geo: { type: 'object', additionalProperties: { type: 'string' }, description: 'Geo-routing rules (country code to URL)' },
+              tags: { type: 'array', items: { type: 'string' }, description: 'Up to 10 normalized link tags, each 1-32 characters' },
             },
           },
         },
@@ -46,21 +47,18 @@ defineRouteMeta({
 })
 
 export default eventHandler(async (event) => {
-  const link = await readValidatedBody(event, LinkSchema.parse)
+  const link = await readValidatedBody(event, CreateLinkSchema.parse)
 
   await prepareIncomingLink(event, link)
 
-  const existingLink = await getLink(event, link.slug)
-  if (existingLink) {
+  await hashLinkPasswordForCreate(link)
+
+  if (!await createLink(event, link)) {
     throw createError({
       status: 409,
       statusText: 'Link already exists',
     })
   }
-
-  await hashLinkPasswordForCreate(link)
-
-  await putLink(event, link)
   setResponseStatus(event, 201)
   return buildLinkResponse(event, link)
 })

@@ -1,0 +1,76 @@
+{
+  "check": {
+    "title": "Link-Prüfung",
+    "description": "Prüfen Sie, ob bestehende Ziel-URLs erreichbar sind. Die Ergebnisse werden nur angezeigt; Links werden nicht geändert.",
+    "config": {
+      "timeout": "Zeitlimit (Sekunden)",
+      "timeout_description": "Zeitlimit pro Link. Standardwert: 6 Sekunden.",
+      "batch_size": "Batch-Größe",
+      "batch_size_description": "Anzahl der pro Anfrage geprüften Links. Maximal 10."
+    },
+    "actions": {
+      "start": "Prüfung starten",
+      "checking": "Wird geprüft…",
+      "stop": "Stoppen",
+      "reload": "Links neu laden",
+      "loading": "Wird geladen…",
+      "clear": "Ergebnisse löschen",
+      "export": "CSV exportieren",
+      "detail": "Details",
+      "original": "Original öffnen"
+    },
+    "stats": {
+      "total": "Gesamt",
+      "checked": "Geprüft",
+      "normal": "In Ordnung",
+      "abnormal": "Fehlerhaft",
+      "network_error": "Netzwerkfehler"
+    },
+    "progress": {
+      "title": "Fortschritt",
+      "description": "{checked} von {total} Links geprüft",
+      "stopped": "Prüfung gestoppt"
+    },
+    "results": {
+      "title": "Ergebnisse",
+      "description": "Standardmäßig werden fehlerhafte Ergebnisse angezeigt. Filtern Sie über die Tabs nach Statuscode."
+    },
+    "tabs": {
+      "abnormal": "Fehlerhaft ({count})",
+      "status": "{status} ({count})",
+      "all": "Alle ({count})"
+    },
+    "table": {
+      "slug": "Slug",
+      "url": "URL",
+      "status": "Status",
+      "result": "Ergebnis",
+      "duration": "Dauer",
+      "error": "Fehler",
+      "action": "Aktion"
+    },
+    "result": {
+      "normal": "In Ordnung",
+      "broken": "Defekt",
+      "network_error": "Netzwerkfehler"
+    },
+    "empty": {
+      "not_started": "Noch keine Ergebnisse.",
+      "no_broken_links": "Keine defekten Links gefunden.",
+      "no_matching_results": "Keine passenden Ergebnisse."
+    },
+    "messages": {
+      "load_failed": "Links konnten nicht geladen werden",
+      "completed": "Link-Prüfung abgeschlossen",
+      "stopped": "Link-Prüfung gestoppt"
+    },
+    "dialogs": {
+      "clear": {
+        "title": "Prüfergebnisse löschen?",
+        "description": "Alle Ergebnisse dieser Prüfung werden entfernt.",
+        "action": "Ergebnisse löschen"
+      }
+    },
+    "duration_ms": "{duration} ms"
+  }
+}

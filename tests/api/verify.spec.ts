@@ -3,27 +3,20 @@ import { describe, expect, it } from 'vitest'
 import { fetch, fetchWithAuth } from '../utils'
 
 describe('/api/verify', () => {
-  it('returns user data with valid auth', async () => {
-    const response = await fetchWithAuth('/api/verify')
-    expect(response.status).toBe(200)
-
-    const data = await response.json() as VerifyResponse
-    expect(data).toHaveProperty('name')
-    expect(data).toHaveProperty('url')
-    expect(data.name).toBeTypeOf('string')
-    expect(data.url).toBeTypeOf('string')
-    expect(data.authMethod).toBe('site-token')
-    expect(data.accessEnabled).toBe(false)
-  })
-
-  it('returns correct response structure', async () => {
+  it('returns the expected verification data with valid auth', async () => {
     const response = await fetchWithAuth('/api/verify')
     expect(response.status).toBe(200)
     expect(response.headers.get('Content-Type')).toContain('application/json')
 
     const data = await response.json() as VerifyResponse
-    expect(data.name).toBe('Sink')
-    expect(data.url).toBe('https://sink.cool')
+    expect(data).toMatchObject({
+      name: 'Sink',
+      url: 'https://sink.cool',
+      authMethod: 'site-token',
+      userID: 'root',
+      userEmail: 'root@localhost',
+      accessEnabled: false,
+    })
   })
 
   it('returns 401 when accessing without auth', async () => {

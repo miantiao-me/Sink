@@ -1,0 +1,22 @@
+{
+  "common": {
+    "i18n": "Multilingua",
+    "abbreviations": "It",
+    "current_language": "Italiano",
+    "try_again": "Riprova",
+    "cancel": "Annulla",
+    "continue": "Continua",
+    "close": "Chiudi",
+    "save": "Salva",
+    "edit": "Modifica",
+    "delete": "Elimina",
+    "delete_success": "Eliminazione riuscita!",
+    "search": "Cerca"
+  },
+  "theme": {
+    "toggle": "Cambia tema",
+    "light": "Chiaro",
+    "dark": "Scuro",
+    "system": "Sistema"
+  }
+}

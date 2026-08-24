@@ -1,0 +1,22 @@
+{
+  "common": {
+    "i18n": "Multi Langue",
+    "abbreviations": "Fr",
+    "current_language": "Français",
+    "try_again": "Réessayer",
+    "cancel": "Annuler",
+    "continue": "Continuer",
+    "close": "Fermer",
+    "save": "Enregistrer",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "delete_success": "Suppression réussie !",
+    "search": "Rechercher"
+  },
+  "theme": {
+    "toggle": "Changer de thème",
+    "light": "Clair",
+    "dark": "Sombre",
+    "system": "Système"
+  }
+}

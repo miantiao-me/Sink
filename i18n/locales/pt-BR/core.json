@@ -1,0 +1,22 @@
+{
+  "common": {
+    "i18n": "Multi idiomas",
+    "abbreviations": "Br",
+    "current_language": "Português (BR)",
+    "try_again": "Tente novamente",
+    "cancel": "Cancelar",
+    "continue": "Continuar",
+    "close": "Fechar",
+    "save": "Salvar",
+    "edit": "Editar",
+    "delete": "Excluir",
+    "delete_success": "Excluído com sucesso!",
+    "search": "Buscar"
+  },
+  "theme": {
+    "toggle": "Alternar tema",
+    "light": "Claro",
+    "dark": "Escuro",
+    "system": "Sistema"
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "layouts": {
+    "footer": {
+      "social": {
+        "email": "이메일",
+        "telegram": "텔레그램",
+        "blog": "블로그",
+        "twitter": "트위터",
+        "mastodon": "마스토돈",
+        "github": "GitHub"
+      }
+    },
+    "header": {
+      "select_language": "언어 선택",
+      "toggle_menu_aria_label": "메뉴 전환"
+    },
+    "links": {
+      "documentation": "문서",
+      "api_reference": "API 레퍼런스",
+      "documentation_aria_label": "Sink 문서 열기(새 탭에서 열림)",
+      "resources_aria_label": "리소스",
+      "skip_to_content": "주요 콘텐츠로 건너뛰기",
+      "home_aria_label": "홈",
+      "github_aria_label": "GitHub의 Sink"
+    }
+  },
+  "nav": {
+    "links": "링크",
+    "analysis": "분석",
+    "realtime": "실시간",
+    "check": "점검",
+    "migrate": "가져오기/내보내기"
+  },
+  "sidebar": {
+    "subtitle": "링크 단축기",
+    "platform": "플랫폼",
+    "settings": "설정",
+    "import": "가져오기",
+    "export": "내보내기",
+    "coffee": "커피 한 잔 사주기",
+    "github": "GitHub",
+    "releases": "릴리스",
+    "stars": "스타",
+    "update": "새 버전 {version}을(를) 사용할 수 있습니다 (현재: {current})"
+  }
+}

@@ -1,212 +1,77 @@
-# Repository Guidelines
+# Sink Repository Guide
 
-Guidelines for agentic coding agents operating in the Sink codebase.
+## Non-obvious constraints
 
-## Project Overview
+- Write all documentation and code comments in English.
+- Use Node.js 22 and pnpm 11.11.0 (`package.json` is authoritative). The root package is the Nuxt app; `docs/` is the `@sink/docs` VitePress workspace package.
+- Do not hand-edit `app/components/ui/**`; it is managed by shadcn-vue and excluded from ESLint.
+- Read `DESIGN.md` before UI work. The authoritative design sources are `app/assets/css/tailwind.css` and `app/components/ui/**`; `DESIGN.md` is a derived summary.
+- Do not invent undocumented design tokens.
+- Feature-level classes should stay focused on layout and composition. Prefer shared component variants and sizes over overriding primitive chrome such as radius, border, shadow, background, typography, padding, height, or focus, hover, and disabled states. Recurring product-specific exceptions should become app-owned wrappers outside `app/components/ui/**`.
+- Use `DropdownMenu` for compact contextual action lists and `Popover` for richer anchored content; do not simulate menu items with buttons inside a `Popover`.
+- Compose dashboard navigation and utilities with `SidebarMenu`, `SidebarMenuItem`, and `SidebarMenuButton`; do not recreate sidebar hover, focus, radius, or collapsed behavior with raw controls.
+- After changing design tokens or `DESIGN.md`, run `npx @google/design.md lint DESIGN.md` and resolve all errors.
+- Nuxt and server utilities are auto-imported. Follow nearby code before adding explicit imports for framework globals.
+- Use `@lucide/vue` for Lucide icons; do not add `lucide-vue-next`.
+- Application forms must live in dedicated `*Form.vue` components and should prefer `@tanstack/vue-form`. Generated components under `app/components/ui/form/**` may use `vee-validate` internally.
+- Business dialogs must live in dedicated `*Dialog.vue` or `*Modal.vue` components; use `AlertDialog` for confirmations and `ResponsiveModal` for task content that adapts between dialog and drawer, and do not inline these implementations in unrelated components.
+- Locale messages live in `i18n/locales/<locale>/*.json` and are loaded through the module list in `i18n/i18n.ts`. Organize feature messages by their owning product domain; do not introduce cross-cutting `ux`, `ui`, or `messages` namespaces at the top level or across product domains.
+- Keep every locale directory aligned on module files, translation keys, and interpolation placeholders. When moving a key or changing the module list, update every locale and all application references in the same change.
 
-Sink is a link shortener with analytics, running 100% on Cloudflare. Uses Nuxt 4 frontend and Cloudflare Workers backend.
-
-**All documentation and comments must be in English.**
-
-## Project Structure
-
-```
-app/                    # Nuxt 4 application (main app layer)
-  ├── components/       # Vue components (PascalCase)
-  │   └── ui/           # shadcn-vue components (DO NOT EDIT - auto-generated)
-  ├── composables/      # Vue composables (camelCase, use* prefix)
-  ├── pages/            # File-based routing
-  ├── types/            # TypeScript types (re-exports from shared/)
-  ├── utils/            # Utility functions
-  └── lib/              # Shared helpers
-layers/dashboard/       # Dashboard layer (extends app/)
-  └── app/components/dashboard/  # Dashboard-specific components
-shared/                 # Shared code (client + server)
-  ├── schemas/          # Zod validation schemas
-  └── types/            # Shared TypeScript types
-server/                 # Nitro server (Cloudflare Workers)
-  ├── api/              # API endpoints (method suffix: create.post.ts)
-  └── utils/            # Server utilities (auto-imported)
-tests/                  # Vitest tests (Cloudflare Workers pool)
-```
-
-## Commands
-
-Use **pnpm** (v10.28.2, enforced via `packageManager`) with **Node.js 22+**.
+## Setup and commands
 
 ```bash
-# Development
-pnpm dev                  # Start dev server (port 7465)
-pnpm build                # Production build (needs 8GB heap)
-pnpm preview              # Worker preview via wrangler
-pnpm lint:fix             # ESLint with auto-fix (ALWAYS run before commit)
-pnpm types:check          # TypeScript type check
-
-# Testing (Vitest + @cloudflare/vitest-pool-workers)
-pnpm vitest               # Watch mode
-pnpm vitest run           # CI mode (run once)
-pnpm vitest tests/api/link.spec.ts       # Single test file
-pnpm vitest -t "creates new link"        # Match test name pattern
-
-# Deployment
-pnpm deploy:pages         # Deploy to Cloudflare Pages
-pnpm deploy:worker        # Deploy to Cloudflare Workers
+pnpm install                              # also runs build:map, nuxt prepare, and hook setup
+pnpm dev                                  # Nuxt dev server on port 7465
+pnpm build                                # production build with an 8 GB Node heap
+pnpm preview                              # requires existing .output build artifacts
+pnpm dev:docs                             # VitePress docs dev server
+pnpm build:docs                           # production docs build
+pnpm preview:docs                         # preview the docs build
+pnpm lint                                 # check only
+pnpm lint:fix                             # modifies files
+pnpm types:check
+pnpm test --run                           # full Vitest run, not watch mode
+pnpm test --run tests/api/link.spec.ts    # one test file
+pnpm test --run -t 'creates new link'     # tests matching a name
 ```
 
-**Important:** `pnpm install` runs `postinstall` which executes `build:map && nuxt prepare`. Do not skip this.
+- ESLint and TypeScript extend generated `.nuxt` files. If they are missing, run `pnpm postinstall` (or `pnpm install`) before diagnosing config errors.
+- Authenticated tests need `NUXT_SITE_TOKEN`; local values are loaded from `.env`, with `.env.example` as the template.
+- There is no validation CI workflow. Run the relevant lint, typecheck, and test commands locally.
+- The pre-commit hook only runs `eslint --fix` on staged JS/TS/Vue files; it does not replace full-project verification.
 
-**Critical lint prerequisite:** ESLint config imports from `.nuxt/eslint.config.mjs` (generated by Nuxt). If lint fails with module not found, run `pnpm postinstall` or `pnpm dev` first to generate it.
+## Architecture and data flow
 
-## Code Style
+- `app/` is a client-only Nuxt 4 UI (`ssr: false`); `/` and `/dashboard/**` are prerendered, and `/dashboard` redirects to `/dashboard/links`. `server/` is the Nitro backend using the `cloudflare-module` preset outside Cloudflare Pages.
+- `shared/` owns schemas, cross-runtime utilities, and shared types. Prefer `#shared/...`; `app/types/index.ts` only re-exports selected shared types for UI use. Never import `app/**` from `server/**`; move cross-runtime code to `shared/**` instead.
+- Use `useAPI()` for authenticated internal APIs, mutations, polling, searches, and abortable user flows. Reserve Nuxt `useFetch` for read-only data where AsyncData caching, deduplication, or shared state provides a concrete benefit.
+- D1 is the authoritative link store. KV is a write-through read cache and the temporary source for pre-D1 links until D1 records a completed KV-to-D1 migration run. Route link persistence through `server/utils/link-store.ts`; direct KV-only writes can lose authoritative data.
+- Link validation has separate create, edit, import, stored, and legacy-KV contracts in `shared/schemas/link.ts`. Do not merge them or remove legacy KV parsing without explicit confirmation that every deployed instance has completed KV-to-D1 migration.
+- `server/middleware/1.redirect.ts` intentionally runs before `2.auth.ts`: public short-link resolution happens first, while every `/api/**` request is authenticated by site token or allowed Cloudflare Access identity.
+- Cloudflare bindings are declared in `wrangler.jsonc`: `DB`, `KV`, `ANALYTICS`, `AI`, `R2`, and `ASSETS`. Regenerate `worker-configuration.d.ts` with `pnpm gen:types` after changing bindings.
+- The realtime dashboard is intentionally pseudo-live: it polls analytics every 10 seconds, then replays the initial and newly discovered access events through a bounded client-side queue at roughly one event per second. Pausing stops polling, queue replay, and WebGL motion; it is not an SSE or WebSocket stream.
 
-Uses `@antfu/eslint-config` with `eslint-plugin-better-tailwindcss`. Run `pnpm lint:fix` before committing.
+## Database and deployment
 
-**Formatting**: 2-space indent | Single quotes | No semicolons | Trailing commas
-
-### TypeScript
-
-- Use TypeScript everywhere; prefer `interface` for objects, `type` for unions/aliases
-- Avoid `any`; use proper types or `unknown`
-- Use Zod for runtime validation in `shared/schemas/`
-- Export types with `export type` for type-only exports
-
-```typescript
-// shared/schemas/link.ts - shared validation
-export const LinkSchema = z.object({
-  id: z.string().trim().max(26),
-  url: z.string().trim().url().max(2048),
-  slug: z.string().trim().max(2048).regex(slugRegex),
-})
-export type Link = z.infer<typeof LinkSchema>
+```bash
+pnpm db:generate         # schema: server/database/schema.ts; output: drizzle/
+pnpm db:migrate:local    # apply migrations to local Wrangler D1
+pnpm db:migrate:remote   # mutates the configured remote D1 database
 ```
 
-### Vue Components
+- Commit generated migrations when changing the Drizzle schema; tests read and apply migrations from `drizzle/` automatically.
+- Prefer Drizzle ORM for constructing and executing SQL. Use raw D1 SQL only when Drizzle cannot express the operation clearly or an existing migration-specific atomic pattern must be preserved.
+- `pnpm deploy:pages` and `pnpm deploy:worker` both run remote D1 migrations before publishing and assume build artifacts already exist. Treat them as production-mutating commands, not verification commands.
 
-Use `<script setup lang="ts">` always. Files: PascalCase (`LinkEditor.vue`).
+## Testing quirks
 
-```vue
-<script setup lang="ts">
-import type { Link } from '@/types'
-import { Copy } from 'lucide-vue-next'
+- Vitest uses `@cloudflare/vitest-pool-workers`, `wrangler.jsonc`, one Worker, `isolate: false`, and `maxWorkers: 1`. Storage is shared across the run.
+- Worker tests execute `.output/server/index.mjs` from `wrangler.jsonc`. Run `pnpm build` after server changes before the final test run, or tests may exercise stale output.
+- Use unique slugs and cleanup helpers from `tests/utils.ts`; do not make state-sharing suites concurrent.
+- `tests/setup.ts` applies all D1 migrations before tests. Update migrations, not ad hoc test setup, when schema changes.
 
-const props = defineProps<{ link: Link }>()
-const emit = defineEmits<{ update: [link: Link] }>()
-</script>
+## Generated artifacts
 
-<template>
-  <div>{{ props.link.slug }}</div>
-</template>
-```
-
-### Imports
-
-- **Prefer Nuxt auto-imports**: `ref`, `computed`, `useFetch`, `useState`, `useRuntimeConfig`, etc.
-- **Explicit imports for**: external libs, types (`import type { Link } from '@/types'`), icons (`import { Copy } from 'lucide-vue-next'`)
-- **Server utils are auto-imported**: Functions in `server/utils/` are available globally in server code
-
-### Naming Conventions
-
-| Item           | Convention       | Example            |
-| -------------- | ---------------- | ------------------ |
-| Components     | PascalCase       | `LinkEditor.vue`   |
-| Composables    | `use` prefix     | `useAuthToken()`   |
-| API routes     | method suffix    | `create.post.ts`   |
-| Directories    | kebab-case       | `dashboard/links/` |
-| Functions/vars | camelCase        | `getLink`          |
-| Constants      | UPPER_SNAKE_CASE | `TOKEN_KEY`        |
-
-### Error Handling
-
-```typescript
-// Server API - use createError for HTTP errors
-export default eventHandler(async (event) => {
-  const link = await readValidatedBody(event, LinkSchema.parse)
-  if (existingLink) {
-    throw createError({ status: 409, statusText: 'Link already exists' })
-  }
-})
-```
-
-## Cloudflare Bindings
-
-Access via destructuring `event.context`:
-
-```typescript
-const { cloudflare } = event.context
-const { KV, ANALYTICS, AI, R2 } = cloudflare.env
-```
-
-| Binding     | Type             | Purpose                      |
-| ----------- | ---------------- | ---------------------------- |
-| `KV`        | Workers KV       | Link storage (`link:{slug}`) |
-| `ANALYTICS` | Analytics Engine | Click tracking & analytics   |
-| `AI`        | Workers AI       | AI-powered slug generation   |
-| `R2`        | R2 Bucket        | Image uploads & backup       |
-
-## Testing Patterns
-
-Tests use `@cloudflare/vitest-pool-workers` with real Cloudflare bindings (single worker, shared storage).
-
-```typescript
-import { generateMock } from '@anatine/zod-mock'
-import { describe, expect, it } from 'vitest'
-import { fetchWithAuth, postJson } from '../utils'
-
-describe.sequential('/api/link/create', () => {
-  it('creates new link with valid data', async () => {
-    const response = await postJson('/api/link/create', { url: 'https://example.com', slug: 'test' })
-    expect(response.status).toBe(201)
-  })
-})
-```
-
-**Test utilities** (`tests/utils.ts`):
-
-- `fetchWithAuth(path, options)` - GET with auth header
-- `postJson(path, body, withAuth?)` - POST JSON with optional auth
-- `putJson(path, body, withAuth?)` - PUT JSON with optional auth
-- `fetch(path, options)` - Raw fetch without auth
-
-Use `describe.sequential` for tests that share state (most API tests).
-
-## UI Components
-
-- Use shadcn-vue from `app/components/ui/` - **Never edit** (auto-generated)
-- Use `ResponsiveModal` for mobile-optimized dialogs
-- Use Tailwind CSS v4 for styling (`@import 'tailwindcss'` syntax)
-- Use static English for `aria-label` (no `$t()` translations)
-- Icons from `lucide-vue-next`
-
-## Commits
-
-Follow Conventional Commits: `feat:`, `fix:`, `docs:`, `chore:`, `refactor:`
-
-## Pre-commit
-
-`simple-git-hooks` runs `lint-staged` on commit, auto-runs `eslint --fix` on staged files.
-
-## API Route Patterns
-
-API routes use method suffix convention:
-
-- `create.post.ts` → `POST /api/link/create`
-- `query.get.ts` → `GET /api/link/query`
-- `edit.put.ts` → `PUT /api/link/edit`
-
-Server utils in `server/utils/` are auto-imported:
-
-- `getLink(event, slug)` - Fetch link from KV
-- `putLink(event, link)` - Store link in KV
-- `deleteLink(event, slug)` - Remove link from KV
-- `normalizeSlug(event, slug)` - Case normalization
-- `buildShortLink(event, slug)` - Construct full URL
-
-## OpenAPI
-
-API routes auto-generate OpenAPI docs via `defineRouteMeta` with `openAPI` property. The spec is served at `/_docs/openapi.json` and UI at `/_docs/scalar` and `/_docs/swagger`.
-
-## Architecture Notes
-
-- **Dashboard layer (`layers/dashboard/`) is client-only**: `ssr: false` with prerendered routes. Dashboard pages are CSR-only.
-- **Nitro preset**: `cloudflare-module` (set conditionally when not in CI)
-- **i18n**: `@nuxtjs/i18n` with `no_prefix` strategy; locales defined in `i18n/i18n.ts`
+- `pnpm install` regenerates ignored `public/world.json` via `build:map`.
+- `pnpm build` regenerates `public/sphere.bin` through its prebuild hook. `build:colo` and `build:testimonials` generate `public/colos.json` and `app/data/testimonials.json`; the testimonial task is network-dependent and randomizes order.

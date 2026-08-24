@@ -1,87 +1,66 @@
-import type { LinkSearchItem } from '#shared/types/link'
+import { z } from 'zod'
 
 defineRouteMeta({
   openAPI: {
-    description: 'Search all links (returns slug, url, comment for each link)',
+    description: 'Search links with a non-empty keyword or exact URL. Tag and status only filter those searches; requests without a search selector return an empty array.',
     security: [{ bearerAuth: [] }],
+    parameters: [
+      {
+        name: 'q',
+        in: 'query',
+        required: false,
+        schema: { type: 'string' },
+        description: 'Non-empty case-insensitive substring to match against slug, URL, comment, or tag',
+      },
+      {
+        name: 'url',
+        in: 'query',
+        required: false,
+        schema: { type: 'string' },
+        description: 'Normalized target URL to match exactly',
+      },
+      {
+        name: 'tag',
+        in: 'query',
+        required: false,
+        schema: { type: 'string' },
+        description: 'Exact normalized tag filter',
+      },
+      {
+        name: 'status',
+        in: 'query',
+        required: false,
+        schema: { type: 'string', enum: ['active', 'expired', 'all'], default: 'active' },
+        description: 'Expiration status filter',
+      },
+      {
+        name: 'limit',
+        in: 'query',
+        required: false,
+        schema: { type: 'integer', minimum: 1, maximum: 1000, default: 20 },
+        description: 'Maximum matches for keyword or exact URL searches',
+      },
+    ],
   },
 })
 
-interface LinkMetadata {
-  url?: string
-  comment?: string
-  expiration?: number
-}
-
-interface LinkData {
-  url: string
-  comment?: string
-}
+const SearchQuerySchema = z.object({
+  q: z.string().trim().refine(value => new TextEncoder().encode(value.toLowerCase().replace(/[!%_]/g, '!$&')).length <= 48, {
+    message: 'Search query must not exceed 48 UTF-8 bytes',
+  }).optional(),
+  url: z.string().trim().url().max(2048).optional(),
+  limit: z.coerce.number().int().min(1).max(1000).optional(),
+  tag: z.string().trim().toLowerCase().min(1).max(32).optional(),
+  status: z.enum(['active', 'expired', 'all']).default('active'),
+})
 
 export default eventHandler(async (event) => {
-  const { cloudflare } = event.context
-  const { KV } = cloudflare.env
-  const list: LinkSearchItem[] = []
-  let finalCursor: string | undefined
+  const query = await getValidatedQuery(event, SearchQuerySchema.parse)
+  if (!query.q && !query.url)
+    return []
 
-  try {
-    while (true) {
-      const result = await KV.list({
-        prefix: `link:`,
-        limit: 1000,
-        cursor: finalCursor,
-      }) as { keys: Array<{ name: string, metadata?: LinkMetadata }>, list_complete: boolean, cursor?: string }
-
-      finalCursor = result.cursor
-
-      if (Array.isArray(result.keys)) {
-        for (const key of result.keys) {
-          try {
-            if (key.metadata?.url) {
-              list.push({
-                slug: key.name.replace('link:', ''),
-                url: key.metadata.url,
-                comment: key.metadata.comment,
-              })
-            }
-            else {
-              // Forward compatible with links without metadata
-              const { metadata, value: link } = await KV.getWithMetadata(key.name, { type: 'json' }) as { metadata: LinkMetadata | null, value: LinkData | null }
-              if (link) {
-                list.push({
-                  slug: key.name.replace('link:', ''),
-                  url: withoutQuery(link.url),
-                  comment: link.comment,
-                })
-                await KV.put(key.name, JSON.stringify(link), {
-                  expiration: metadata?.expiration,
-                  metadata: {
-                    ...(metadata ?? {}),
-                    url: withoutQuery(link.url),
-                    comment: link.comment,
-                  },
-                })
-              }
-            }
-          }
-          catch (err) {
-            console.error(`Error processing key ${key.name}:`, err)
-            continue // Skip this key and continue with the next one
-          }
-        }
-      }
-
-      if (!result.keys || result.list_complete) {
-        break
-      }
-    }
-    return list
-  }
-  catch (err) {
-    console.error('Error fetching link list:', err)
-    throw createError({
-      status: 500,
-      statusText: 'Failed to fetch link list',
-    })
-  }
+  return await searchLinks(event, {
+    ...query,
+    limit: query.limit ?? 20,
+  })
 })

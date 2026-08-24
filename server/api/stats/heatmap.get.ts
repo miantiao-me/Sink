@@ -1,8 +1,7 @@
 import type { H3Event } from 'h3'
-import { QuerySchema } from '#shared/schemas/query'
+import { sql } from 'kysely'
 import { z } from 'zod'
-
-const { select } = SqlBricks
+import { QuerySchema } from '#shared/schemas/query'
 
 const HeatmapQuerySchema = QuerySchema.extend({
   clientTimezone: z.string()
@@ -11,14 +10,24 @@ const HeatmapQuerySchema = QuerySchema.extend({
     .default('Etc/UTC'),
 })
 
-function query2sql(query: z.infer<typeof HeatmapQuerySchema>, event: H3Event): string {
-  const filter = query2filter(query)
+function query2sql(query: z.infer<typeof HeatmapQuerySchema>, event: H3Event) {
+  const filter = buildAnalyticsFilter(query)
   const { dataset } = useRuntimeConfig(event)
   const timezone = getSafeTimezone(query.clientTimezone)
-  const tzTimestamp = `toDateTime(toUnixTimestamp(timestamp), '${timezone}')`
-  const sql = select(`toDayOfWeek(${tzTimestamp}) as weekday, toHour(${tzTimestamp}) as hour, SUM(_sample_interval) as visits, COUNT(DISTINCT ${logsMap.ip}) as visitors`).from(dataset).where(filter).groupBy('weekday', 'hour').orderBy('weekday', 'hour')
-  appendTimeFilter(sql, query)
-  return sql.toString()
+  const tzTimestamp = sql<string>`toDateTime(toUnixTimestamp(${sql.ref('timestamp')}), ${sql.lit(timezone)})`
+  const analyticsQuery = createAnalyticsQuery(dataset)
+  const filteredQuery = filter ? analyticsQuery.where(filter) : analyticsQuery
+
+  return filteredQuery
+    .select([
+      sql<number>`toDayOfWeek(${tzTimestamp})`.as('weekday'),
+      sql<number>`toHour(${tzTimestamp})`.as('hour'),
+      sql<number>`SUM(_sample_interval)`.as('visits'),
+      sql<number>`COUNT(DISTINCT ${sql.ref(logsMap.ip!)})`.as('visitors'),
+    ])
+    .groupBy(['weekday', 'hour'])
+    .orderBy('weekday')
+    .orderBy('hour')
 }
 
 export default eventHandler(async (event) => {

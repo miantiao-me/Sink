@@ -1,4 +1,4 @@
-import { LinkSchema } from '#shared/schemas/link'
+import { CreateLinkSchema } from '#shared/schemas/link'
 
 defineRouteMeta({
   openAPI: {
@@ -23,6 +23,7 @@ defineRouteMeta({
               google: { type: 'string', description: 'Google Play Store redirect URL' },
               unsafe: { type: 'boolean', description: 'Mark link as unsafe, showing a warning page before redirect' },
               geo: { type: 'object', additionalProperties: { type: 'string' }, description: 'Geo-routing rules (country code to URL)' },
+              tags: { type: 'array', items: { type: 'string' }, description: 'Up to 10 normalized link tags, each 1-32 characters' },
             },
           },
         },
@@ -32,18 +33,23 @@ defineRouteMeta({
 })
 
 export default eventHandler(async (event) => {
-  const link = await readValidatedBody(event, LinkSchema.parse)
+  const link = await readValidatedBody(event, CreateLinkSchema.parse)
 
   await prepareIncomingLink(event, link)
 
-  const existingLink = await getLink(event, link.slug)
+  const existingLink = await getAuthoritativeLink(event, link.slug)
   if (existingLink) {
     return { ...buildLinkResponse(event, existingLink), status: 'existing' }
   }
 
   await hashLinkPasswordForCreate(link)
 
-  await putLink(event, link)
+  if (!await createLink(event, link)) {
+    const racedLink = await getAuthoritativeLink(event, link.slug)
+    if (racedLink)
+      return { ...buildLinkResponse(event, racedLink), status: 'existing' }
+    throw createError({ status: 409, statusText: 'Link already exists' })
+  }
   setResponseStatus(event, 201)
   return { ...buildLinkResponse(event, link), status: 'created' }
 })

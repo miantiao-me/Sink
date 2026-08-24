@@ -1,0 +1,22 @@
+{
+  "common": {
+    "i18n": "Multi Language",
+    "abbreviations": "En",
+    "current_language": "English",
+    "try_again": "Try again",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "close": "Close",
+    "save": "Save",
+    "edit": "Edit",
+    "delete": "Delete",
+    "delete_success": "Delete successful!",
+    "search": "Search"
+  },
+  "theme": {
+    "toggle": "Toggle theme",
+    "light": "Light",
+    "dark": "Dark",
+    "system": "System"
+  }
+}

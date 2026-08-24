@@ -1,0 +1,22 @@
+{
+  "common": {
+    "i18n": "Multibahasa",
+    "abbreviations": "Id",
+    "current_language": "Bahasa Indonesia",
+    "try_again": "Coba lagi",
+    "cancel": "Batal",
+    "continue": "Lanjutkan",
+    "close": "Tutup",
+    "save": "Simpan",
+    "edit": "Edit",
+    "delete": "Hapus",
+    "delete_success": "Berhasil dihapus!",
+    "search": "Cari"
+  },
+  "theme": {
+    "toggle": "Ganti tema",
+    "light": "Terang",
+    "dark": "Gelap",
+    "system": "Sistem"
+  }
+}

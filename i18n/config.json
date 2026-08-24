@@ -1,0 +1,69 @@
+{
+  "modules": [
+    "core",
+    "auth",
+    "shell",
+    "home",
+    "dashboard",
+    "links",
+    "check",
+    "migrate"
+  ],
+  "locales": [
+    {
+      "code": "en-US",
+      "name": "English",
+      "emoji": "🇺🇸"
+    },
+    {
+      "code": "zh-CN",
+      "name": "简体中文",
+      "emoji": "🇨🇳"
+    },
+    {
+      "code": "zh-TW",
+      "name": "繁體中文",
+      "emoji": "🇹🇼"
+    },
+    {
+      "code": "fr-FR",
+      "name": "Français",
+      "emoji": "🇫🇷"
+    },
+    {
+      "code": "id-ID",
+      "name": "Bahasa Indonesia",
+      "emoji": "🇮🇩"
+    },
+    {
+      "code": "ko-KR",
+      "name": "한국어",
+      "emoji": "🇰🇷"
+    },
+    {
+      "code": "it-IT",
+      "name": "Italiano",
+      "emoji": "🇮🇹"
+    },
+    {
+      "code": "vi-VN",
+      "name": "Tiếng Việt",
+      "emoji": "🇻🇳"
+    },
+    {
+      "code": "de-DE",
+      "name": "Deutsch",
+      "emoji": "🇩🇪"
+    },
+    {
+      "code": "pt-PT",
+      "name": "Português (PT)",
+      "emoji": "🇵🇹"
+    },
+    {
+      "code": "pt-BR",
+      "name": "Português (BR)",
+      "emoji": "🇧🇷"
+    }
+  ]
+}

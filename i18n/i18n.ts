@@ -1,72 +1,14 @@
 import type { LocaleObject } from '@nuxtjs/i18n'
+import localeConfig from './config.json'
 
-const locales: LocaleObject[] = [
-  {
-    code: 'en-US',
-    file: 'en-US.json',
-    name: 'English',
-    emoji: '🇺🇸',
-  },
-  {
-    code: 'zh-CN',
-    file: 'zh-CN.json',
-    name: '简体中文',
-    emoji: '🇨🇳',
-  },
-  {
-    code: 'zh-TW',
-    file: 'zh-TW.json',
-    name: '繁體中文',
-    emoji: '🇹🇼',
-  },
-  {
-    code: 'fr-FR',
-    file: 'fr-FR.json',
-    name: 'Français',
-    emoji: '🇫🇷',
-  },
-  {
-    code: 'id-ID',
-    file: 'id-ID.json',
-    name: 'Bahasa Indonesia',
-    emoji: '🇮🇩',
-  },
-  {
-    code: 'ko-KR',
-    file: 'ko-KR.json',
-    name: '한국어',
-    emoji: '🇰🇷',
-  },
-  {
-    code: 'it-IT',
-    file: 'it-IT.json',
-    name: 'Italiano',
-    emoji: '🇮🇹',
-  },
-  {
-    code: 'vi-VN',
-    file: 'vi-VN.json',
-    name: 'Tiếng Việt',
-    emoji: '🇻🇳',
-  },
-  {
-    code: 'de-DE',
-    file: 'de-DE.json',
-    name: 'Deutsch',
-    emoji: '🇩🇪',
-  },
-  {
-    code: 'pt-PT',
-    file: 'pt-PT.json',
-    name: 'Português (PT)',
-    emoji: '🇵🇹',
-  },
-  {
-    code: 'pt-BR',
-    file: 'pt-BR.json',
-    name: 'Português (BR)',
-    emoji: '🇧🇷',
-  },
-]
+function localeFiles(code: string): string[] {
+  return localeConfig.modules.map(module => `${code}/${module}.json`)
+}
+
+const locales: LocaleObject[] = localeConfig.locales.map(locale => ({
+  ...locale,
+  code: locale.code as LocaleObject['code'],
+  files: localeFiles(locale.code),
+}))
 
 export const currentLocales = [...locales].sort((a, b) => a.code.localeCompare(b.code))

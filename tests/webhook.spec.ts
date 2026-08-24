@@ -4,7 +4,6 @@ import {
   createLinkClickedWebhook,
   createWebhookDelivery,
   deliverWebhook,
-  handleWebhookDelivery,
   isWebhookConfigured,
   scheduleWebhookDelivery,
   signWebhook,
@@ -213,47 +212,42 @@ describe('standard webhook delivery', () => {
     expect(fetcher).not.toHaveBeenCalled()
   })
 
-  it('contains delivery failures inside the background boundary', async () => {
+  it('contains scheduled delivery failures inside the background boundary', async () => {
     const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
-    await expect(handleWebhookDelivery(Promise.reject(new Error('network failure')))).resolves.toBeUndefined()
-    expect(consoleError).toHaveBeenCalledWith({
-      event: 'webhook.delivery.failed',
-      code: 'request_failed',
-      status: undefined,
-    })
-  })
+    try {
+      const fetcher = vi.fn(async () => {
+        throw new Error('network failure')
+      })
+      const delivery = createWebhookDelivery({
+        url: 'https://webhook.example.com/events',
+        secret,
+        click,
+        link: { id: 'link_test', slug: 'test' },
+        fetcher,
+      })
+      if (!delivery)
+        throw new Error('Expected configured webhook delivery')
 
-  it('schedules a caught fetch failure without throwing', async () => {
-    const consoleError = vi.spyOn(console, 'error').mockImplementation(() => {})
-    const fetcher = vi.fn(async () => {
-      throw new Error('network failure')
-    })
-    const delivery = createWebhookDelivery({
-      url: 'https://webhook.example.com/events',
-      secret,
-      click,
-      link: { id: 'link_test', slug: 'test' },
-      fetcher,
-    })
-    if (!delivery)
-      throw new Error('Expected configured webhook delivery')
+      let backgroundPromise: Promise<unknown> | undefined
+      const context: Pick<ExecutionContext, 'waitUntil'> = {
+        waitUntil(promise) {
+          backgroundPromise = promise
+        },
+      }
 
-    let backgroundPromise: Promise<unknown> | undefined
-    const context: Pick<ExecutionContext, 'waitUntil'> = {
-      waitUntil(promise) {
-        backgroundPromise = promise
-      },
+      expect(() => scheduleWebhookDelivery(context, delivery)).not.toThrow()
+      if (!backgroundPromise)
+        throw new Error('Expected a background promise')
+      await expect(backgroundPromise).resolves.toBeUndefined()
+      expect(fetcher).toHaveBeenCalledOnce()
+      expect(consoleError).toHaveBeenCalledWith({
+        event: 'webhook.delivery.failed',
+        code: 'request_failed',
+        status: undefined,
+      })
     }
-
-    expect(() => scheduleWebhookDelivery(context, delivery)).not.toThrow()
-    if (!backgroundPromise)
-      throw new Error('Expected a background promise')
-    await expect(backgroundPromise).resolves.toBeUndefined()
-    expect(fetcher).toHaveBeenCalledOnce()
-    expect(consoleError).toHaveBeenCalledWith({
-      event: 'webhook.delivery.failed',
-      code: 'request_failed',
-      status: undefined,
-    })
+    finally {
+      consoleError.mockRestore()
+    }
   })
 })

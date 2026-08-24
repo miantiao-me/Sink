@@ -1,0 +1,46 @@
+{
+  "layouts": {
+    "footer": {
+      "social": {
+        "email": "Email",
+        "telegram": "Telegram",
+        "blog": "Blog",
+        "twitter": "Twitter",
+        "mastodon": "Mastodon",
+        "github": "GitHub"
+      }
+    },
+    "header": {
+      "select_language": "Chọn ngôn ngữ",
+      "toggle_menu_aria_label": "Mở hoặc đóng menu"
+    },
+    "links": {
+      "documentation": "Tài liệu",
+      "api_reference": "Tham chiếu API",
+      "documentation_aria_label": "Mở tài liệu Sink (mở trong thẻ mới)",
+      "resources_aria_label": "Tài nguyên",
+      "skip_to_content": "Chuyển đến nội dung chính",
+      "home_aria_label": "Trang chủ",
+      "github_aria_label": "Sink trên GitHub"
+    }
+  },
+  "nav": {
+    "links": "Liên kết",
+    "analysis": "Phân tích",
+    "realtime": "Thời gian thực",
+    "check": "Check",
+    "migrate": "Nhập/Xuất"
+  },
+  "sidebar": {
+    "subtitle": "Rút gọn liên kết",
+    "platform": "Nền tảng",
+    "settings": "Cài đặt",
+    "import": "Nhập",
+    "export": "Xuất",
+    "coffee": "Mua cho tôi một ly cà phê",
+    "github": "GitHub",
+    "releases": "Bản phát hành",
+    "stars": "Stars",
+    "update": "Phiên bản mới {version} có sẵn (hiện tại: {current})"
+  }
+}

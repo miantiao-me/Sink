@@ -1,17 +1,5 @@
 import { z } from 'zod'
-
-import { LinkSchema } from './link'
-
-// Import uses LinkSchema but:
-// - Removes defaults (id, slug, createdAt, updatedAt have defaults in LinkSchema)
-// - Removes expiration refinement (imported links may have past expiration)
-// - Makes id optional, slug required
-const ImportLinkSchema = LinkSchema
-  .omit({ expiration: true })
-  .extend({
-    id: z.string().trim().max(26).optional(),
-    expiration: z.number().int().safe().optional(),
-  })
+import { ImportLinkSchema } from './link'
 
 export const ImportDataSchema = z.object({
   version: z.string(),

@@ -92,7 +92,7 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
     v-bind="forwarded"
     v-model:placeholder="placeholder"
     data-slot="calendar"
-    :class="cn('p-3', props.class)"
+    :class="cn('p-3 [--cell-radius:var(--radius-4xl)] [--cell-size:--spacing(8)] group/calendar bg-background in-data-[slot=card-content]:bg-transparent in-data-[slot=popover-content]:bg-transparent', props.class)"
   >
     <CalendarHeader class="pt-0">
       <nav class="flex items-center gap-1 absolute top-0 inset-x-0 justify-between">

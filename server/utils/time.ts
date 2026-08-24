@@ -14,7 +14,7 @@ export function getExpiration(event: H3Event, expiration: number | undefined) {
 
 export function isValidTimezone(tz: string): boolean {
   try {
-    Intl.DateTimeFormat(undefined, { timeZone: tz })
+    new Intl.DateTimeFormat(undefined, { timeZone: tz }).resolvedOptions()
     return true
   }
   catch {

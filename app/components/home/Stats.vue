@@ -7,8 +7,8 @@ const { rawStats } = useGithubStats()
 <template>
   <section
     class="
-      py-12
-      md:py-20
+      bg-background py-16 text-foreground
+      md:py-24
     "
   >
     <div
@@ -19,7 +19,7 @@ const { rawStats } = useGithubStats()
     >
       <div class="relative z-10 mx-auto max-w-xl space-y-4 text-center">
         <h2
-          class="text-3xl font-semibold"
+          class="text-3xl font-semibold text-balance"
         >
           {{ $t('home.stats.title') }}
         </h2>

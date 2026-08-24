@@ -1,0 +1,74 @@
+{
+  "migrate": {
+    "d1": {
+      "title": "KV에서 D1으로 마이그레이션",
+      "description": "기존 D1 레코드를 유지하면서 Workers KV 링크를 D1으로 복사합니다.",
+      "status_title": "마이그레이션 상태",
+      "status_pending": "마이그레이션이 완료되지 않았습니다.",
+      "status_completed": "마이그레이션이 완료되었습니다.",
+      "completed_at": "완료: {date}",
+      "run_again": "다시 실행",
+      "running": "마이그레이션 중…",
+      "success": "마이그레이션이 완료되었습니다.",
+      "failed": "마이그레이션 실패",
+      "scanned": "스캔됨",
+      "inserted": "추가됨",
+      "skipped": "건너뜀",
+      "expired": "만료됨",
+      "failed_count": "실패",
+      "no_marker": "완료 마커를 찾을 수 없습니다."
+    },
+    "access_export": {
+      "title": "접속 데이터 내보내기",
+      "description": "접속 통계를 CSV 파일로 다운로드합니다",
+      "date_range": "날짜 범위",
+      "slug_label": "슬러그 필터",
+      "slug_description": "모든 슬러그를 내보내려면 비워두세요.",
+      "button": "CSV 내보내기",
+      "exporting": "내보내는 중...",
+      "success": "내보내기 성공",
+      "failed": "내보내기 실패"
+    },
+    "backup": {
+      "title": "수동 백업",
+      "description": "설정된 R2 버킷으로 모든 링크의 수동 백업을 실행합니다",
+      "button": "백업 시작",
+      "backing_up": "백업 중...",
+      "success": "백업 성공",
+      "failed": "백업 실패"
+    },
+    "export": {
+      "title": "링크 내보내기",
+      "description": "모든 링크를 JSON 파일로 다운로드합니다",
+      "button": "전체 내보내기",
+      "total_links": "전체 링크 수",
+      "success": "내보내기 성공",
+      "failed": "내보내기 실패"
+    },
+    "import": {
+      "title": "링크 가져오기",
+      "description": "링크를 가져오려면 JSON 파일을 업로드하세요",
+      "dropzone": "JSON 파일을 여기에 놓거나 클릭하여 업로드하세요",
+      "links_found": "가져올 링크 {count}개",
+      "button": "가져오기 시작",
+      "importing": "가져오는 중...",
+      "import_more": "추가로 가져오기",
+      "download_success": "가져온 링크 {count}개 다운로드",
+      "download_skipped": "건너뛴 링크 {count}개 다운로드",
+      "download_failed": "실패한 링크 {count}개 다운로드",
+      "result": {
+        "title": "가져오기 결과",
+        "success": "성공적으로 가져옴",
+        "skipped": "건너뜀 (이미 존재함)",
+        "failed": "실패",
+        "success_message": "{count}개의 링크를 성공적으로 가져왔습니다"
+      },
+      "errors": {
+        "invalid_json": "잘못된 JSON 파일입니다",
+        "invalid_format": "잘못된 파일 형식입니다. Sink에서 내보낸 파일을 사용해 주세요.",
+        "parse_error": "파일 구문 분석에 실패했습니다",
+        "batch_failed": "이 가져오기 묶음에 실패했습니다."
+      }
+    }
+  }
+}

@@ -1,8 +1,7 @@
 import type { H3Event } from 'h3'
 import type { AiChatResponse } from '../../utils/ai'
-import { destr } from 'destr'
 import { z } from 'zod'
-import { stripCodeFence } from '../../utils/ai'
+import { parseAiResponse } from '../../utils/ai'
 
 defineRouteMeta({
   openAPI: {
@@ -60,7 +59,7 @@ function resolveMetadataLocale(event: H3Event, locale?: string): string {
 
 export default eventHandler(async (event) => {
   const query = await getValidatedQuery(event, z.object({
-    url: z.string().url(),
+    url: z.url(),
     locale: z.string().optional(),
   }).parse)
   const { url } = query
@@ -91,20 +90,24 @@ export default eventHandler(async (event) => {
     { role: 'user', content: userContent },
   ]
 
-  const response = await AI.run(aiModel as keyof AiModels, {
-    messages,
-    chat_template_kwargs: {
-      enable_thinking: false,
-      thinking: false,
-    },
-  }) as AiChatResponse
+  let response: AiChatResponse
+  try {
+    // @ts-expect-error Workers AI supports model-specific chat template options at runtime.
+    response = await AI.run(aiModel as keyof AiModels, {
+      messages,
+      chat_template_kwargs: {
+        enable_thinking: false,
+        thinking: false,
+      },
+    }) as AiChatResponse
+  }
+  catch (error) {
+    console.warn('Workers AI metadata generation failed; using fallback.', error)
+    return fallbackMetadata(url)
+  }
 
-  const content = response.response ?? response.choices?.[0]?.message?.content ?? ''
   const fallback = fallbackMetadata(url)
-  const parsed = content.trim() ? destr(stripCodeFence(content)) : undefined
-  const result = typeof parsed === 'object' && parsed !== null && !Array.isArray(parsed)
-    ? parsed as Record<string, unknown>
-    : {}
+  const result = parseAiResponse(response)
 
   const title = String(result.title ?? '').trim() || fallback.title
   const description = String(result.description ?? '').trim() || fallback.description

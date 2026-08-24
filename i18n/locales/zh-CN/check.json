@@ -1,0 +1,76 @@
+{
+  "check": {
+    "title": "链接检测",
+    "description": "检测已有链接的目标 URL 是否可访问。结果仅展示，不会修改链接。",
+    "config": {
+      "timeout": "超时时间（秒）",
+      "timeout_description": "单个链接的超时时间，默认 6 秒。",
+      "batch_size": "批量大小",
+      "batch_size_description": "每次请求检测的链接数量，最大 10。"
+    },
+    "actions": {
+      "start": "开始检测",
+      "checking": "检测中...",
+      "stop": "停止",
+      "reload": "重新加载链接",
+      "loading": "加载中...",
+      "clear": "清空结果",
+      "export": "导出 CSV",
+      "detail": "详情",
+      "original": "原链接"
+    },
+    "stats": {
+      "total": "总数",
+      "checked": "已检测",
+      "normal": "正常",
+      "abnormal": "异常",
+      "network_error": "网络异常"
+    },
+    "progress": {
+      "title": "进度",
+      "description": "已检测 {checked} / {total} 个链接",
+      "stopped": "检测已停止"
+    },
+    "results": {
+      "title": "检测结果",
+      "description": "默认展示异常结果，可通过标签按状态码快速筛选。"
+    },
+    "tabs": {
+      "abnormal": "异常 ({count})",
+      "status": "{status} ({count})",
+      "all": "全部 ({count})"
+    },
+    "table": {
+      "slug": "短链",
+      "url": "目标 URL",
+      "status": "状态码",
+      "result": "结果",
+      "duration": "耗时",
+      "error": "错误",
+      "action": "操作"
+    },
+    "result": {
+      "normal": "正常",
+      "broken": "异常",
+      "network_error": "网络异常"
+    },
+    "empty": {
+      "not_started": "暂无检测结果。",
+      "no_broken_links": "没有发现异常链接。",
+      "no_matching_results": "没有匹配的结果。"
+    },
+    "messages": {
+      "load_failed": "链接加载失败",
+      "completed": "链接检测完成",
+      "stopped": "链接检测已停止"
+    },
+    "dialogs": {
+      "clear": {
+        "title": "清除检查结果？",
+        "description": "这将清除此轮检查的全部结果。",
+        "action": "清除结果"
+      }
+    },
+    "duration_ms": "{duration} 毫秒"
+  }
+}

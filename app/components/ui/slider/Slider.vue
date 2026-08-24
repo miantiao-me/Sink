@@ -17,19 +17,24 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
   <SliderRoot
     v-slot="{ modelValue }"
     data-slot="slider"
+    :data-vertical="props.orientation === 'vertical' ? '' : undefined"
     :class="cn(
-      'relative flex w-full touch-none items-center select-none data-[disabled]:opacity-50 data-[orientation=vertical]:h-full data-[orientation=vertical]:min-h-44 data-[orientation=vertical]:w-auto data-[orientation=vertical]:flex-col',
+      'data-vertical:min-h-40 relative flex w-full touch-none items-center select-none data-disabled:opacity-50 data-vertical:h-full data-vertical:w-auto data-vertical:flex-col',
       props.class,
     )"
     v-bind="forwarded"
   >
     <SliderTrack
       data-slot="slider-track"
-      class="bg-muted relative grow overflow-hidden rounded-full data-[orientation=horizontal]:h-1.5 data-[orientation=horizontal]:w-full data-[orientation=vertical]:h-full data-[orientation=vertical]:w-1.5"
+      :data-horizontal="props.orientation !== 'vertical' ? '' : undefined"
+      :data-vertical="props.orientation === 'vertical' ? '' : undefined"
+      class="bg-muted rounded-4xl data-horizontal:h-3 data-vertical:w-3 relative grow overflow-hidden data-horizontal:w-full data-vertical:h-full"
     >
       <SliderRange
         data-slot="slider-range"
-        class="bg-primary absolute data-[orientation=horizontal]:h-full data-[orientation=vertical]:w-full"
+        :data-horizontal="props.orientation !== 'vertical' ? '' : undefined"
+        :data-vertical="props.orientation === 'vertical' ? '' : undefined"
+        class="bg-primary absolute select-none data-horizontal:h-full data-vertical:w-full"
       />
     </SliderTrack>
 
@@ -37,7 +42,8 @@ const forwarded = useForwardPropsEmits(delegatedProps, emits)
       v-for="(_, key) in modelValue"
       :key="key"
       data-slot="slider-thumb"
-      class="bg-white border-primary ring-ring/50 block size-4 shrink-0 rounded-full border shadow-sm transition-[color,box-shadow] hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden disabled:pointer-events-none disabled:opacity-50"
+      :data-vertical="props.orientation === 'vertical' ? '' : undefined"
+      class="border-primary ring-ring/50 size-4 rounded-4xl border bg-white shadow-sm transition-colors hover:ring-4 focus-visible:ring-4 focus-visible:outline-hidden block shrink-0 select-none disabled:pointer-events-none disabled:opacity-50"
     />
   </SliderRoot>
 </template>

@@ -1,18 +1,29 @@
 import type { DateValue } from '@internationalized/date'
+import type { AnalysisDatePreset, RealtimeWindow } from '@/utils/dashboard-query'
 import { fromAbsolute, getLocalTimeZone, now, startOfMonth, startOfWeek, toCalendarDate } from '@internationalized/date'
+
+const REALTIME_DURATIONS: Record<Exclude<RealtimeWindow, 'today'>, { minutes?: number, hours?: number }> = {
+  'last-5m': { minutes: 5 },
+  'last-10m': { minutes: 10 },
+  'last-30m': { minutes: 30 },
+  'last-1h': { hours: 1 },
+  'last-6h': { hours: 6 },
+  'last-12h': { hours: 12 },
+  'last-24h': { hours: 24 },
+}
 
 export function getTimeZone() {
   if (typeof Intl === 'undefined')
     return 'Etc/UTC'
 
-  return Intl.DateTimeFormat().resolvedOptions().timeZone
+  return new Intl.DateTimeFormat().resolvedOptions().timeZone
 }
 
 export function getLocale() {
   if (typeof Intl === 'undefined')
     return typeof navigator === 'undefined' ? 'en-US' : navigator.language
 
-  return Intl.DateTimeFormat().resolvedOptions().locale
+  return new Intl.DateTimeFormat().resolvedOptions().locale
 }
 
 export function shortDate(unix = 0, locale?: string) {
@@ -27,11 +38,7 @@ export function shortTime(unix = 0, locale?: string) {
   return new Intl.DateTimeFormat(locale, { timeStyle: 'short' }).format(unix * 1000)
 }
 
-export function longTime(unix = 0, locale?: string) {
-  return new Intl.DateTimeFormat(locale, { timeStyle: 'long' }).format(unix * 1000)
-}
-
-export function date2unix(dateValue: DateValue | Date, type?: string) {
+export function date2unix(dateValue: DateValue | Date, type?: 'start' | 'end') {
   const date = dateValue instanceof Date ? dateValue : dateValue.toDate(getTimeZone())
   if (type === 'start')
     return Math.floor(date.setHours(0, 0, 0) / 1000)
@@ -55,11 +62,11 @@ export function getWeekdayNames(style: 'long' | 'short' | 'narrow' = 'short', lo
   })
 }
 
-export function computeDateRange(name: string, locale?: string): [number, number] {
+export function computeDateRange(name: AnalysisDatePreset | string, locale?: string): [number, number] {
   const tz = getLocalTimeZone()
   const currentTime = now(tz)
 
-  const presets: Record<string, () => [number, number]> = {
+  const presets: Record<AnalysisDatePreset, () => [number, number]> = {
     'today': () => [date2unix(currentTime, 'start'), date2unix(currentTime)],
     'last-24h': () => [date2unix(currentTime.subtract({ hours: 24 })), date2unix(currentTime)],
     'this-week': () => [date2unix(startOfWeek(currentTime, locale || getLocale()), 'start'), date2unix(currentTime)],
@@ -69,6 +76,15 @@ export function computeDateRange(name: string, locale?: string): [number, number
     'last-90d': () => [date2unix(currentTime.subtract({ days: 90 })), date2unix(currentTime)],
   }
 
-  const getRange = presets[name]
-  return getRange ? getRange() : presets['last-7d']!()
+  return presets[name as AnalysisDatePreset]?.() ?? presets['last-7d']()
+}
+
+export function computeRealtimeRange(name: RealtimeWindow): [number, number] {
+  const currentTime = now(getLocalTimeZone())
+  const endAt = date2unix(currentTime)
+
+  if (name === 'today')
+    return [date2unix(currentTime, 'start'), endAt]
+
+  return [date2unix(currentTime.subtract(REALTIME_DURATIONS[name])), endAt]
 }

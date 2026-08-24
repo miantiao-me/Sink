@@ -16,9 +16,10 @@ export const LinkCheckTargetSchema = z.object({
 })
 
 export const LinkCheckRequestSchema = z.object({
-  links: z.array(LinkCheckTargetSchema).min(1).max(10),
+  cursor: z.string().trim().max(1024).optional(),
+  limit: z.coerce.number().int().min(1).max(10).default(6),
   timeout: z.coerce.number().int().min(1).max(30).default(6),
-})
+}).strict()
 
 export const LinkCheckConfigSchema = z.object({
   timeout: z.coerce.number().int().min(1).max(30).default(6),
