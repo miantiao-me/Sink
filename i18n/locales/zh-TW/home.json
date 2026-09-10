@@ -1,0 +1,80 @@
+{
+  "home": {
+    "hero": {
+      "github_repo": "GitHub 倉庫"
+    },
+    "features": {
+      "title": "功能特色",
+      "subtitle": "簡單而實用的功能",
+      "url_shortening": {
+        "title": "URL 縮短",
+        "description": "將您的 URL 壓縮到最小長度"
+      },
+      "analytics": {
+        "title": "數據分析",
+        "description": "監控連結分析病收集有價值的統計數據"
+      },
+      "serverless": {
+        "title": "無伺服器",
+        "description": "無需傳統伺服器即可部署"
+      },
+      "customizable_slug": {
+        "title": "自定義短連結",
+        "description": "建立自訂短連結並加入 UTM 參數"
+      },
+      "ai_slug": {
+        "title": "AI 助手",
+        "description": "根據頁面內容生成短連結和 OpenGraph 元資料"
+      },
+      "link_expiration": {
+        "title": "連結控制",
+        "description": "設定過期時間、訪問密碼和不安全連結警告"
+      },
+      "device_routing": {
+        "title": "智慧路由",
+        "description": "根據訪客裝置或國家重定向"
+      },
+      "og_preview": {
+        "title": "社交預覽",
+        "description": "自訂標題、描述和圖片等社交預覽"
+      },
+      "realtime_analytics": {
+        "title": "近即時分析",
+        "description": "透過定時輪詢與用戶端回放顯示 3D 地球和事件日誌"
+      },
+      "qr_code": {
+        "title": "QR Code",
+        "description": "為短連結生成 QR Code"
+      },
+      "import_export": {
+        "title": "匯入/匯出",
+        "description": "透過 JSON 批次匯入或匯出連結，並透過 CSV 匯出存取分析"
+      },
+      "multi_language": {
+        "title": "多語言",
+        "description": "儀表板和跳轉頁面完整的國際化支援"
+      }
+    },
+    "cta": {
+      "title": "部署 Sink",
+      "description": "閱讀入門指南，在 Cloudflare 上設定並部署 Sink",
+      "button": "查看部署指南"
+    },
+    "logos": {
+      "title": "使用優秀的技術構建"
+    },
+    "twitter": {
+      "follow": "在 X(Twitter) 上追蹤我"
+    },
+    "stats": {
+      "title": "有關 Sink 的數據",
+      "subtitle": "受到全球開發者信賴",
+      "stars": "個 GitHub 星星",
+      "forks": "次分叉"
+    },
+    "testimonials": {
+      "title": "深受用戶喜愛",
+      "subtitle": "看看開發者們都怎麼描述 Sink"
+    }
+  }
+}

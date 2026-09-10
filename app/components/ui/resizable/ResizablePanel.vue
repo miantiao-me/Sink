@@ -6,12 +6,11 @@ const props = defineProps<SplitterPanelProps>()
 const emits = defineEmits<SplitterPanelEmits>()
 
 const forwarded = useForwardPropsEmits(props, emits)
-const { forwardRef } = useForwardExpose()
+useForwardExpose()
 </script>
 
 <template>
   <SplitterPanel
-    :ref="forwardRef"
     v-slot="slotProps"
     data-slot="resizable-panel"
     v-bind="forwarded"

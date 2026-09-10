@@ -1,5 +1,7 @@
-import { destr } from 'destr'
+import type { H3Event } from 'h3'
+import type { AiChatResponse } from '../../utils/ai'
 import { z } from 'zod'
+import { parseAiResponse } from '../../utils/ai'
 
 defineRouteMeta({
   openAPI: {
@@ -17,14 +19,29 @@ defineRouteMeta({
   },
 })
 
-interface AiChatResponse {
-  response?: string
-  choices?: { message?: { content?: string } }[]
+function fallbackSlug(event: H3Event, url: string): string {
+  let source = 'link'
+
+  try {
+    const urlObj = new URL(url)
+    const pathSegments = urlObj.pathname.split('/').filter(Boolean)
+    source = pathSegments.at(-1) ?? urlObj.hostname
+  }
+  catch {
+    source = 'link'
+  }
+
+  const sanitizedSlug = source
+    .replace(/[^A-Z0-9-]/gi, '-')
+    .slice(0, 50)
+    .replace(/^-+|-+$/g, '') || 'link'
+
+  return normalizeSlug(event, sanitizedSlug)
 }
 
 export default eventHandler(async (event) => {
   const url = (await getValidatedQuery(event, z.object({
-    url: z.string().url(),
+    url: z.url(),
   }).parse)).url
   const { cloudflare } = event.context
   const { AI } = cloudflare.env
@@ -59,14 +76,29 @@ export default eventHandler(async (event) => {
     { role: 'user', content: userContent },
   ]
 
-  const response = await AI.run(aiModel as keyof AiModels, { messages }) as AiChatResponse
-
-  let content = response.response ?? response.choices?.[0]?.message?.content ?? ''
-  // Strip markdown code block wrapper (e.g. ```json\n{...}\n```)
-  const codeBlockMatch = content.match(/```\w*\n([^`]+)```/)
-  if (codeBlockMatch?.[1]) {
-    content = codeBlockMatch[1].trim()
+  let response: AiChatResponse
+  try {
+    // @ts-expect-error Workers AI supports model-specific chat template options at runtime.
+    response = await AI.run(aiModel as keyof AiModels, {
+      messages,
+      chat_template_kwargs: {
+        enable_thinking: false,
+        thinking: false,
+      },
+    }) as AiChatResponse
+  }
+  catch (error) {
+    console.warn('Workers AI slug generation failed; using fallback.', error)
+    return { slug: fallbackSlug(event, url) }
   }
 
-  return destr(content)
+  const result = parseAiResponse(response)
+  const slug = String(result.slug ?? '').trim()
+  if (!slug) {
+    return { slug: fallbackSlug(event, url) }
+  }
+
+  return {
+    slug: normalizeSlug(event, slug),
+  }
 })

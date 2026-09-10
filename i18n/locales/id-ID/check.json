@@ -1,0 +1,76 @@
+{
+  "check": {
+    "title": "Pemeriksaan Tautan",
+    "description": "Periksa apakah URL tujuan yang ada dapat diakses. Hasil hanya ditampilkan dan tidak akan mengubah tautan.",
+    "config": {
+      "timeout": "Batas waktu (detik)",
+      "timeout_description": "Batas waktu untuk setiap tautan. Nilai default adalah 6 detik.",
+      "batch_size": "Ukuran batch",
+      "batch_size_description": "Tautan yang diperiksa per permintaan. Maksimum 10."
+    },
+    "actions": {
+      "start": "Mulai Pemeriksaan",
+      "checking": "Memeriksa...",
+      "stop": "Hentikan",
+      "reload": "Muat Ulang Tautan",
+      "loading": "Memuat...",
+      "clear": "Hapus Hasil",
+      "export": "Ekspor CSV",
+      "detail": "Detail",
+      "original": "Asli"
+    },
+    "stats": {
+      "total": "Total",
+      "checked": "Diperiksa",
+      "normal": "Normal",
+      "abnormal": "Tidak Normal",
+      "network_error": "Kesalahan Jaringan"
+    },
+    "progress": {
+      "title": "Kemajuan",
+      "description": "{checked} dari {total} tautan telah diperiksa",
+      "stopped": "Pemeriksaan dihentikan"
+    },
+    "results": {
+      "title": "Hasil",
+      "description": "Hasil tidak normal ditampilkan secara default. Gunakan tab untuk memfilter berdasarkan kode status."
+    },
+    "tabs": {
+      "abnormal": "Tidak Normal ({count})",
+      "status": "{status} ({count})",
+      "all": "Semua ({count})"
+    },
+    "table": {
+      "slug": "Slug",
+      "url": "URL",
+      "status": "Status",
+      "result": "Hasil",
+      "duration": "Durasi",
+      "error": "Kesalahan",
+      "action": "Tindakan"
+    },
+    "result": {
+      "normal": "Normal",
+      "broken": "Rusak",
+      "network_error": "Kesalahan Jaringan"
+    },
+    "empty": {
+      "not_started": "Belum ada hasil.",
+      "no_broken_links": "Tidak ditemukan tautan rusak.",
+      "no_matching_results": "Tidak ada hasil yang sesuai."
+    },
+    "messages": {
+      "load_failed": "Gagal memuat tautan",
+      "completed": "Pemeriksaan tautan selesai",
+      "stopped": "Pemeriksaan tautan dihentikan"
+    },
+    "dialogs": {
+      "clear": {
+        "title": "Hapus hasil pemeriksaan?",
+        "description": "Semua hasil pemeriksaan ini akan dihapus.",
+        "action": "Hapus hasil"
+      }
+    },
+    "duration_ms": "{duration} ms"
+  }
+}

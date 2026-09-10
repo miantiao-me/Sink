@@ -21,14 +21,15 @@ const QueryParamsSchema = z.object({
 })
 
 export default eventHandler(async (event) => {
-  const { slug } = await getValidatedQuery(event, QueryParamsSchema.parse)
+  const query = await getValidatedQuery(event, QueryParamsSchema.parse)
+  const slug = normalizeSlug(event, query.slug)
 
   const { link, metadata } = await getLinkWithMetadata(event, slug)
   if (link) {
-    return {
+    return sanitizeLinkPassword({
       ...metadata,
       ...link,
-    }
+    })
   }
 
   throw createError({

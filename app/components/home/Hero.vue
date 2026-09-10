@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import heroUrl from '@/assets/images/hero.svg?url'
+
 const { title, description } = useAppConfig()
 </script>
+
 <template>
-  <section>
+  <section class="bg-background text-foreground">
     <div
       class="
         py-16
@@ -45,7 +47,6 @@ const { title, description } = useAppConfig()
             <Button
               as-child
               size="lg"
-              class="px-5 text-base"
             >
               <NuxtLink to="/dashboard">
                 <span class="text-nowrap">{{ $t('dashboard.title') }}</span>
@@ -54,17 +55,15 @@ const { title, description } = useAppConfig()
           </div>
         </div>
 
-        <object
-          type="image/svg+xml"
-          :data="heroUrl"
+        <img
+          :src="heroUrl"
           class="
-            hidden aspect-square w-96 shrink-0
+            hidden aspect-square w-96 max-w-full shrink-0 bg-transparent
             md:block
             lg:w-[420px]
           "
-          aria-label="Link sharing illustration"
-          suppressHydrationWarning
-        ></object>
+          alt="Link sharing illustration"
+        >
       </div>
     </div>
   </section>

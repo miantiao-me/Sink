@@ -1,4 +1,4 @@
-import { LinkSchema } from '#shared/schemas/link'
+import { CreateLinkSchema } from '#shared/schemas/link'
 
 defineRouteMeta({
   openAPI: {
@@ -36,6 +36,8 @@ defineRouteMeta({
               redirectWithQuery: { type: 'boolean', description: 'Append query parameters to destination URL' },
               password: { type: 'string', description: 'Password protection for the link' },
               unsafe: { type: 'boolean', description: 'Mark link as unsafe, showing a warning page before redirect' },
+              geo: { type: 'object', additionalProperties: { type: 'string' }, description: 'Geo-routing rules (country code to URL)' },
+              tags: { type: 'array', items: { type: 'string' }, description: 'Up to 10 normalized link tags, each 1-32 characters' },
             },
           },
         },
@@ -45,28 +47,18 @@ defineRouteMeta({
 })
 
 export default eventHandler(async (event) => {
-  const link = await readValidatedBody(event, LinkSchema.parse)
+  const link = await readValidatedBody(event, CreateLinkSchema.parse)
 
-  link.slug = normalizeSlug(event, link.slug)
+  await prepareIncomingLink(event, link)
 
-  // Auto-detect unsafe URL via Safe Browsing DoH
-  if (link.unsafe === undefined) {
-    const safe = await isSafeUrl(event, link.url)
-    if (!safe) {
-      link.unsafe = true
-    }
-  }
+  await hashLinkPasswordForCreate(link)
 
-  const existingLink = await getLink(event, link.slug)
-  if (existingLink) {
+  if (!await createLink(event, link)) {
     throw createError({
       status: 409,
       statusText: 'Link already exists',
     })
   }
-
-  await putLink(event, link)
   setResponseStatus(event, 201)
-  const shortLink = buildShortLink(event, link.slug)
-  return { link, shortLink }
+  return buildLinkResponse(event, link)
 })

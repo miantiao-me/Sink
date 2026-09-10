@@ -1,12 +1,14 @@
 <script setup lang="ts">
-const { stats } = useGithubStats()
+import NumberFlow from '@number-flow/vue'
+
+const { rawStats } = useGithubStats()
 </script>
 
 <template>
   <section
     class="
-      py-12
-      md:py-20
+      bg-background py-16 text-foreground
+      md:py-24
     "
   >
     <div
@@ -17,7 +19,7 @@ const { stats } = useGithubStats()
     >
       <div class="relative z-10 mx-auto max-w-xl space-y-4 text-center">
         <h2
-          class="text-3xl font-semibold"
+          class="text-3xl font-semibold text-balance"
         >
           {{ $t('home.stats.title') }}
         </h2>
@@ -42,9 +44,7 @@ const { stats } = useGithubStats()
             <template #fallback>
               <Skeleton class="mx-auto h-12 w-24" />
             </template>
-            <div class="text-5xl font-bold tabular-nums">
-              {{ stats.stars }}
-            </div>
+            <NumberFlow class="text-5xl font-bold tabular-nums" :value="rawStats.stars" />
           </ClientOnly>
           <p class="text-muted-foreground">
             {{ $t('home.stats.stars') }}
@@ -60,9 +60,7 @@ const { stats } = useGithubStats()
             <template #fallback>
               <Skeleton class="mx-auto h-12 w-24" />
             </template>
-            <div class="text-5xl font-bold tabular-nums">
-              {{ stats.forks }}
-            </div>
+            <NumberFlow class="text-5xl font-bold tabular-nums" :value="rawStats.forks" />
           </ClientOnly>
           <p class="text-muted-foreground">
             {{ $t('home.stats.forks') }}

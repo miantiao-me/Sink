@@ -3,6 +3,8 @@ import 'vue-sonner/style.css'
 
 const { title, description, image } = useAppConfig()
 const route = useRoute()
+const localeHead = useLocaleHead()
+const colorMode = useColorMode()
 
 useSeoMeta({
   title: `${title} - Link Shortener with Analytics`,
@@ -18,14 +20,16 @@ useSeoMeta({
   twitterCard: 'summary_large_image',
 })
 
-useHead({
-  htmlAttrs: {
-    lang: 'en',
-  },
+useHead(() => ({
+  htmlAttrs: localeHead.value.htmlAttrs,
   meta: [
     {
       name: 'viewport',
-      content: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no',
+      content: 'width=device-width, initial-scale=1, viewport-fit=cover',
+    },
+    {
+      name: 'theme-color',
+      content: colorMode.value === 'dark' ? '#09090b' : '#ffffff',
     },
   ],
   link: [
@@ -43,12 +47,12 @@ useHead({
       href: '/apple-touch-icon.png',
     },
   ],
-})
+}))
 </script>
 
 <template>
   <NuxtLayout>
-    <NuxtLoadingIndicator color="#000" />
+    <NuxtLoadingIndicator color="var(--primary)" />
     <NuxtPage />
     <Toaster position="top-center" rich-colors />
   </NuxtLayout>

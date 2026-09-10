@@ -1,17 +1,26 @@
-import { SELF } from 'cloudflare:test'
+import type { Link } from '../shared/schemas/link'
+import { env, exports } from 'cloudflare:workers'
+import { eq } from 'drizzle-orm'
+import { drizzle } from 'drizzle-orm/d1'
+import { expect } from 'vitest'
+import { linkMigrationRuns, links, linkTombstones } from '../server/database/schema'
+import { LINK_PASSWORD_HASH_PREFIX, LINK_PASSWORD_MASK_PREFIX } from '../shared/utils/link-password'
+
+export const db = drizzle(env.DB)
 
 export function fetchWithAuth(path: string, options?: RequestInit): Promise<Response> {
-  return SELF.fetch(`http://localhost${path}`, {
+  const request = new Request(`http://localhost${path}`, {
     ...options,
     headers: {
       ...options?.headers,
       Authorization: `Bearer ${import.meta.env.NUXT_SITE_TOKEN}`,
     },
   })
+  return exports.default.fetch(request)
 }
 
 export function fetch(path: string, options?: RequestInit): Promise<Response> {
-  return SELF.fetch(`http://localhost${path}`, options)
+  return exports.default.fetch(new Request(`http://localhost${path}`, options))
 }
 
 export function postJson(path: string, body: unknown, withAuth = true): Promise<Response> {
@@ -30,6 +39,62 @@ export function putJson(path: string, body: unknown, withAuth = true): Promise<R
     body: JSON.stringify(body),
     headers: { 'Content-Type': 'application/json' },
   })
+}
+
+export async function getStoredLink(slug: string) {
+  return await env.KV.get<Link>(`link:${slug}`, { type: 'json' })
+}
+
+export async function getD1Link(slug: string) {
+  const [link] = await db.select().from(links).where(eq(links.slug, slug)).limit(1)
+  return link ?? null
+}
+
+export async function deleteStoredLink(slug: string) {
+  await Promise.all([
+    env.KV.delete(`link:${slug}`),
+    db.delete(links).where(eq(links.slug, slug)),
+    db.delete(linkTombstones).where(eq(linkTombstones.slug, slug)),
+  ])
+}
+
+export async function deleteStoredLinks(slugs: string[]) {
+  await Promise.all(slugs.map(slug => deleteStoredLink(slug)))
+}
+
+export async function clearLinkMigrationState() {
+  await db.delete(linkMigrationRuns)
+}
+
+export async function setLinkStoreD1Mode() {
+  await clearLinkMigrationState()
+  const now = Math.floor(Date.now() / 1000)
+  await db.insert(linkMigrationRuns).values({
+    id: `test-completed-${crypto.randomUUID()}`,
+    expectedCursor: null,
+    scanned: 0,
+    inserted: 0,
+    skipped: 0,
+    expired: 0,
+    force: false,
+    status: 'completed',
+    createdAt: now,
+    updatedAt: now,
+  })
+}
+
+export function expectMaskedPassword(password: string | undefined, plainText: string) {
+  expect(password).toBeDefined()
+  expect(password?.startsWith(LINK_PASSWORD_MASK_PREFIX), password).toBe(true)
+  expect(password).toContain(plainText.slice(-3))
+  expect(password).not.toBe(plainText)
+  expect(password?.startsWith(LINK_PASSWORD_HASH_PREFIX)).toBe(false)
+}
+
+export async function expectStoredHashedPassword(slug: string, plainText: string) {
+  const storedLink = await getStoredLink(slug)
+  expect(storedLink?.password?.startsWith(LINK_PASSWORD_HASH_PREFIX), storedLink?.password).toBe(true)
+  expect(storedLink?.password).not.toBe(plainText)
 }
 
 // 1x1 transparent PNG for testing

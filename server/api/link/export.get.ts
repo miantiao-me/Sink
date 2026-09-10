@@ -22,8 +22,13 @@ export default eventHandler(async (event) => {
   const kvBatchLimit = useRuntimeConfig(event).public.kvBatchLimit as string
   const limit = +kvBatchLimit
 
-  const list = await listLinks(event, { limit, cursor })
-  const links = list.links.filter((link): link is Link => link !== null)
+  const list = await listLinks(event, { limit, cursor, status: 'all' })
+  const links: Link[] = []
+  for (const link of list.links) {
+    if (link) {
+      links.push(await protectLinkPasswordForExport(link))
+    }
+  }
 
   const exportData: ExportData = {
     version: '1.0',

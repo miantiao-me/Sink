@@ -1,0 +1,80 @@
+{
+  "home": {
+    "hero": {
+      "github_repo": "Repositório GitHub"
+    },
+    "features": {
+      "title": "Funcionalidades",
+      "subtitle": "Funcionalidade simples e suficiente",
+      "url_shortening": {
+        "title": "Encurtamento de URL",
+        "description": "Comprima suas URLs ao tamanho mínimo"
+      },
+      "analytics": {
+        "title": "Analytics",
+        "description": "Monitore a análise de links e obtenha estatísticas detalhadas"
+      },
+      "serverless": {
+        "title": "Serverless",
+        "description": "Implante sem a necessidade de servidores tradicionais"
+      },
+      "customizable_slug": {
+        "title": "Slug Personalizável",
+        "description": "Crie slugs personalizados e adicione parâmetros UTM"
+      },
+      "ai_slug": {
+        "title": "Assistência por IA",
+        "description": "Gere slugs e metadados OpenGraph a partir do conteúdo da página"
+      },
+      "link_expiration": {
+        "title": "Controle de Links",
+        "description": "Defina expirações, senhas e alertas para links inseguros"
+      },
+      "device_routing": {
+        "title": "Roteamento inteligente",
+        "description": "Redirecione visitantes por dispositivo ou país"
+      },
+      "og_preview": {
+        "title": "Prévia Social",
+        "description": "Personalize prévias com títulos, descrições e imagens"
+      },
+      "realtime_analytics": {
+        "title": "Analytics quase em tempo real",
+        "description": "Globo 3D e logs de eventos atualizados por consultas periódicas e reprodução no cliente"
+      },
+      "qr_code": {
+        "title": "QR Code",
+        "description": "Gere códigos QR para seus links curtos"
+      },
+      "import_export": {
+        "title": "Importar/Exportar",
+        "description": "Transfira links em massa com JSON e exporte analytics de acesso em CSV"
+      },
+      "multi_language": {
+        "title": "Multi-idioma",
+        "description": "Suporte i18n completo para painel e páginas de redirecionamento"
+      }
+    },
+    "cta": {
+      "title": "Implante o Sink",
+      "description": "Consulte o guia de introdução para configurar e implantar o Sink na Cloudflare",
+      "button": "Ver guia de implantação"
+    },
+    "logos": {
+      "title": "Construído com tecnologias incríveis"
+    },
+    "twitter": {
+      "follow": "Siga no X (Twitter)"
+    },
+    "stats": {
+      "title": "Mergulhe nos números",
+      "subtitle": "Confiado por desenvolvedores ao redor do mundo",
+      "stars": "Estrelas no GitHub",
+      "forks": "Forks"
+    },
+    "testimonials": {
+      "title": "Amado pelos usuários",
+      "subtitle": "Veja o que os desenvolvedores estão dizendo sobre o Sink"
+    }
+  }
+}

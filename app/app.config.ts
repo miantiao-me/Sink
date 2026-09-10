@@ -1,5 +1,6 @@
 export default defineAppConfig({
   title: 'ToShort - To.cd',
+  documentation: 'https://docs.sink.cool',
   github: 'https://github.com/miantiao-me/sink',
   coffee: 'https://to.cd/coffee',
   twitter: 'https://to.cd/x',

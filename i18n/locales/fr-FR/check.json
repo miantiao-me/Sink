@@ -1,0 +1,76 @@
+{
+  "check": {
+    "title": "Vérification des liens",
+    "description": "Vérifiez si les URL de destination existantes sont accessibles. Les résultats sont affichés à titre informatif et ne modifient pas les liens.",
+    "config": {
+      "timeout": "Délai d’attente (secondes)",
+      "timeout_description": "Délai d’attente pour chaque lien. Valeur par défaut : 6 secondes.",
+      "batch_size": "Taille du lot",
+      "batch_size_description": "Nombre de liens vérifiés par requête. Maximum : 10."
+    },
+    "actions": {
+      "start": "Lancer la vérification",
+      "checking": "Vérification en cours…",
+      "stop": "Arrêter",
+      "reload": "Recharger les liens",
+      "loading": "Chargement…",
+      "clear": "Effacer les résultats",
+      "export": "Exporter en CSV",
+      "detail": "Détails",
+      "original": "Lien d’origine"
+    },
+    "stats": {
+      "total": "Nombre total",
+      "checked": "Vérifiés",
+      "normal": "Fonctionnels",
+      "abnormal": "Anormaux",
+      "network_error": "Erreurs réseau"
+    },
+    "progress": {
+      "title": "Progression",
+      "description": "{checked} liens vérifiés sur {total}",
+      "stopped": "Vérification arrêtée"
+    },
+    "results": {
+      "title": "Résultats",
+      "description": "Les résultats anormaux sont affichés par défaut. Utilisez les onglets pour filtrer par code d’état."
+    },
+    "tabs": {
+      "abnormal": "Anormaux ({count})",
+      "status": "{status} ({count})",
+      "all": "Tous ({count})"
+    },
+    "table": {
+      "slug": "Slug",
+      "url": "URL",
+      "status": "Statut",
+      "result": "Résultat",
+      "duration": "Durée",
+      "error": "Erreur",
+      "action": "Actions"
+    },
+    "result": {
+      "normal": "Fonctionnel",
+      "broken": "Rompu",
+      "network_error": "Erreur réseau"
+    },
+    "empty": {
+      "not_started": "Aucun résultat pour le moment.",
+      "no_broken_links": "Aucun lien rompu détecté.",
+      "no_matching_results": "Aucun résultat correspondant."
+    },
+    "messages": {
+      "load_failed": "Impossible de charger les liens",
+      "completed": "Vérification des liens terminée",
+      "stopped": "Vérification des liens arrêtée"
+    },
+    "dialogs": {
+      "clear": {
+        "title": "Effacer les résultats ?",
+        "description": "Tous les résultats de cette vérification seront supprimés.",
+        "action": "Effacer les résultats"
+      }
+    },
+    "duration_ms": "{duration} ms"
+  }
+}

@@ -1,8 +1,8 @@
 ---
 name: sink
 description: |
-  Sink short link API operations via OpenAPI. Use when managing short links: creating, querying, updating, deleting, listing, importing, or exporting links. Also covers AI-powered slug generation and link analytics.
-  Triggers: "create short link", "shorten URL", "delete link", "edit link", "list links", "export links", "import links", "link analytics", "AI slug".
+  Sink short link API operations via OpenAPI. Use when managing short links: creating, querying, updating, deleting, listing, importing, exporting links, configuring smart routing, password protection, unsafe-link warnings, and analytics exports. Also covers AI-powered slug and OpenGraph metadata generation.
+  Triggers: "create short link", "shorten URL", "delete link", "edit link", "list links", "export links", "import links", "link analytics", "export analytics", "AI slug", "AI OpenGraph", "geo routing".
 ---
 
 # Sink API
@@ -39,12 +39,19 @@ Content-Type: application/json
   "comment": "optional note",
   "expiration": 1735689599,
   "apple": "https://apps.apple.com/app/id123",
-  "google": "https://play.google.com/store/apps/details?id=com.example"
+  "google": "https://play.google.com/store/apps/details?id=com.example",
+  "geo": {
+    "US": "https://example.com/us"
+  },
+  "title": "Example Title",
+  "description": "Example social preview description",
+  "password": "optional-password",
+  "redirectWithQuery": true
 }
 ```
 
 **Required**: `url`
-**Optional**: `slug` (auto-generated if omitted), `comment`, `expiration` (unix timestamp), `apple` (iOS redirect), `google` (Android redirect), `password`, `unsafe`, `title`, `description`, `image`, `cloaking`, `redirectWithQuery`
+**Optional**: `slug` (auto-generated if omitted), `comment`, `expiration` (unix timestamp), `apple` (Apple device redirect), `google` (Android redirect), `geo` (country-specific routing map), `password`, `unsafe`, `title`, `description`, `image`, `cloaking`, `redirectWithQuery`
 
 > If `NUXT_SAFE_BROWSING_DOH` is configured and `unsafe` is not explicitly set, the server auto-detects via DoH and marks unsafe links automatically.
 
@@ -179,11 +186,30 @@ Content-Type: application/json
 GET /api/link/ai?url=https://example.com/article
 ```
 
+The server can use the URL and extracted page content to generate a readable slug.
+
 **Response**:
 
 ```json
 {
   "slug": "ai-generated-slug"
+}
+```
+
+### AI OpenGraph Metadata Generation
+
+```http
+GET /api/link/og-ai?url=https://example.com/article&locale=en-US
+```
+
+Generates a localized OpenGraph title and description from the URL and extracted page content.
+
+**Response**:
+
+```json
+{
+  "title": "Example Article",
+  "description": "A concise social preview description."
 }
 ```
 
@@ -216,6 +242,7 @@ Verify if the site token is valid.
 | `expiration`        | number  | No       | Unix timestamp                                                                       |
 | `apple`             | string  | No       | iOS/macOS redirect URL                                                               |
 | `google`            | string  | No       | Android redirect URL                                                                 |
+| `geo`               | object  | No       | Country-specific routing map, for example `{ "US": "https://example.com/us" }`       |
 | `title`             | string  | No       | Custom title (max 256)                                                               |
 | `description`       | string  | No       | Custom description                                                                   |
 | `image`             | string  | No       | Custom image path                                                                    |
@@ -226,10 +253,10 @@ Verify if the site token is valid.
 
 ## Analytics Endpoints
 
-### Summary
+### Counters
 
 ```http
-GET /api/stats/summary
+GET /api/stats/counters
 ```
 
 ### Metrics
@@ -238,11 +265,25 @@ GET /api/stats/summary
 GET /api/stats/metrics
 ```
 
-### Realtime
+### Views
 
 ```http
-GET /api/stats/realtime
+GET /api/stats/views
 ```
+
+### Heatmap
+
+```http
+GET /api/stats/heatmap
+```
+
+### Export Access Analytics
+
+```http
+GET /api/stats/export?startAt=1717200000&endAt=1719791999&slug=custom-slug
+```
+
+Returns `text/csv` with `slug`, `url`, `viewer`, `views`, and `referer` columns.
 
 ## OpenAPI Docs
 

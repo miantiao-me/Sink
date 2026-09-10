@@ -2,9 +2,11 @@
 
 **A Simple / Speedy / Secure Link Shortener with Analytics, 100% run on Cloudflare.**
 
-<a href="https://trendshift.io/repositories/10421" target="_blank">
+[Website](https://sink.cool) · [Documentation](https://docs.sink.cool) · [API Reference](https://sink.cool/_docs/scalar)
+
+<a href="https://trendshift.io/repositories/20331" target="_blank">
   <img
-    src="https://trendshift.io/api/badge/repositories/10421"
+    src="https://trendshift.io/api/badge/repositories/20331"
     alt="miantiao-me/Sink | Trendshift"
     width="250"
     height="55"
@@ -50,16 +52,22 @@
 - **🔗 URL Shortening:** Compress your URLs to their minimal length.
 - **📈 Analytics:** Monitor link analytics and gather insightful statistics.
 - **☁️ Serverless:** Deploy without the need for traditional servers.
-- **🎨 Customizable Slug:** Support for personalized slugs and case sensitivity.
-- **🪄 AI Slug:** Leverage AI to generate slugs.
-- **⏰ Link Expiration:** Set expiration dates for your links.
-- **📱 Device Routing:** Redirect iOS/Android users to different URLs (App Store links).
-- **🖼️ OpenGraph Preview:** Custom social media previews with title, description, and image.
-- **📊 Real-time Analytics:** Live 3D globe visualization and real-time event logs.
+- **🎨 Customizable Slug:** Support personalized slugs, UTM parameters, and optional case-sensitive slug matching through configuration.
+- **🪄 AI Assistance:** Optionally use Cloudflare Workers AI to generate slugs and OpenGraph metadata from page content.
+- **⏰ Link Control:** Set expirations, passwords, and unsafe-link warning pages.
+- **📱 Smart Routing:** Redirect visitors by device or country.
+- **🖼️ Social Preview:** Customize social previews with titles, descriptions, and images.
+- **📊 Near-real-time Analytics:** Display a live 3D globe and event logs using 10-second analytics polling and client-side replay, not SSE or WebSocket.
 - **🔲 QR Code:** Generate QR codes for your short links.
-- **📦 Import/Export:** Bulk migration via JSON/CSV files.
-- **🌍 Multi-language:** Full i18n support for the dashboard.
-- **🌙 Dark Mode:** Light, dark, and system theme support.
+- **📦 Import/Export:** Transfer links via JSON and export access analytics via CSV.
+- **🌍 Multi-language:** Full i18n support for dashboard and redirect pages.
+
+> [!TIP]
+> **Who is Sink for?**
+>
+> Sink focuses on **individuals and small teams** who want a simple, self-hosted shortener on Cloudflare.
+>
+> For professional / business needs (managed service, multi-user, SLA, and more), use **[S.EE](https://sink.cool/see)**.
 
 ## 🪧 Demo
 
@@ -78,9 +86,12 @@ Site Token: SinkCool
 
 ## 🧱 Technologies Used
 
-- **Framework**: [Nuxt](https://nuxt.com/)
-- **Database**: [Cloudflare Workers KV](https://developers.cloudflare.com/kv/)
+- **Framework**: [Nuxt 4](https://nuxt.com/)
+- **Database**: [Cloudflare D1](https://developers.cloudflare.com/d1/) is the authoritative link store; [Workers KV](https://developers.cloudflare.com/kv/) is a write-through read cache
+- **ORM**: [Drizzle ORM](https://orm.drizzle.team/)
 - **Analytics Engine**: [Cloudflare Workers Analytics Engine](https://developers.cloudflare.com/analytics/)
+- **Object Storage**: [Cloudflare R2](https://developers.cloudflare.com/r2/) for optional logical JSON snapshots
+- **AI**: Optional [Cloudflare Workers AI](https://developers.cloudflare.com/workers-ai/)
 - **UI Components**: [shadcn-vue](https://www.shadcn-vue.com/)
 - **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 - **Deployment**: [Cloudflare](https://www.cloudflare.com/)
@@ -94,24 +105,24 @@ We welcome your contributions and PRs.
 - [x] Raycast Extension - [Raycast-Sink](https://github.com/foru17/raycast-sink)
 - [x] Apple Shortcuts - [Sink Shortcuts](https://s.search1api.com/sink001)
 - [x] iOS App - [Sink](https://apps.apple.com/app/id6745417598)
-- [ ] Enhanced Link Management (with Cloudflare D1)
-- [ ] Analytics Enhancements (Support for merging filter conditions)
-- [ ] Dashboard Performance Optimization (Infinite loading)
-- [ ] Units Test
+- [x] Enhanced Link Management (with Cloudflare D1)
+- [x] Analytics Enhancements (Multi-link filtering)
+- [x] Dashboard Performance Optimization (Infinite loading)
+- [x] API, migration, backup, and redirect tests
 
 ## 🏗️ Deployment
 
 > Video tutorial: [Watch here](https://www.youtube.com/watch?v=MkU23U2VE9E)
 
-We currently support deployment to [Cloudflare Workers](./docs/deployment/workers.md) (recommended) and [Cloudflare Pages](./docs/deployment/pages.md).
+We currently support deployment to [Cloudflare Workers](https://docs.sink.cool/deployment/workers) (recommended) and [Cloudflare Pages](https://docs.sink.cool/deployment/pages) (deprecated).
 
 ## ⚒️ Configuration
 
-[Configuration Docs](./docs/configuration.md)
+[Configuration Docs](https://docs.sink.cool/configuration/)
 
 ## 🔌 API
 
-[API Docs](./docs/api.md)
+[API Docs](https://docs.sink.cool/api/) · [Live Scalar Reference for the public demo instance](https://sink.cool/_docs/scalar)
 
 ## 🤖 AI Skills
 
@@ -125,9 +136,9 @@ npx skills add miantiao-me/sink
 
 We currently do not support native MCP Server, but we have OpenAPI documentation, and you can use the following method to support MCP.
 
-> Replace the domain name in `OPENAPI_SPEC_URL` with your own domain name.
+> Replace the domain name in `OPENAPI_SPEC_URL` and the `API_KEY` below with your own instance configuration.
 >
-> The `API_KEY` is the same as the `NUXT_SITE_TOKEN` in the environment variables.
+> The `API_KEY` is the same as the `NUXT_SITE_TOKEN` in your instance's environment variables.
 
 ```json
 {
@@ -149,7 +160,7 @@ We currently do not support native MCP Server, but we have OpenAPI documentation
 
 ## 🙋🏻 FAQs
 
-[FAQs](./docs/faqs.md)
+[FAQs](https://docs.sink.cool/faqs)
 
 ## 💖 Credits
 

@@ -1,0 +1,76 @@
+{
+  "check": {
+    "title": "Kiểm tra liên kết",
+    "description": "Kiểm tra xem các URL đích hiện có có thể truy cập được hay không. Kết quả chỉ được hiển thị và không làm thay đổi liên kết.",
+    "config": {
+      "timeout": "Thời gian chờ (giây)",
+      "timeout_description": "Thời gian chờ cho mỗi liên kết. Mặc định là 6 giây.",
+      "batch_size": "Kích thước lô",
+      "batch_size_description": "Số liên kết được kiểm tra trong mỗi yêu cầu. Tối đa là 10."
+    },
+    "actions": {
+      "start": "Bắt đầu kiểm tra",
+      "checking": "Đang kiểm tra...",
+      "stop": "Dừng",
+      "reload": "Tải lại liên kết",
+      "loading": "Đang tải...",
+      "clear": "Xóa kết quả",
+      "export": "Xuất CSV",
+      "detail": "Chi tiết",
+      "original": "Bản gốc"
+    },
+    "stats": {
+      "total": "Tổng cộng",
+      "checked": "Đã kiểm tra",
+      "normal": "Bình thường",
+      "abnormal": "Bất thường",
+      "network_error": "Lỗi mạng"
+    },
+    "progress": {
+      "title": "Tiến độ",
+      "description": "Đã kiểm tra {checked} trên {total} liên kết",
+      "stopped": "Đã dừng kiểm tra"
+    },
+    "results": {
+      "title": "Kết quả",
+      "description": "Mặc định hiển thị các kết quả bất thường. Dùng các thẻ để lọc theo mã trạng thái."
+    },
+    "tabs": {
+      "abnormal": "Bất thường ({count})",
+      "status": "{status} ({count})",
+      "all": "Tất cả ({count})"
+    },
+    "table": {
+      "slug": "Slug",
+      "url": "URL",
+      "status": "Trạng thái",
+      "result": "Kết quả",
+      "duration": "Thời lượng",
+      "error": "Lỗi",
+      "action": "Thao tác"
+    },
+    "result": {
+      "normal": "Bình thường",
+      "broken": "Bị hỏng",
+      "network_error": "Lỗi mạng"
+    },
+    "empty": {
+      "not_started": "Chưa có kết quả.",
+      "no_broken_links": "Không tìm thấy liên kết bị hỏng.",
+      "no_matching_results": "Không có kết quả phù hợp."
+    },
+    "messages": {
+      "load_failed": "Không thể tải liên kết",
+      "completed": "Đã kiểm tra liên kết xong",
+      "stopped": "Đã dừng kiểm tra liên kết"
+    },
+    "dialogs": {
+      "clear": {
+        "title": "Xóa kết quả kiểm tra?",
+        "description": "Tất cả kết quả của lần kiểm tra này sẽ bị xóa.",
+        "action": "Xóa kết quả"
+      }
+    },
+    "duration_ms": "{duration} ms"
+  }
+}

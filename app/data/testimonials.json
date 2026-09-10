@@ -1,57 +1,12 @@
 [
   {
-    "id": "1953003326317920422",
-    "name": "OpenAlternative",
-    "username": "ossalternative",
-    "content": "⭐ Sink has just reached 5,000 stars on GitHub! Huge congrats! 🎉 Simple, speedy, and secure link shortener with analytics",
-    "url": "https://x.com/ossalternative/status/1953003326317920422",
-    "verified": false,
-    "date": "2025-08-06T08:00:52.000Z"
-  },
-  {
-    "id": "1857623546606080350",
-    "name": "toobug",
-    "username": "TooooooBug",
-    "content": "我就说多翻翻能翻到好东西吧。Sink这个短链系统（）用的网站图标来自，这个网站提供了按email 用户名 域名来返回对象图标/头像的功能，可以直接引用，很方便。",
-    "url": "https://x.com/TooooooBug/status/1857623546606080350",
-    "verified": false,
-    "date": "2024-11-16T03:15:41.000Z"
-  },
-  {
-    "id": "1876990358250246628",
-    "name": "Ian Howells",
-    "username": "ianhowells",
-    "content": "Link shortener, run entirely on CF w/ analytics. You know.. if having redirects you can change the target URL on later is a thing you're interested in.",
-    "url": "https://x.com/ianhowells/status/1876990358250246628",
-    "verified": false,
-    "date": "2025-01-08T13:52:28.000Z"
-  },
-  {
-    "id": "1961700003459862799",
+    "id": "1988423170148495867",
     "name": "Wey Gu 古思为",
     "username": "wey_gu",
-    "content": "再次感慨、感谢面条哥哥 @miantiao_me 的 做的太好了。 同时感恩 cloudflare 的完备、慷慨的服务。",
-    "url": "https://x.com/wey_gu/status/1961700003459862799",
+    "content": "我们的 就构建在 mt 老师的 sink cool 上，从这启发，Nowledge Mem 所涉及的购买、license、更新、可观测性的后端全都在 cloudflare 的 serverless 服务上： 无运维、高性能、高可用、自扩展",
+    "url": "https://x.com/wey_gu/status/1988423170148495867",
     "verified": true,
-    "date": "2025-08-30T07:58:22.000Z"
-  },
-  {
-    "id": "1808150012058390969",
-    "name": "Vincent Yang",
-    "username": "m1ssuo",
-    "content": "买了个新域名部署了一下 @ccbikai 的 Sink，体验不错。",
-    "url": "https://x.com/m1ssuo/status/1808150012058390969",
-    "verified": true,
-    "date": "2024-07-02T14:45:31.000Z"
-  },
-  {
-    "id": "1794746047136411723",
-    "name": "Moran🫆",
-    "username": "NoPeople404",
-    "content": "Sink - 基于 Cloudflare 带访问统计的短链系统",
-    "url": "https://x.com/NoPeople404/status/1794746047136411723",
-    "verified": false,
-    "date": "2024-05-26T15:02:57.000Z"
+    "date": "2025-11-12T01:46:41.000Z"
   },
   {
     "id": "1990813013247492308",
@@ -63,58 +18,49 @@
     "date": "2025-11-18T16:03:04.000Z"
   },
   {
-    "id": "1931199560489251052",
-    "name": "Fox@MkSaaS.com",
-    "username": "indie_maker_fox",
-    "content": "🎉 Sink A Simple / Speedy / Secure Link Shortener with Analytics, 100% run on Cloudflare.",
-    "url": "https://x.com/indie_maker_fox/status/1931199560489251052",
+    "id": "2059979252578357733",
+    "name": "mousepotato",
+    "username": "iluciddreaming",
+    "content": "Cloudflare 被叫「赛博菩萨」不是没有原因的。 GitHub 上有个收藏清单，专收基于 CF 免费套餐能跑的开源项目： 🖼️ 图床：Telegraph-Image、CloudFlare-ImgBed — 免费无限存图 📮 临时邮箱：cloudflare_temp_email、moemail — 带附件、支持自动回复 🔗 短链：Sink — 带分析面板，一键部署 📊",
+    "url": "https://x.com/iluciddreaming/status/2059979252578357733",
     "verified": true,
-    "date": "2025-06-07T04:00:29.000Z"
+    "date": "2026-05-28T12:45:01.000Z"
   },
   {
-    "id": "1817702576629985685",
-    "name": "Tw93",
-    "username": "HiTw93",
-    "content": "#工程师工具 逛 GitHub 发现一款不错的短链接开源工具 Sink，有访问数据分析功能，使用尚简单、快速、安全，可以直接部署在 Cloudflare 上运行，有需要的小伙伴可以部署一个自用玩玩。 🤖",
-    "url": "https://x.com/HiTw93/status/1817702576629985685",
+    "id": "1952949386348249504",
+    "name": "𝘁𝗮𝗿𝗲𝘀𝗸𝘆",
+    "username": "taresky",
+    "content": "#Crypto #短链接 如果你经常留推广链接，非常推荐的一款短链接工具 Sink 这款工具解决的问题是：以前的邀请链接失效了，但推文已经发出去了无法修改。 不管是购物返利，还是交易所邀请，都会有这个问题。核心目的是：窃取长尾流量，减少营销开支。",
+    "url": "https://x.com/taresky/status/1952949386348249504",
     "verified": true,
-    "date": "2024-07-28T23:24:00.000Z"
+    "date": "2025-08-06T04:26:32.000Z"
   },
   {
-    "id": "1944683470627741966",
-    "name": "allentown",
-    "username": "allentown521",
-    "content": "🏆 Daily Winner! Sink IntroductionSink is a simple, speedy, and secure link shortener designed for individuals and businesses seeking efficien... From 👉:",
-    "url": "https://x.com/allentown521/status/1944683470627741966",
+    "id": "1961700003459862799",
+    "name": "Wey Gu 古思为",
+    "username": "wey_gu",
+    "content": "再次感慨、感谢面条哥哥 @miantiao_me 的 做的太好了。 同时感恩 cloudflare 的完备、慷慨的服务。",
+    "url": "https://x.com/wey_gu/status/1961700003459862799",
+    "verified": true,
+    "date": "2025-08-30T07:58:22.000Z"
+  },
+  {
+    "id": "1876990358250246628",
+    "name": "Ian Howells",
+    "username": "ianhowells",
+    "content": "Link shortener, run entirely on CF w/ analytics. You know.. if having redirects you can change the target URL on later is a thing you're interested in.",
+    "url": "https://x.com/ianhowells/status/1876990358250246628",
     "verified": false,
-    "date": "2025-07-14T09:00:44.000Z"
+    "date": "2025-01-08T13:52:28.000Z"
   },
   {
-    "id": "1795169172873413116",
-    "name": "GitHubGPT",
-    "username": "GitHubGPT",
-    "content": "📛 Sink 🧠 Sink is a fast, secure Cloudflare link shortener with analytics. It provides URL shortening, tracking, serverless deployment, custom and AI slugs, and link expiration. 🛠️ @ccbikai 💻 Vue ⭐ 518 🍴 150 🔗",
-    "url": "https://x.com/GitHubGPT/status/1795169172873413116",
-    "verified": true,
-    "date": "2024-05-27T19:04:18.000Z"
-  },
-  {
-    "id": "1925250262870237555",
-    "name": "Michael Hoffmann",
-    "username": "Mokkapps",
-    "content": "🛠️ Sink 👉🏻 A simple, speedy, secure link shortener with analytics. 👉🏻 Source code is open-source and built with Nuxt.",
-    "url": "https://x.com/Mokkapps/status/1925250262870237555",
+    "id": "1794746047136411723",
+    "name": "Moran Fong🪼",
+    "username": "morandotim",
+    "content": "Sink - 基于 Cloudflare 带访问统计的短链系统",
+    "url": "https://x.com/morandotim/status/1794746047136411723",
     "verified": false,
-    "date": "2025-05-21T18:00:06.000Z"
-  },
-  {
-    "id": "1796478331522781460",
-    "name": "Luo说不啰嗦",
-    "username": "LuoSays",
-    "content": "分享一个优秀的开源项目：Sink - 基于 Cloudflare 构建的短网址系统。 特性： 1. 自带访问统计 2. 自定义 slug（还能 AI 生成） 4. 可设置链接有效期 5. Cloudflare 部署，免费版就支持 300 万次访问/月 仓库： 作者 @ccbikai 是我在 WordPress",
-    "url": "https://x.com/LuoSays/status/1796478331522781460",
-    "verified": true,
-    "date": "2024-05-31T09:46:25.000Z"
+    "date": "2024-05-26T15:02:57.000Z"
   },
   {
     "id": "1893594908147270073",
@@ -126,31 +72,103 @@
     "date": "2025-02-23T09:33:02.000Z"
   },
   {
-    "id": "1809763345320624271",
-    "name": "f_sugar",
-    "username": "f_sugar",
-    "content": "ccbikai/Sink: ⚡ A Simple / Speedy / Secure Link Shortener with Analytics, 100% run on Cloudflare.",
-    "url": "https://x.com/f_sugar/status/1809763345320624271",
+    "id": "2018655797006541184",
+    "name": "Wey Gu 古思为",
+    "username": "wey_gu",
+    "content": "牛逼... 我们 的短链接骄傲的由面条老师的 sink 驱动",
+    "url": "https://x.com/wey_gu/status/2018655797006541184",
+    "verified": true,
+    "date": "2026-02-03T12:00:21.000Z"
+  },
+  {
+    "id": "1944683470627741966",
+    "name": "allentown",
+    "username": "allentown521",
+    "content": "🏆 Daily Winner! Sink IntroductionSink is a simple, speedy, and secure link shortener designed for individuals and businesses seeking efficien... From 👉:",
+    "url": "https://x.com/allentown521/status/1944683470627741966",
     "verified": false,
-    "date": "2024-07-07T01:36:19.000Z"
+    "date": "2025-07-14T09:00:44.000Z"
   },
   {
-    "id": "1905626254931624281",
-    "name": "DeBill",
-    "username": "DeBill_me",
-    "content": "@yetone 面条大佬的Sink，Cloudflare 一键部署",
-    "url": "https://x.com/DeBill_me/status/1905626254931624281",
-    "verified": true,
-    "date": "2025-03-28T14:21:18.000Z"
+    "id": "1941722268847177887",
+    "name": "Kaiyuan Hise",
+    "username": "KaiyuanXie",
+    "content": "自用的短链接从 Yourls 换成 Sink，直接跑在 Clouflare Pages 上，不用吃服务器资源还很稳定。自用的服务在免费版上足够用就是好。",
+    "url": "https://x.com/KaiyuanXie/status/1941722268847177887",
+    "verified": false,
+    "date": "2025-07-06T04:53:59.000Z"
   },
   {
-    "id": "1833125667568804284",
-    "name": "Dragos",
-    "username": "bitdoze",
-    "content": "Created a tutorial of how the sink link shortener created by @0xKaiBi can be installed on cloudflare for beginners: Video is showing everything:",
-    "url": "https://x.com/bitdoze/status/1833125667568804284",
+    "id": "1925250262870237555",
+    "name": "Michael Hoffmann",
+    "username": "Mokkapps",
+    "content": "🛠️ Sink 👉🏻 A simple, speedy, secure link shortener with analytics. 👉🏻 Source code is open-source and built with Nuxt.",
+    "url": "https://x.com/Mokkapps/status/1925250262870237555",
+    "verified": false,
+    "date": "2025-05-21T18:00:06.000Z"
+  },
+  {
+    "id": "2008358120498884871",
+    "name": "Indie Fox",
+    "username": "indie_maker_fox",
+    "content": "📚 推荐一些个人在用的提高效率的工具 例如，终端工具warp，效率工具raycast，社媒发帖神器Typefully等 还有浏览器插件：沉浸式翻译trancy，爱贝壳同步助手，网页保存工具Obsidian Web Clipper等 还有可部署的开源项目：短链管理系统Sink，统计分析工具Plausible等 详情请阅读原始文章 👇",
+    "url": "https://x.com/indie_maker_fox/status/2008358120498884871",
     "verified": true,
-    "date": "2024-09-09T12:49:51.000Z"
+    "date": "2026-01-06T02:01:04.000Z"
+  },
+  {
+    "id": "2008717152283705401",
+    "name": "弗兰克 Chen🕊️",
+    "username": "FrankFika",
+    "content": "分享几个我每天都在用的效率工具 桌面端 • Warp 终端 • Raycast 启动器 • Typefully 写推特 浏览器插件 • Trancy 翻译 • 爱贝壳同步 • Obsidian 剪藏 可自部署的开源 • Sink 短链 • Plausible 统计 每一个都是我用下来的真心推荐",
+    "url": "https://x.com/FrankFika/status/2008717152283705401",
+    "verified": true,
+    "date": "2026-01-07T01:47:43.000Z"
+  },
+  {
+    "id": "1988243083558035901",
+    "name": "王小嗨",
+    "username": "yeahwong",
+    "content": "自從 @miantiao_me 推出部署在 Cloudflare 上的 短鏈服務後，我就一直很感興趣。只是自己太笨，一直沒操練起來。😂 今天在網上找到了一份教程，順利完成部署，感謝教程作者分享，也特別感謝 @miantiao_me 大佬。🙏 📘 教程：",
+    "url": "https://x.com/yeahwong/status/1988243083558035901",
+    "verified": false,
+    "date": "2025-11-11T13:51:05.000Z"
+  },
+  {
+    "id": "1817702576629985685",
+    "name": "Tw93",
+    "username": "HiTw93",
+    "content": "#工程师工具 逛 GitHub 发现一款不错的短链接开源工具 Sink，有访问数据分析功能，使用尚简单、快速、安全，可以直接部署在 Cloudflare 上运行，有需要的小伙伴可以部署一个自用玩玩。 🤖",
+    "url": "https://x.com/HiTw93/status/1817702576629985685",
+    "verified": true,
+    "date": "2024-07-28T23:24:00.000Z"
+  },
+  {
+    "id": "1837864449732235602",
+    "name": "Geek",
+    "username": "geekbb",
+    "content": "100% 完全部署在 Cloudflare Pages上！🥳 ⚡ 一个带有分析功能的简单 / 快速 / 安全 URL 缩短工具，可启用Workers AI 生成标识符(slug)。 跟着教程一步步操作，包的。🫰 GitHub 教程(视频) 教程(博客)",
+    "url": "https://x.com/geekbb/status/1837864449732235602",
+    "verified": true,
+    "date": "2024-09-22T14:40:05.000Z"
+  },
+  {
+    "id": "1796478331522781460",
+    "name": "Luo说不啰嗦",
+    "username": "LuoSays",
+    "content": "分享一个优秀的开源项目：Sink - 基于 Cloudflare 构建的短网址系统。 特性： 1. 自带访问统计 2. 自定义 slug（还能 AI 生成） 4. 可设置链接有效期 5. Cloudflare 部署，免费版就支持 300 万次访问/月 仓库： 作者 @ccbikai 是我在 WordPress",
+    "url": "https://x.com/LuoSays/status/1796478331522781460",
+    "verified": true,
+    "date": "2024-05-31T09:46:25.000Z"
+  },
+  {
+    "id": "1877194614806864242",
+    "name": "王小荐（公众号同名）",
+    "username": "frankwong0205",
+    "content": "开源短链接神器Sink 还在为超长的链接发愁吗？ 还在纠结如何统计点击数据吗？ 一个超好用的开源短链接服务 - **Sink**！ 完全免费！无广告！无限制！一键部署！ ✨ 主要功能： - 一键生成短链接 - 实时点击统计，统计分析，国家，地区，语言，设备 - 自定义后缀 - 支持二维码生成 - 数据永久保存",
+    "url": "https://x.com/frankwong0205/status/1877194614806864242",
+    "verified": false,
+    "date": "2025-01-09T03:24:07.000Z"
   },
   {
     "id": "1846465874389356916",
@@ -171,12 +189,93 @@
     "date": "2025-06-04T16:31:31.000Z"
   },
   {
-    "id": "1988243083558035901",
-    "name": "王小嗨",
-    "username": "yeahwong",
-    "content": "自從 @miantiao_me 推出部署在 Cloudflare 上的 短鏈服務後，我就一直很感興趣。只是自己太笨，一直沒操練起來。😂 今天在網上找到了一份教程，順利完成部署，感謝教程作者分享，也特別感謝 @miantiao_me 大佬。🙏 📘 教程：",
-    "url": "https://x.com/yeahwong/status/1988243083558035901",
+    "id": "1888954153189380600",
+    "name": "强子手记",
+    "username": "iBigQiang",
+    "content": "玩各种项目的人都经常要分享很多（项目、教程、文章）网址链接，比如有些aff链接还特别长，更不好记忆🤔所以短网址就非常有用了。以前搭过一个 #YOURLS 的需要服务器和数据库维护有点门槛，这次@javay_hu 推荐 @miantiao_me大佬开源的这个 #Sink 完美了，免费白嫖CF还很好用。",
+    "url": "https://x.com/iBigQiang/status/1888954153189380600",
+    "verified": true,
+    "date": "2025-02-10T14:12:19.000Z"
+  },
+  {
+    "id": "1931199560489251052",
+    "name": "Indie Fox",
+    "username": "indie_maker_fox",
+    "content": "🎉 Sink A Simple / Speedy / Secure Link Shortener with Analytics, 100% run on Cloudflare.",
+    "url": "https://x.com/indie_maker_fox/status/1931199560489251052",
+    "verified": true,
+    "date": "2025-06-07T04:00:29.000Z"
+  },
+  {
+    "id": "1857623546606080350",
+    "name": "toobug",
+    "username": "TooooooBug",
+    "content": "我就说多翻翻能翻到好东西吧。Sink这个短链系统（）用的网站图标来自，这个网站提供了按email 用户名 域名来返回对象图标/头像的功能，可以直接引用，很方便。",
+    "url": "https://x.com/TooooooBug/status/1857623546606080350",
     "verified": false,
-    "date": "2025-11-11T13:51:05.000Z"
+    "date": "2024-11-16T03:15:41.000Z"
+  },
+  {
+    "id": "1809763345320624271",
+    "name": "f_sugar",
+    "username": "f_sugar",
+    "content": "ccbikai/Sink: ⚡ A Simple / Speedy / Secure Link Shortener with Analytics, 100% run on Cloudflare.",
+    "url": "https://x.com/f_sugar/status/1809763345320624271",
+    "verified": false,
+    "date": "2024-07-07T01:36:19.000Z"
+  },
+  {
+    "id": "1808150012058390969",
+    "name": "Vincent Yang",
+    "username": "m1ssuo",
+    "content": "买了个新域名部署了一下 @ccbikai 的 Sink，体验不错。",
+    "url": "https://x.com/m1ssuo/status/1808150012058390969",
+    "verified": true,
+    "date": "2024-07-02T14:45:31.000Z"
+  },
+  {
+    "id": "1833125667568804284",
+    "name": "Dragos",
+    "username": "bitdoze",
+    "content": "Created a tutorial of how the sink link shortener created by @0xKaiBi can be installed on cloudflare for beginners: Video is showing everything:",
+    "url": "https://x.com/bitdoze/status/1833125667568804284",
+    "verified": true,
+    "date": "2024-09-09T12:49:51.000Z"
+  },
+  {
+    "id": "1795169172873413116",
+    "name": "GitHubGPT",
+    "username": "GitHubGPT",
+    "content": "📛 Sink 🧠 Sink is a fast, secure Cloudflare link shortener with analytics. It provides URL shortening, tracking, serverless deployment, custom and AI slugs, and link expiration. 🛠️ @ccbikai 💻 Vue ⭐ 518 🍴 150 🔗",
+    "url": "https://x.com/GitHubGPT/status/1795169172873413116",
+    "verified": true,
+    "date": "2024-05-27T19:04:18.000Z"
+  },
+  {
+    "id": "1901619539869331519",
+    "name": "GitHubDaily",
+    "username": "GitHub_Daily",
+    "content": "一款简单、快速、安全的短链接生成工具：Sink。 无需服务器可部署在 Cloudflare 上，不仅能生成短链，还提供详细的点击分析，让我们能追踪到链接的点击情况和传播效果。 GitHub： 除此之外，还支持自定义短链后缀，支持设置链接过期时间等等功能。",
+    "url": "https://x.com/GitHub_Daily/status/1901619539869331519",
+    "verified": true,
+    "date": "2025-03-17T13:00:03.000Z"
+  },
+  {
+    "id": "1794162548776079701",
+    "name": "面条",
+    "username": "miantiao_me",
+    "content": "【开源】 Sink - 基于 Cloudflare 带访问统计的短链系统 特性： 1. 访问统计 2. 自定义 Slug 3. 🪄 AI 生成 Slug 4. 链接有效期 5. Cloudflare 部署, 支持 3,000,000 次访问/月 演示站：",
+    "url": "https://x.com/miantiao_me/status/1794162548776079701",
+    "verified": true,
+    "date": "2024-05-25T00:24:20.000Z"
+  },
+  {
+    "id": "1953003326317920422",
+    "name": "OpenAlternative",
+    "username": "ossalternative",
+    "content": "⭐ Sink has just reached 5,000 stars on GitHub! Huge congrats! 🎉 Simple, speedy, and secure link shortener with analytics",
+    "url": "https://x.com/ossalternative/status/1953003326317920422",
+    "verified": true,
+    "date": "2025-08-06T08:00:52.000Z"
   }
 ]

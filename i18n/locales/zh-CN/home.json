@@ -1,0 +1,80 @@
+{
+  "home": {
+    "hero": {
+      "github_repo": "GitHub 仓库"
+    },
+    "features": {
+      "title": "功能特点",
+      "subtitle": "简单而实用的功能",
+      "url_shortening": {
+        "title": "URL 缩短",
+        "description": "将您的 URL 压缩到最小长度"
+      },
+      "analytics": {
+        "title": "数据分析",
+        "description": "监控链接分析并收集有价值的统计数据"
+      },
+      "serverless": {
+        "title": "无服务器",
+        "description": "无需传统服务器即可部署"
+      },
+      "customizable_slug": {
+        "title": "自定义短链",
+        "description": "创建自定义短链并添加 UTM 参数"
+      },
+      "ai_slug": {
+        "title": "AI 助手",
+        "description": "根据页面内容生成短链和 OpenGraph 元数据"
+      },
+      "link_expiration": {
+        "title": "链接控制",
+        "description": "设置过期时间、访问密码和不安全链接警告"
+      },
+      "device_routing": {
+        "title": "智能路由",
+        "description": "根据访客设备或国家重定向"
+      },
+      "og_preview": {
+        "title": "社交预览",
+        "description": "自定义标题、描述和图片等社交预览"
+      },
+      "realtime_analytics": {
+        "title": "近实时分析",
+        "description": "通过定时轮询和客户端回放展示 3D 地球与事件日志"
+      },
+      "qr_code": {
+        "title": "二维码",
+        "description": "为短链生成二维码"
+      },
+      "import_export": {
+        "title": "导入/导出",
+        "description": "通过 JSON 批量导入或导出链接，并通过 CSV 导出访问分析"
+      },
+      "multi_language": {
+        "title": "多语言",
+        "description": "仪表盘和跳转页面完整的国际化支持"
+      }
+    },
+    "cta": {
+      "title": "部署 Sink",
+      "description": "阅读入门指南，在 Cloudflare 上配置并部署 Sink",
+      "button": "查看部署指南"
+    },
+    "logos": {
+      "title": "使用优秀的技术构建"
+    },
+    "twitter": {
+      "follow": "在 X(Twitter) 上关注我"
+    },
+    "stats": {
+      "title": "Sink 数据",
+      "subtitle": "受到全球开发者的信赖",
+      "stars": "GitHub Stars",
+      "forks": "Forks"
+    },
+    "testimonials": {
+      "title": "用户好评",
+      "subtitle": "看看开发者们怎么说"
+    }
+  }
+}

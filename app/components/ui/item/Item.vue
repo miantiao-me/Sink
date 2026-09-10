@@ -12,12 +12,16 @@ const props = withDefaults(defineProps<PrimitiveProps & {
   size?: ItemVariants["size"]
 }>(), {
   as: "div",
+  variant: "default",
+  size: "default",
 })
 </script>
 
 <template>
   <Primitive
     data-slot="item"
+    :data-variant="variant"
+    :data-size="size"
     :as="as"
     :as-child="asChild"
     :class="cn(itemVariants({ variant, size }), props.class)"

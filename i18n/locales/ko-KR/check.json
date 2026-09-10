@@ -1,0 +1,76 @@
+{
+  "check": {
+    "title": "링크 점검",
+    "description": "기존 대상 URL의 접속 가능 여부를 확인합니다. 결과만 표시되며 링크는 수정되지 않습니다.",
+    "config": {
+      "timeout": "제한 시간 (초)",
+      "timeout_description": "각 링크에 대한 제한 시간입니다. 기본값은 6초입니다.",
+      "batch_size": "일괄 처리 크기",
+      "batch_size_description": "요청당 확인할 링크 수입니다. 최대 10개입니다."
+    },
+    "actions": {
+      "start": "점검 시작",
+      "checking": "확인 중...",
+      "stop": "중지",
+      "reload": "링크 새로고침",
+      "loading": "불러오는 중...",
+      "clear": "결과 지우기",
+      "export": "CSV 내보내기",
+      "detail": "상세",
+      "original": "원본"
+    },
+    "stats": {
+      "total": "전체",
+      "checked": "확인됨",
+      "normal": "정상",
+      "abnormal": "비정상",
+      "network_error": "네트워크 오류"
+    },
+    "progress": {
+      "title": "진행률",
+      "description": "{total}개 중 {checked}개 링크 확인됨",
+      "stopped": "점검이 중지되었습니다"
+    },
+    "results": {
+      "title": "결과",
+      "description": "비정상 결과가 기본으로 표시됩니다. 탭을 사용하여 상태 코드별로 필터링하세요."
+    },
+    "tabs": {
+      "abnormal": "비정상 ({count})",
+      "status": "{status} ({count})",
+      "all": "전체 ({count})"
+    },
+    "table": {
+      "slug": "슬러그",
+      "url": "URL",
+      "status": "상태",
+      "result": "결과",
+      "duration": "소요 시간",
+      "error": "오류",
+      "action": "작업"
+    },
+    "result": {
+      "normal": "정상",
+      "broken": "손상됨",
+      "network_error": "네트워크 오류"
+    },
+    "empty": {
+      "not_started": "아직 결과가 없습니다.",
+      "no_broken_links": "손상된 링크가 없습니다.",
+      "no_matching_results": "일치하는 결과가 없습니다."
+    },
+    "messages": {
+      "load_failed": "링크를 불러오지 못했습니다",
+      "completed": "링크 점검이 완료되었습니다",
+      "stopped": "링크 점검이 중지되었습니다"
+    },
+    "dialogs": {
+      "clear": {
+        "title": "검사 결과를 지울까요?",
+        "description": "이번 검사의 모든 결과가 삭제됩니다.",
+        "action": "결과 지우기"
+      }
+    },
+    "duration_ms": "{duration}ms"
+  }
+}

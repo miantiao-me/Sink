@@ -1,0 +1,46 @@
+{
+  "layouts": {
+    "footer": {
+      "social": {
+        "email": "E-mail",
+        "telegram": "Telegram",
+        "blog": "Blog",
+        "twitter": "Twitter",
+        "mastodon": "Mastodon",
+        "github": "GitHub"
+      }
+    },
+    "header": {
+      "select_language": "Selecionar idioma",
+      "toggle_menu_aria_label": "Abrir ou fechar o menu"
+    },
+    "links": {
+      "documentation": "Documentação",
+      "api_reference": "Referência da API",
+      "documentation_aria_label": "Abrir a documentação do Sink (abre em uma nova guia)",
+      "resources_aria_label": "Recursos",
+      "skip_to_content": "Ir para o conteúdo principal",
+      "home_aria_label": "Início",
+      "github_aria_label": "Sink no GitHub"
+    }
+  },
+  "nav": {
+    "links": "Links",
+    "analysis": "Análise",
+    "realtime": "Tempo Real",
+    "check": "Check",
+    "migrate": "Importar/Exportar"
+  },
+  "sidebar": {
+    "subtitle": "Encurtador de links",
+    "platform": "Plataforma",
+    "settings": "Configurações",
+    "import": "Importar",
+    "export": "Exportar",
+    "coffee": "Pague-me um café",
+    "github": "GitHub",
+    "releases": "Versões",
+    "stars": "Estrelas",
+    "update": "Nova versão {version} disponível (atual: {current})"
+  }
+}

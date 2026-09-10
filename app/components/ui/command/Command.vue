@@ -9,6 +9,7 @@ import { provideCommandContext } from "."
 
 const props = withDefaults(defineProps<ListboxRootProps & { class?: HTMLAttributes["class"] }>(), {
   modelValue: "",
+  highlightOnHover: true,
 })
 
 const emits = defineEmits<ListboxRootEmits>()
@@ -80,7 +81,7 @@ provideCommandContext({
   <ListboxRoot
     data-slot="command"
     v-bind="forwarded"
-    :class="cn('bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md', props.class)"
+    :class="cn('bg-popover text-popover-foreground rounded-4xl p-1 flex size-full flex-col overflow-hidden', props.class)"
   >
     <slot />
   </ListboxRoot>

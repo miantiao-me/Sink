@@ -1,0 +1,80 @@
+{
+  "home": {
+    "hero": {
+      "github_repo": "GitHub 저장소"
+    },
+    "features": {
+      "title": "기능",
+      "subtitle": "간단하면서도 충분한 기능",
+      "url_shortening": {
+        "title": "URL 단축",
+        "description": "URL을 최소 길이로 압축하세요"
+      },
+      "analytics": {
+        "title": "분석",
+        "description": "링크 분석을 모니터링하고 유용한 통계를 수집하세요"
+      },
+      "serverless": {
+        "title": "서버리스",
+        "description": "기존 서버 없이 배포하세요"
+      },
+      "customizable_slug": {
+        "title": "사용자 지정 슬러그",
+        "description": "사용자 지정 슬러그를 만들고 UTM 매개변수를 추가하세요"
+      },
+      "ai_slug": {
+        "title": "AI 지원",
+        "description": "페이지 콘텐츠로부터 슬러그와 OpenGraph 메타데이터를 생성하세요"
+      },
+      "link_expiration": {
+        "title": "링크 제어",
+        "description": "만료일, 비밀번호, 안전하지 않은 링크 경고 페이지를 설정하세요"
+      },
+      "device_routing": {
+        "title": "스마트 라우팅",
+        "description": "기기 또는 국가별로 방문자를 리디렉션하세요"
+      },
+      "og_preview": {
+        "title": "소셜 미리보기",
+        "description": "제목, 설명, 이미지로 소셜 미리보기를 사용자 지정하세요"
+      },
+      "realtime_analytics": {
+        "title": "준실시간 분석",
+        "description": "주기적 폴링과 클라이언트 재생으로 표시되는 3D 지구본 및 이벤트 로그"
+      },
+      "qr_code": {
+        "title": "QR 코드",
+        "description": "단축 링크용 QR 코드를 생성하세요"
+      },
+      "import_export": {
+        "title": "가져오기/내보내기",
+        "description": "JSON으로 링크를 일괄 전송하고 액세스 분석을 CSV로 내보내세요"
+      },
+      "multi_language": {
+        "title": "다국어",
+        "description": "대시보드와 리디렉션 페이지에 대한 완전한 i18n 지원"
+      }
+    },
+    "cta": {
+      "title": "Sink 배포하기",
+      "description": "시작 가이드에 따라 Cloudflare에 Sink를 구성하고 배포하세요",
+      "button": "배포 가이드 보기"
+    },
+    "logos": {
+      "title": "훌륭한 기술로 제작되었습니다"
+    },
+    "twitter": {
+      "follow": "X(트위터)에서 팔로우하기"
+    },
+    "stats": {
+      "title": "숫자로 보는 Sink",
+      "subtitle": "전 세계 개발자들이 신뢰합니다",
+      "stars": "GitHub 스타",
+      "forks": "포크"
+    },
+    "testimonials": {
+      "title": "사용자들의 사랑을 받고 있습니다",
+      "subtitle": "개발자들이 Sink에 대해 말하는 것을 확인하세요"
+    }
+  }
+}
