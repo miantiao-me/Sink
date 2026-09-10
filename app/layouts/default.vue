@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ExternalLink, Menu } from '@lucide/vue'
+import { Menu } from '@lucide/vue'
 import { TelegramIcon, XIcon } from 'vue3-simple-icons'
 import {
   NavigationMenu,
@@ -17,7 +17,7 @@ import {
 } from '@/components/ui/sheet'
 
 const mobileMenuOpen = shallowRef(false)
-const { title, documentation, telegram, twitter } = useAppConfig()
+const { title, telegram, twitter } = useAppConfig()
 
 function closeMobileMenu() {
   mobileMenuOpen.value = false
@@ -82,19 +82,6 @@ function closeMobileMenu() {
                   <NavigationMenuItem>
                     <NavigationMenuLink as-child>
                       <a
-                        :href="documentation"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        :aria-label="$t('layouts.links.documentation_aria_label')"
-                      >
-                        {{ $t('layouts.links.documentation') }}
-                        <ExternalLink class="size-3.5" aria-hidden="true" />
-                      </a>
-                    </NavigationMenuLink>
-                  </NavigationMenuItem>
-                  <NavigationMenuItem>
-                    <NavigationMenuLink as-child>
-                      <a
                         href="/_docs/scalar"
                         target="_blank"
                         rel="noopener noreferrer"
@@ -154,22 +141,6 @@ function closeMobileMenu() {
                   "
                 >
                   <nav class="flex flex-col gap-1">
-                    <a
-                      :href="documentation"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      :aria-label="$t('layouts.links.documentation_aria_label')"
-                      class="
-                        flex min-h-11 items-center justify-between gap-2
-                        rounded-xl px-3 text-sm font-medium
-                        text-muted-foreground transition-colors
-                        hover:bg-muted hover:text-foreground
-                      "
-                      @click="closeMobileMenu"
-                    >
-                      {{ $t('layouts.links.documentation') }}
-                      <ExternalLink class="size-3.5" aria-hidden="true" />
-                    </a>
                     <a
                       href="/_docs/scalar"
                       target="_blank"
