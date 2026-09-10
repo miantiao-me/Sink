@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from "vue"
+import type { ComponentPublicInstance, HTMLAttributes } from "vue"
 import { onBeforeUnmount, onMounted, watch } from "vue"
 import { cn } from "@/lib/utils"
 import { SCROLL_KEYS, useMessageScrollerContext } from "./useMessageScroller"
@@ -19,6 +19,10 @@ const {
   userScrollIntent,
   viewportRef,
 } = useMessageScrollerContext()
+
+function setViewportElementRef(element: Element | ComponentPublicInstance | null) {
+  setViewportElement(element instanceof HTMLElement ? element : null)
+}
 
 preserveScrollOnPrependRef.current = props.preserveScrollOnPrepend
 watch(() => props.preserveScrollOnPrepend, (value) => {
@@ -65,7 +69,7 @@ onBeforeUnmount(() => {
 
 <template>
   <div
-    :ref="(el) => setViewportElement(el as HTMLElement | null)"
+    :ref="setViewportElementRef"
     data-slot="message-scroller-viewport"
     role="region"
     aria-label="Messages"

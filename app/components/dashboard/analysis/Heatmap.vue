@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import type { ComponentPublicInstance } from 'vue'
 import type { HeatmapDataPoint } from '@/types'
 
 const props = withDefaults(defineProps<{
@@ -89,6 +90,10 @@ function getCellLabel(weekdayIndex: number, weekday: number, hour: number): stri
 
 function setCellButton(element: unknown, index: number) {
   cellButtons.value[index] = element instanceof HTMLButtonElement ? element : undefined
+}
+
+function createCellButtonRef(index: number) {
+  return (element: Element | ComponentPublicInstance | null) => setCellButton(element, index)
 }
 
 function setTooltipOpen(index: number, open: boolean) {
@@ -288,7 +293,7 @@ watch([effectiveTimeRange, effectiveFilters, retryKey], async (_values, _oldValu
                   >
                     <TooltipTrigger as-child>
                       <button
-                        :ref="element => setCellButton(element, arrayIdx * hours.length + hour)"
+                        :ref="createCellButtonRef(arrayIdx * hours.length + hour)"
                         type="button"
                         class="
                           relative block size-full rounded-sm border-0 p-0
