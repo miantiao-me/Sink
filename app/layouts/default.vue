@@ -264,6 +264,15 @@ function closeMobileMenu() {
               </a>
             </Button>
           </nav>
+
+          <img
+            referrerpolicy="no-referrer-when-downgrade"
+            src="https://tongji.xy.do/matomo.php?idsite=6&amp;rec=1"
+            style="border:0"
+            alt=""
+            width="1"
+            height="1"
+          >
         </div>
       </div>
     </footer>
