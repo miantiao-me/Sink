@@ -117,7 +117,9 @@
       "utm_clear": "Löschen",
       "utm_invalid_url": "Gib eine gültige URL ein, um UTM-Parameter in der Vorschau zu sehen und anzuwenden.",
       "ai_og_generate": "KI-OpenGraph generieren",
-      "duplicate_url_hint": "Diese URL existiert bereits als {shortLink}"
+      "duplicate_url_hint": "Diese URL existiert bereits als {shortLink}",
+      "proxy_label": "Reverse-Proxy aktivieren",
+      "proxy_description": "Leitet Inhalte der Ziel-URL transparent weiter, ohne 301/302-Weiterleitung. Ideal für Subscriptions und APIs."
     },
     "dialogs": {
       "discard": {

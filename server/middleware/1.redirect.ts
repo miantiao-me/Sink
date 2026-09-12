@@ -173,6 +173,39 @@ export default eventHandler(async (event) => {
           setHeader(event, 'Cache-Control', 'no-store')
         return sendRedirect(event, finalTargetUrl, +redirectStatusCode)
       }
+      if (link.proxy) {
+        const forwardHeaders = new Headers()
+        const incomingHeaders = getHeaders(event)
+        for (const [k, v] of Object.entries(incomingHeaders)) {
+          if (v !== undefined && !['host', 'connection', 'cf-connecting-ip', 'cf-ray', 'cf-visitor'].includes(k.toLowerCase())) {
+            forwardHeaders.set(k, v)
+          }
+        }
+
+        const clientIp = getHeader(event, 'cf-connecting-ip') || getHeader(event, 'x-forwarded-for')
+        if (clientIp) {
+          forwardHeaders.set('x-forwarded-for', clientIp)
+        }
+        forwardHeaders.set('x-forwarded-proto', getRequestProtocol(event))
+
+        const targetResponse = await fetch(finalTargetUrl, {
+          method: event.method,
+          headers: forwardHeaders,
+          body: ['GET', 'HEAD'].includes(event.method) ? undefined : await readRawBody(event),
+          redirect: 'follow',
+        })
+
+        setResponseStatus(event, targetResponse.status, targetResponse.statusText)
+
+        const skipHeaders = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
+        for (const [key, value] of targetResponse.headers.entries()) {
+          if (!skipHeaders.includes(key.toLowerCase())) {
+            setHeader(event, key, value)
+          }
+        }
+
+        return targetResponse.body
+      }
 
       if (isSocialBot(userAgent) && hasOgConfig(link)) {
         const baseUrl = `${getRequestProtocol(event)}://${getRequestHost(event)}`

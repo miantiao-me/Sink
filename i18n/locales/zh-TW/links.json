@@ -117,7 +117,9 @@
       "utm_clear": "清除",
       "utm_invalid_url": "請輸入有效的 URL 以預覽並套用 UTM 參數。",
       "ai_og_generate": "生成 AI OpenGraph",
-      "duplicate_url_hint": "此 URL 已存在為 {shortLink}"
+      "duplicate_url_hint": "此 URL 已存在為 {shortLink}",
+      "proxy_label": "啟用反向代理",
+      "proxy_description": "直接透明代理轉發目標 URL 內容，不發生 301/302 重定向。適合配置訂閱或 API 請求。"
     },
     "dialogs": {
       "discard": {
