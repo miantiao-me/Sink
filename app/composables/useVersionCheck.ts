@@ -1,6 +1,6 @@
+import { useFetch } from '#imports'
 import { version as currentVersion } from '@@/package.json'
 import { computed } from 'vue'
-import { useFetch } from '#imports'
 
 export function useVersionCheck() {
   const { data, status } = useFetch<{ version: string }>('https://cdn.jsdelivr.net/gh/miantiao-me/Sink@master/package.json', {

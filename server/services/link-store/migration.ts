@@ -1,6 +1,6 @@
-import type { H3Event } from 'h3'
 import type { Link } from '#shared/schemas/link'
 import type { LinkMigrationMarker } from '#shared/schemas/link-migration'
+import type { H3Event } from 'h3'
 import { desc, eq } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/d1'
 import { linkMigrationRuns } from '../../database/schema'

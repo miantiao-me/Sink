@@ -1,10 +1,10 @@
 import type { H3Event } from 'h3'
 import type { RawBuilder } from 'kysely'
-import { sql } from 'kysely'
-import { z } from 'zod'
 import { QuerySchema } from '#shared/schemas/query'
 import { generateCsv } from '#shared/utils/csv'
 import { createExportFilename } from '#shared/utils/export-file'
+import { sql } from 'kysely'
+import { z } from 'zod'
 
 const CsvColumns = ['slug', 'url', 'viewer', 'views', 'referer'] as const
 

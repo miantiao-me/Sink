@@ -1,6 +1,6 @@
 import type { AnalysisQueryState, AnalysisView, DashboardSlugFilters, HeatmapMetric } from '@/utils/dashboard-query'
-import { ref } from 'vue'
 import { defineStore, useI18n } from '#imports'
+import { ref } from 'vue'
 import { toSlugFilters } from '@/utils/dashboard-query'
 import { computeDateRange } from '@/utils/time'
 

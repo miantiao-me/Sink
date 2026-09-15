@@ -4,9 +4,9 @@ import type {
   LinkMigrationRunResult,
   LinkMigrationStatus,
 } from '#shared/schemas/link-migration'
+import { defineStore } from '#imports'
 import { useLocalStorage } from '@vueuse/core'
 import { storeToRefs } from 'pinia'
-import { defineStore } from '#imports'
 
 const LINK_MIGRATION_STATUS_CACHE_KEY = 'sink:link-migration:status:v1'
 

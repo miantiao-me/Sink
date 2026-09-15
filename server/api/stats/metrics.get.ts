@@ -1,8 +1,8 @@
-import type { H3Event } from 'h3'
 import type { BlobsMap, DoublesMap } from '#server/utils/access-log'
+import type { H3Event } from 'h3'
+import { QuerySchema } from '#shared/schemas/query'
 import { sql } from 'kysely'
 import { z } from 'zod'
-import { QuerySchema } from '#shared/schemas/query'
 
 type MetricType = BlobsMap[keyof BlobsMap] | DoublesMap[keyof DoublesMap]
 const validMetricTypes = [...Object.values(blobsMap), ...Object.values(doublesMap)] as [MetricType, ...MetricType[]]

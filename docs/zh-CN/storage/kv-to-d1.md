@@ -28,6 +28,20 @@ description: 每次部署都需要的一次性存储初始化，以及如何把�
 - 迁移完成前不要改链接
 - 可选：先用 Cloudflare 仪表盘或 [Wrangler](https://developers.cloudflare.com/kv/api/read-key-value-pairs/)（Cloudflare 命令行工具）导出 KV
 
+## 部署前需要配置什么
+
+在 Cloudflare Workers Builds 或 Pages 的环境变量中配置：
+
+- `DEPLOY_D1_DATABASE_ID`：你自己创建的 D1 数据库 ID，必填
+- `DEPLOY_KV_NAMESPACE_ID`：原来存放短链接的 KV 命名空间 ID，必须保持不变
+- `DEPLOY_KV_PREVIEW_NAMESPACE_ID`：可选的预览环境 KV ID；不填写时使用上面的 KV ID
+- `DEPLOY_D1_DATABASE_NAME`：可选，默认是 `sink`
+- `DEPLOY_ANALYTICS_DATASET`：可选，默认是 `sink`，应与 `NUXT_DATASET` 一致
+
+如果继续使用 R2 备份或图片存储，请保留原来的 `R2` 绑定和存储桶。`NUXT_SITE_TOKEN`、`NUXT_CF_ACCOUNT_ID`、`NUXT_CF_API_TOKEN` 以及其他运行时变量也不要删除或改名。
+
+部署时应使用新的 `master` 分支。Workers 使用 `pnpm deploy:worker`；Pages 按项目设置执行部署。部署脚本会根据 `DEPLOY_*` 变量生成实际的 Wrangler 配置，不要把生产环境的 D1 ID 或其他资源 ID 改成上游示例值。
+
 ## 仅旧版升级 — 迁移链接
 
 1. 保留或导出原始 KV 数据

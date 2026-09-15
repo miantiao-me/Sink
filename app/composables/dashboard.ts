@@ -1,7 +1,7 @@
 import type { Component } from 'vue'
+import { useRoute } from '#imports'
 import { Activity, ChartArea, FolderSync, Link, ScanSearch } from '@lucide/vue'
 import { computed } from 'vue'
-import { useRoute } from '#imports'
 
 export interface DashboardRouteConfig {
   readonly paths: readonly string[]

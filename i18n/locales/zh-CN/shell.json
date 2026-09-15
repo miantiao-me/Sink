@@ -1,6 +1,7 @@
 {
   "layouts": {
     "footer": {
+      "copyright": "本站由HTML.ZONE驱动",
       "social": {
         "email": "邮箱",
         "telegram": "Telegram",

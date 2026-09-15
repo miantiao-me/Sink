@@ -1,9 +1,9 @@
 import type { Link, LinkUpdateType } from '@/types'
 import type { DashboardLinkStatus } from '@/types/dashboard-links'
 import type { DashboardLinkSort, LinksQueryState } from '@/utils/dashboard-query'
+import { defineStore } from '#imports'
 import { createEventHook, tryOnScopeDispose } from '@vueuse/core'
 import { ref } from 'vue'
-import { defineStore } from '#imports'
 
 export interface LinkUpdateEvent {
   link: Link

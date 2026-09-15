@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import type { Link } from '@/types'
+import { createExportFilename } from '#shared/utils/export-file'
 import { Download, Loader } from '@lucide/vue'
 import { toast } from 'vue-sonner'
-import { createExportFilename } from '#shared/utils/export-file'
 
 interface ExportResponse {
   version: string

@@ -1,7 +1,7 @@
 import type { H3Event } from 'h3'
 import type { RawBuilder } from 'kysely'
-import { sql } from 'kysely'
 import { QuerySchema } from '#shared/schemas/query'
+import { sql } from 'kysely'
 
 function weightedDistinct(column: string): RawBuilder<number> {
   return sql<number>`ROUND(COUNT(DISTINCT ${sql.ref(column)}) * SUM(_sample_interval) / COUNT())`

@@ -1,6 +1,6 @@
 import type { H3Event } from 'h3'
-import { sql } from 'kysely'
 import { QuerySchema } from '#shared/schemas/query'
+import { sql } from 'kysely'
 
 function query2sql(query: Query, event: H3Event) {
   const filter = buildAnalyticsFilter(query)

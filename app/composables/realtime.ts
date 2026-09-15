@@ -1,6 +1,6 @@
 import type { DashboardSlugFilters, RealtimeQueryState } from '@/utils/dashboard-query'
-import { ref } from 'vue'
 import { defineStore } from '#imports'
+import { ref } from 'vue'
 import { toSlugFilters } from '@/utils/dashboard-query'
 import { computeRealtimeRange } from '@/utils/time'
 

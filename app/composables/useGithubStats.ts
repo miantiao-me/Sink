@@ -1,5 +1,5 @@
-import { computed } from 'vue'
 import { useAppConfig, useFetch } from '#imports'
+import { computed } from 'vue'
 
 export function useGithubStats() {
   const { github } = useAppConfig()

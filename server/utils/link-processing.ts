@@ -1,5 +1,5 @@
-import type { H3Event } from 'h3'
 import type { EditLink, Link } from '#shared/schemas/link'
+import type { H3Event } from 'h3'
 
 const editableOptionalLinkFields = [
   'comment',

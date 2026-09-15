@@ -1,5 +1,5 @@
-import { z } from 'zod'
 import { SlugSchema } from '#shared/schemas/link'
+import { z } from 'zod'
 
 defineRouteMeta({
   openAPI: {

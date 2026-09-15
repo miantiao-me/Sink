@@ -1,7 +1,7 @@
 import type { H3Event } from 'h3'
+import { QuerySchema } from '#shared/schemas/query'
 import { sql } from 'kysely'
 import { z } from 'zod'
-import { QuerySchema } from '#shared/schemas/query'
 
 const HeatmapQuerySchema = QuerySchema.extend({
   clientTimezone: z.string()

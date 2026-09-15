@@ -1,6 +1,7 @@
 {
   "layouts": {
     "footer": {
+      "copyright": "Sản phẩm của HTML.ZONE",
       "social": {
         "email": "Email",
         "telegram": "Telegram",

@@ -1,8 +1,8 @@
-import type { H3Event } from 'h3'
 import type { LinkCheckResult } from '#shared/types/link-check'
-import { ofetch } from 'ofetch'
+import type { H3Event } from 'h3'
 import { LinkCheckRequestSchema } from '#shared/schemas/link-check'
 import { toErrorMessage } from '#shared/utils/error'
+import { ofetch } from 'ofetch'
 
 defineRouteMeta({
   openAPI: {

@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { DashboardLink } from '@/types/dashboard-links'
+import { nanoid, SlugSchema, UrlSchema } from '#shared/schemas/link'
 import { ExternalLink, Shuffle, Sparkles } from '@lucide/vue'
 import { useForm } from '@tanstack/vue-form'
 import { useDebounceFn } from '@vueuse/core'
 import { toast } from 'vue-sonner'
 import { z } from 'zod'
-import { nanoid, SlugSchema, UrlSchema } from '#shared/schemas/link'
 
 const props = defineProps<{
   link: Partial<DashboardLink>

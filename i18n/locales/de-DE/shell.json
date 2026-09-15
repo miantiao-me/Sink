@@ -1,6 +1,7 @@
 {
   "layouts": {
     "footer": {
+      "copyright": "Produkte von HTML.ZONE",
       "social": {
         "email": "E-Mail",
         "telegram": "Telegram",

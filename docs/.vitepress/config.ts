@@ -112,6 +112,7 @@ export default defineConfig({
             { text: '部署', items: [
               { text: 'Cloudflare Workers', link: '/zh-CN/deployment/workers' },
               { text: 'Cloudflare Pages', link: '/zh-CN/deployment/pages' },
+              { text: '环境变量安全指南', link: '/zh-CN/deployment/env-security' },
               { text: '升级 Sink', link: '/zh-CN/deployment/upgrading' },
             ] },
             { text: '配置', items: [

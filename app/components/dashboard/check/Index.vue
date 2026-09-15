@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import type { LinkCheckConfig, LinkCheckResult } from '@/types'
-import { toast } from 'vue-sonner'
 import { generateCsv } from '#shared/utils/csv'
 import { toErrorMessage } from '#shared/utils/error'
 import { createExportFilename } from '#shared/utils/export-file'
+import { toast } from 'vue-sonner'
 
 const { t } = useI18n()
 const {

@@ -4,10 +4,10 @@ import type { DeepKeys, DeepValue, Updater } from '@tanstack/vue-form'
 import type { Component } from 'vue'
 import type { AnyFieldApi } from '@/types'
 import type { DashboardLinkFormData } from '@/types/dashboard-links'
+import { isMaskedLinkPassword, LINK_PASSWORD_MASK_PREFIX } from '#shared/utils/link-password'
 import { today } from '@internationalized/date'
 import { CalendarIcon, Plus, Sparkles, Trash2 } from '@lucide/vue'
 import { toast } from 'vue-sonner'
-import { isMaskedLinkPassword, LINK_PASSWORD_MASK_PREFIX } from '#shared/utils/link-password'
 import { cn } from '@/lib/utils'
 
 const props = defineProps<{
