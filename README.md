@@ -139,29 +139,31 @@ npx skills add miantiao-me/sink
 
 ## 🧰 MCP
 
-We currently do not support native MCP Server, but we have OpenAPI documentation, and you can use the following method to support MCP.
+Sink serves a built-in MCP endpoint at `POST /api/mcp`, implementing the stateless [2026-07-28](https://modelcontextprotocol.io/specification/2026-07-28) revision of the Streamable HTTP transport while remaining compatible with older, initialization-based clients.
 
-> Replace the domain name in `OPENAPI_SPEC_URL` and the `API_KEY` below with your own instance configuration.
->
-> The `API_KEY` is the same as the `NUXT_SITE_TOKEN` in your instance's environment variables.
+> Replace the domain below with your own instance, and use the `NUXT_SITE_TOKEN` from your instance's environment variables as the bearer token.
+
+```sh
+claude mcp add --transport http sink https://sink.cool/api/mcp --header "Authorization: Bearer SinkCool"
+```
+
+Any client that supports an HTTP transport with custom headers can connect the same way:
 
 ```json
 {
   "mcpServers": {
     "sink": {
-      "command": "uvx",
-      "args": [
-        "mcp-openapi-proxy"
-      ],
-      "env": {
-        "OPENAPI_SPEC_URL": "https://sink.cool/_docs/openapi.json",
-        "API_KEY": "SinkCool",
-        "TOOL_WHITELIST": "/api/link"
+      "type": "http",
+      "url": "https://sink.cool/api/mcp",
+      "headers": {
+        "Authorization": "Bearer SinkCool"
       }
     }
   }
 }
 ```
+
+It exposes tools for managing links (list, search, read, count, tag, create, update, upsert, delete) and for reading analytics (counters, views over time, and top values per dimension). See the [integrations documentation](https://docs.sink.cool/integrations/) for the full list.
 
 ## 🙋🏻 FAQs
 

@@ -3,6 +3,7 @@ import type { Link } from '#shared/schemas/link'
 import type { LinkMigrationMarker } from '#shared/schemas/link-migration'
 import { desc, eq } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/d1'
+import { createError } from 'h3'
 import { linkMigrationRuns } from '../../database/schema'
 import { buildD1LinkValues } from './d1'
 
@@ -31,6 +32,20 @@ export async function readCompletedLinkMigrationMarker(env: Cloudflare.Env): Pro
     skipped: run.skipped,
     expired: run.expired,
   }
+}
+
+/**
+ * Guards link reads and writes until the KV-to-D1 migration has completed, so
+ * callers never operate on a store that is not yet authoritative.
+ */
+export async function assertLinkStoreReady(event: H3Event): Promise<void> {
+  if (await readCompletedLinkMigrationMarker(event.context.cloudflare.env))
+    return
+
+  throw createError({
+    status: 423,
+    statusText: 'Link migration is required',
+  })
 }
 
 export async function insertMigratedKvLink(event: H3Event, link: Link, effectiveExpiresAt?: number): Promise<boolean> {

@@ -23,7 +23,7 @@ Send your site password in the `Authorization` header:
 Authorization: Bearer YOUR_SITE_TOKEN
 ```
 
-(`Bearer` means “here is the token”.) It must match `NUXT_SITE_TOKEN` exactly (at least 8 characters). With [Cloudflare Access](/configuration/cloudflare-access) enabled, browsers can also authenticate with a verified Access login.
+(`Bearer` means “here is the token”.) It must match `NUXT_SITE_TOKEN` exactly (at least 8 characters). With [Cloudflare Access](/configuration/cloudflare-access) enabled, browsers can also authenticate with a verified Access login. The [MCP endpoint](/integrations/#mcp-server) at `/api/mcp` uses the same token.
 
 ## CORS
 
@@ -54,3 +54,4 @@ Use the OpenAPI UI for full request/response details.
 | AI            | `/api/link/ai`, `/api/link/og-ai` — [Workers AI](/features/ai)                               |
 | Analytics     | `/api/stats/**`, `/api/logs/**` — [Analytics](/features/analytics)                           |
 | Utilities     | `/api/verify`, `/api/location`, `/api/upload/image`, `/api/backup`                           |
+| MCP           | `/api/mcp` — [MCP Server](/integrations/#mcp-server)                                         |

@@ -1,4 +1,4 @@
-import { z } from 'zod'
+import { LinkSlugQuerySchema } from '#shared/schemas/link'
 
 defineRouteMeta({
   openAPI: {
@@ -16,12 +16,8 @@ defineRouteMeta({
   },
 })
 
-const QueryParamsSchema = z.object({
-  slug: z.string().trim().min(1).max(2048),
-})
-
 export default eventHandler(async (event) => {
-  const query = await getValidatedQuery(event, QueryParamsSchema.parse)
+  const query = await getValidatedQuery(event, LinkSlugQuerySchema.parse)
   const slug = normalizeSlug(event, query.slug)
 
   const { link, metadata } = await getLinkWithMetadata(event, slug)
