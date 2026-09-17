@@ -148,6 +148,27 @@ describe('/api/link/create', { concurrent: false }, () => {
     expect(response.status).toBe(400)
   })
 
+  it('returns 400 when slug is reserved', async () => {
+    const response = await postJson('/api/link/create', { url: 'https://example.com', slug: 'dashboard' })
+    expect(response.status).toBe(400)
+    expect(await getStoredLink('dashboard')).toBeNull()
+  })
+
+  it('returns 400 when slug only differs from a reserved slug by case', async () => {
+    const response = await postJson('/api/link/create', { url: 'https://example.com', slug: 'Dashboard' })
+    expect(response.status).toBe(400)
+    expect(await getStoredLink('dashboard')).toBeNull()
+  })
+
+  it('creates a link whose slug only contains a reserved slug', async () => {
+    const slug = trackSlug(`dashboard-${crypto.randomUUID()}`)
+    const response = await postJson('/api/link/create', { url: 'https://example.com', slug })
+    expect(response.status).toBe(201)
+
+    const data = await response.json() as { link: { slug: string } }
+    expect(data.link.slug).toBe(slug)
+  })
+
   it('accepts lowercase geo key and returns uppercase key', async () => {
     const slug = trackSlug(`geo-lower-${crypto.randomUUID()}`)
     const response = await postJson('/api/link/create', {
@@ -198,6 +219,12 @@ describe('/api/link/upsert', { concurrent: false }, () => {
 
     const response = await postJson('/api/link/upsert', { ...payload, url: 'https://updated.example.com' })
     expect(response.status).toBe(200)
+  })
+
+  it('returns 400 when slug is reserved', async () => {
+    const response = await postJson('/api/link/upsert', { url: 'https://example.com', slug: 'dashboard' })
+    expect(response.status).toBe(400)
+    expect(await getStoredLink('dashboard')).toBeNull()
   })
 
   it('masks password in response and stores hashed password', async () => {

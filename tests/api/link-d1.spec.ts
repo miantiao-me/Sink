@@ -292,6 +292,22 @@ describe('d1 link integration', () => {
     expect(await query.json()).toMatchObject({ tags: ['legacy-tag'] })
   })
 
+  it('keeps a legacy KV link on a reserved slug readable and editable', async () => {
+    await clearLinkMigrationState()
+    const link = makeLink('dashboard')
+    await putKvLink(link)
+
+    await runMigration(false)
+
+    expect(await getD1Link(link.slug)).toMatchObject({ slug: link.slug, url: link.url })
+    const query = await fetchWithAuth(`/api/link/query?slug=${link.slug}`)
+    expect(query.status).toBe(200)
+
+    const edit = await putJson('/api/link/edit', { slug: link.slug, url: 'https://example.com/reserved-edit' })
+    expect(edit.status).toBe(201)
+    expect(await getD1Link(link.slug)).toMatchObject({ url: 'https://example.com/reserved-edit' })
+  })
+
   it('does not let a conflicting edit overwrite tags from the successful edit', async () => {
     const link = makeLink()
     expect((await postJson('/api/link/create', link)).status).toBe(201)
