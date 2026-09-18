@@ -52,6 +52,10 @@
     },
     "form": {
       "url": "URL",
+      "url_description": "Nhập URL đầy đủ, chẳng hạn https://example.com. Tối đa {max} ký tự.",
+      "url_required": "URL là bắt buộc.",
+      "url_invalid": "Định dạng URL không hợp lệ. Hãy nhập URL đầy đủ, chẳng hạn https://example.com.",
+      "url_too_long": "URL có {length} ký tự, nhưng giới hạn là {max}.",
       "slug": "Slug",
       "comment": "Ghi chú",
       "tags": "Thẻ",

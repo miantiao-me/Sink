@@ -52,6 +52,10 @@
     },
     "form": {
       "url": "URL",
+      "url_description": "Insira uma URL completa, como https://example.com. Máximo de {max} caracteres.",
+      "url_required": "A URL é obrigatória.",
+      "url_invalid": "O formato da URL é inválido. Insira uma URL completa, como https://example.com.",
+      "url_too_long": "A URL tem {length} caracteres, mas o limite é {max}.",
       "slug": "Slug",
       "comment": "Comentário",
       "tags": "Tags",

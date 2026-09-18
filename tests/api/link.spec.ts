@@ -114,6 +114,35 @@ describe('/api/link/create', { concurrent: false }, () => {
     expect(data.shortLink).toContain(payload.slug)
   })
 
+  it('creates and searches for a long target URL', async () => {
+    const slug = trackSlug(`long-url-${crypto.randomUUID()}`)
+    const url = `https://example.com/preview?payload=${'a'.repeat(9_000)}`
+    const response = await postJson('/api/link/create', { url, slug })
+
+    expect(response.status).toBe(201)
+    const data = await response.json() as { link: { url: string } }
+    expect(data.link.url).toBe(url)
+
+    const searchResponse = await postJson('/api/link/search', { url, limit: 20 })
+    expect(searchResponse.status).toBe(200)
+    expect(await searchResponse.json()).toEqual([expect.objectContaining({
+      slug,
+      url: 'https://example.com/preview',
+    })])
+  })
+
+  it('returns 400 when URL exceeds the configured maximum length', async () => {
+    const url = `https://example.com/?payload=${'a'.repeat(16_384)}`
+    const response = await postJson('/api/link/create', {
+      url,
+      slug: `overlong-url-${crypto.randomUUID()}`,
+    })
+
+    expect(response.status).toBe(400)
+    const data = await response.json() as { data: { message: string } }
+    expect(data.data.message).toContain('URL must not exceed 16384 characters')
+  })
+
   it('returns 409 when slug already exists', async () => {
     const payload = createLinkPayload()
     await postJson('/api/link/create', payload)
