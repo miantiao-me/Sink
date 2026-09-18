@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "sink",
+  "name": "sink-link-shortener",
   "main": ".output/server/index.mjs",
   "assets": {
     "binding": "ASSETS",
@@ -37,8 +37,8 @@
   "kv_namespaces": [
     {
       "binding": "KV",
-      "preview_id": "ef93d42dc4b34969bab404d2e80f8dd3", // Override with DEPLOY_KV_PREVIEW_NAMESPACE_ID (falls back to DEPLOY_KV_NAMESPACE_ID)
-      "id": "ef93d42dc4b34969bab404d2e80f8dd3" // Override with DEPLOY_KV_NAMESPACE_ID
+      "preview_id": "dcc57973e9bb43118591fa4a78570969", // Override with DEPLOY_KV_PREVIEW_NAMESPACE_ID (falls back to DEPLOY_KV_NAMESPACE_ID)
+      "id": "dcc57973e9bb43118591fa4a78570969" // Override with DEPLOY_KV_NAMESPACE_ID
     }
   ],
   "d1_databases": [
@@ -54,11 +54,11 @@
       "binding": "R2",
       // preview_bucket_name: DEPLOY_R2_PREVIEW_BUCKET_NAME (falls back to DEPLOY_R2_BUCKET_NAME)
       // omit DEPLOY_R2_BUCKET_NAME to drop R2 from generated deploy config
-      "preview_bucket_name": "sink",
-      "bucket_name": "sink" // Override with DEPLOY_R2_BUCKET_NAME
+      "preview_bucket_name": "sink-r2-backup",
+      "bucket_name": "sink-r2-backup" // Override with DEPLOY_R2_BUCKET_NAME
     }
   ],
   "triggers": {
-    "crons": ["0 0 * * *"] // Run backup task daily at 00:00 UTC
+    "crons": ["0 14 * * *"] // Run backup task daily at 1AM AU time
   }
 }
