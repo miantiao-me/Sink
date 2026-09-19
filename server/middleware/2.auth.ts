@@ -4,6 +4,23 @@ export default eventHandler(async (event) => {
   if (!event.path.startsWith('/api/'))
     return
 
+  if (event.path.startsWith('/api/auth/'))
+    return
+
+  if (getAuthenticationMode(event) === 'oidc') {
+    const oidcSession = await getOidcSession(event)
+    if (oidcSession) {
+      assertSameOriginUnsafeRequest(event)
+      Object.assign(event.context, oidcSessionAuth(oidcSession))
+      return
+    }
+
+    throw createError({
+      status: 401,
+      statusText: 'Unauthorized',
+    })
+  }
+
   const token = getHeader(event, 'Authorization')?.replace(/^Bearer\s+/, '')
   if (await verifySiteToken(token, useRuntimeConfig(event).siteToken)) {
     event.context.authMethod = 'site-token'

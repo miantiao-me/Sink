@@ -6,6 +6,7 @@ defineRouteMeta({
 })
 
 export default eventHandler(async (event) => {
+  assertSiteAdministrator(event)
   const env = event.context.cloudflare.env
   const result = await backupLinksToR2(env, true)
   if (!result.completed && result.reason === 'migration-incomplete')

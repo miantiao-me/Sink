@@ -5,6 +5,7 @@ import { index, integer, primaryKey, sqliteTable, text } from 'drizzle-orm/sqlit
 export const links = sqliteTable('links', {
   slug: text().primaryKey(),
   id: text().notNull(),
+  ownerId: text('owner_id').notNull().default('root'),
   url: text().notNull(),
   comment: text(),
   createdAt: integer('created_at').notNull(),
@@ -27,6 +28,7 @@ export const links = sqliteTable('links', {
   index('links_created_at_desc_slug_idx').on(sql`${table.createdAt} desc`, table.slug),
   index('links_normalized_url_idx').on(table.normalizedUrl),
   index('links_id_idx').on(table.id),
+  index('links_owner_id_created_at_slug_idx').on(table.ownerId, table.createdAt, table.slug),
 ])
 
 export const tags = sqliteTable('tags', {

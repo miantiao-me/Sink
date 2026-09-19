@@ -35,11 +35,11 @@ function weightedReferers(column: string): RawBuilder<number> {
   return sql<number>`ROUND((COUNT(DISTINCT ${reference}) - MAX(if(${reference} = ${sql.lit('')}, ${sql.lit(1)}, ${sql.lit(0)}))) * SUM(_sample_interval) / COUNT())`
 }
 
-function query2sql(query: z.infer<typeof StatsExportQuerySchema>, event: H3Event) {
-  const filter = buildAnalyticsFilter(query)
+async function query2sql(query: z.infer<typeof StatsExportQuerySchema>, event: H3Event) {
+  const filter = await buildOwnedAnalyticsFilter(event, query)
   const { dataset } = useRuntimeConfig(event)
   const analyticsQuery = createAnalyticsQuery(dataset)
-  const filteredQuery = filter ? analyticsQuery.where(filter) : analyticsQuery
+  const filteredQuery = analyticsQuery.where(filter)
 
   return filteredQuery
     .select([
@@ -63,7 +63,7 @@ export default eventHandler(async (event) => {
   }
 
   const query = await getValidatedQuery(event, StatsExportQuerySchema.parse)
-  const sql = query2sql(query, event)
+  const sql = await query2sql(query, event)
   const result = await useWAE(event, sql) as { data?: AccessExportRow[] }
   const csv = toCsv(result.data ?? [])
 

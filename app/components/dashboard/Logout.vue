@@ -18,8 +18,15 @@ const slots = defineSlots<{
 const open = defineModel<boolean>('open', { default: false })
 const { authMethod, accessEnabled, clearAuthSession } = useAuthSession()
 
-function logOut() {
+async function logOut() {
   const method = authMethod.value || (getAuthToken() ? 'site-token' : 'access-user')
+
+  if (method === 'oidc-session') {
+    clearAuthSession()
+    await signOutFromOidc()
+    return
+  }
+
   const shouldLogoutAccess = accessEnabled.value || method === 'access-user' || method === 'access-service'
   removeAuthToken()
   clearAuthSession()

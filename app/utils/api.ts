@@ -10,6 +10,7 @@ export async function useAPI(api: string, options?: APIOptions): Promise<unknown
   const { headers, ...fetchOptions } = options ?? {}
   const requestOptions: NitroFetchOptions<NitroFetchRequest> = {
     ...fetchOptions,
+    credentials: 'same-origin',
     headers: {
       'Authorization': `Bearer ${getAuthToken() ?? ''}`,
       'X-Requested-With': 'XMLHttpRequest',

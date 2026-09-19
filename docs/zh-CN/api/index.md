@@ -23,7 +23,7 @@ description: Sink 的 OpenAPI 文档、身份认证、CORS 与端点索引。
 Authorization: Bearer YOUR_SITE_TOKEN
 ```
 
-（`Bearer` 的意思是「后面是令牌」。）必须与 `NUXT_SITE_TOKEN` 完全一致（至少 8 个字符）。启用 [Cloudflare Access](/zh-CN/configuration/cloudflare-access) 后，浏览器也可以用已验证的 Access 登录访问 API。
+（`Bearer` 的意思是「后面是令牌」。）在单用户模式下，它必须与 `NUXT_SITE_TOKEN` 完全一致（至少 8 个字符）。在 OIDC 多用户模式下，受保护的 API 必须使用浏览器的 OIDC Session，并拒绝站点令牌。OIDC access token 和 ID token 始终保留在服务端，不会存入浏览器。
 
 ## CORS
 

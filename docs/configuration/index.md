@@ -52,11 +52,31 @@ Set this yourself. It is the **dashboard login password** and the **API password
 If you leave it empty, Sink may invent a random password at build time that can change on the next deploy.
 :::
 
-| Variable                 | When             | Where                                | Purpose                                   |
-| ------------------------ | ---------------- | ------------------------------------ | ----------------------------------------- |
-| `NUXT_SITE_TOKEN`        | Runtime (secret) | Encrypted secret on Workers or Pages | Login + API password                      |
-| `DEPLOY_D1_DATABASE_ID`  | Build            | Workers Builds or Pages variables    | D1 database ID (from the D1 detail page)  |
-| `DEPLOY_KV_NAMESPACE_ID` | Build            | Workers Builds or Pages variables    | KV namespace ID (from the KV detail page) |
+| Variable                        | When             | Where                                | Purpose                                                    |
+| ------------------------------- | ---------------- | ------------------------------------ | ---------------------------------------------------------- |
+| `NUXT_SITE_TOKEN`               | Runtime (secret) | Encrypted secret on Workers or Pages | Single-user login + API password                           |
+| `NUXT_OIDC_ISSUER`              | Runtime          | Worker/Pages variable                | Optional OpenID Connect issuer URL                         |
+| `NUXT_OIDC_CLIENT_ID`           | Runtime          | Worker/Pages variable                | Confidential web client ID                                 |
+| `NUXT_OIDC_CLIENT_SECRET`       | Runtime (secret) | Encrypted secret on Workers or Pages | Confidential web client secret                             |
+| `NUXT_OIDC_REDIRECT_URI`        | Runtime          | Worker/Pages variable                | Exact callback URL ending in `/api/auth/callback`          |
+| `NUXT_OIDC_SESSION_SECRET`      | Runtime (secret) | Encrypted secret on Workers or Pages | Random value of at least 32 characters for signed sessions |
+| `NUXT_OIDC_SESSION_TTL_SECONDS` | Runtime          | Worker/Pages variable                | Local session limit; defaults to `28800`                   |
+| `DEPLOY_D1_DATABASE_ID`         | Build            | Workers Builds or Pages variables    | D1 database ID (from the D1 detail page)                   |
+| `DEPLOY_KV_NAMESPACE_ID`        | Build            | Workers Builds or Pages variables    | KV namespace ID (from the KV detail page)                  |
+
+### Authentication modes
+
+Sink uses one authentication mode at a time:
+
+- Without OIDC configuration, Sink remains a single-user application. The site token and Cloudflare Access use the shared `root` owner.
+- Configuring OIDC enables multi-user mode. Browser and API access then require an OIDC session; the site token and Cloudflare Access no longer authenticate protected APIs.
+- Setting only part of the required OIDC configuration fails closed. Configure the issuer, client ID, client secret, and session secret together.
+
+### User ownership
+
+In OIDC multi-user mode, each verified identity gets an isolated set of links, tags, and analytics. Sink uses the provider's stable subject identifier as the owner ID. In single-user mode, links created through the site token or Cloudflare Access and existing links upgraded from an earlier release belong to the shared `root` owner.
+
+Short-link slugs remain globally unique because every public redirect shares the same hostname. A user therefore receives a conflict when another user already owns the requested slug, without gaining access to that link.
 
 ## Recommended (analytics)
 
