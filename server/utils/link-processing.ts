@@ -10,6 +10,7 @@ const editableOptionalLinkFields = [
   'google',
   'cloaking',
   'redirectWithQuery',
+  'proxy',
   'expiration',
   'unsafe',
   'geo',

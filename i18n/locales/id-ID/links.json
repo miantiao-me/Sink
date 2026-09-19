@@ -117,7 +117,9 @@
       "utm_clear": "Bersihkan",
       "utm_invalid_url": "Masukkan URL valid untuk melihat pratinjau dan menerapkan parameter UTM.",
       "ai_og_generate": "Buat OpenGraph AI",
-      "duplicate_url_hint": "URL ini sudah ada sebagai {shortLink}"
+      "duplicate_url_hint": "URL ini sudah ada sebagai {shortLink}",
+      "proxy_label": "Aktifkan Reverse Proxy",
+      "proxy_description": "Meneruskan konten dari URL tujuan secara transparan tanpa pengalihan 301/302. Ideal untuk langganan konfigurasi dan API."
     },
     "dialogs": {
       "discard": {

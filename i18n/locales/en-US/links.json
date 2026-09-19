@@ -117,7 +117,9 @@
       "utm_clear": "Clear",
       "utm_invalid_url": "Enter a valid URL to preview and apply UTM parameters.",
       "ai_og_generate": "Generate AI OpenGraph",
-      "duplicate_url_hint": "This URL already exists as {shortLink}"
+      "duplicate_url_hint": "This URL already exists as {shortLink}",
+      "proxy_label": "Enable Reverse Proxy",
+      "proxy_description": "Transparently proxy and forward content from destination URL without 301/302 redirect. Ideal for subscriptions and APIs."
     },
     "dialogs": {
       "discard": {

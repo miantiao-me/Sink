@@ -171,6 +171,25 @@ describe('/', () => {
     expect(html).toContain('allow-modals')
   })
 
+  it('proxies request to destination URL when proxy is enabled', async () => {
+    const slug = `proxy-mode-${crypto.randomUUID()}`
+    const targetUrl = 'https://example.com/'
+
+    const createResponse = await postJson('/api/link/create', {
+      url: targetUrl,
+      slug,
+      proxy: true,
+    })
+    expect(createResponse.status).toBe(201)
+    createdSlugs.push(slug)
+
+    const response = await fetch(`/${slug}`, { redirect: 'manual' })
+    expect(response.status).toBe(200)
+    expect(response.headers.get('location')).toBeNull()
+    const body = await response.text()
+    expect(body).toContain('Example Domain')
+  })
+
   it('prefers device redirect over geo redirect', async () => {
     const slug = `device-over-geo-${crypto.randomUUID()}`
     const apple = 'https://apps.apple.com/app/sink-test-priority'

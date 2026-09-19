@@ -55,6 +55,12 @@ When a social bot visits a link that has preview fields, Sink returns a preview 
 Cloaking shows the target site inside the page while the address bar still shows the short link. Browsers and developer tools still see the real URL. Sites that block embedding (and most OAuth/payment pages) will not load.
 :::
 
+## Reverse proxy mode
+
+When reverse proxy mode is enabled on a link, Sink transparently fetches and streams content from the destination URL via Cloudflare Workers without issuing HTTP 301/302 redirects.
+
+This is ideal for API endpoints, shell install scripts, raw payloads, and configuration subscriptions where redirects or iframes are undesirable.
+
 ## Health check
 
 **Dashboard → Check** (and `/api/link/check`) probes target URLs from the server (up to 10 at a time, 1–30s timeout). Private/local addresses are blocked.

@@ -117,7 +117,9 @@
       "utm_clear": "지우기",
       "utm_invalid_url": "UTM 매개변수를 미리보고 적용하려면 유효한 URL을 입력하세요.",
       "ai_og_generate": "AI OpenGraph 생성",
-      "duplicate_url_hint": "이 URL은 이미 {shortLink}(으)로 존재합니다"
+      "duplicate_url_hint": "이 URL은 이미 {shortLink}(으)로 존재합니다",
+      "proxy_label": "역방향 프록시 활성화",
+      "proxy_description": "301/302 리디렉션 없이 대상 URL의 콘텐츠를 투명하게 프록시하여 전달합니다. 구독 및 API에 이상적입니다."
     },
     "dialogs": {
       "discard": {
