@@ -213,6 +213,15 @@ describe('/api/link/import', { concurrent: false }, () => {
     expect(response.status).toBe(400)
   })
 
+  it('returns 400 for a reserved slug in links', async () => {
+    const response = await postJson('/api/link/import', {
+      version: '1.0',
+      links: [{ url: 'https://example.com', slug: 'dashboard' }],
+    })
+    expect(response.status).toBe(400)
+    expect(await getStoredLink('dashboard')).toBeNull()
+  })
+
   it('returns 400 when an imported link is missing its slug', async () => {
     const response = await postJson('/api/link/import', {
       version: '1.0',
