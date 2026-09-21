@@ -115,7 +115,8 @@ export const useDashboardLinksSearchStore = defineStore('dashboard-links-search'
       return undefined
 
     const matches = await useAPI<DashboardLinkSearchItem[]>('/api/link/search', {
-      query: {
+      method: 'POST',
+      body: {
         url: targetUrl,
         limit: 20,
       },

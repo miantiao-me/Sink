@@ -76,6 +76,7 @@ On Workers, set the same value in Builds and runtime. On Pages, set once, then r
 | `NUXT_PUBLIC_PREVIEW_MODE`        | empty   | `true` = demo mode (links last 5 minutes)                 |
 | `NUXT_PUBLIC_SLUG_DEFAULT_LENGTH` | `6`     | Length of auto-generated short codes                      |
 | `NUXT_PUBLIC_KV_BATCH_LIMIT`      | `50`    | Export page size; import accepts at most half per request |
+| `NUXT_PUBLIC_MAX_URL_LENGTH`      | `16384` | Maximum target URL length in characters (256-24000)       |
 
 ## Optional
 

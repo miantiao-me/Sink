@@ -52,6 +52,10 @@
     },
     "form": {
       "url": "链接地址",
+      "url_description": "请输入完整链接，例如 https://example.com，最多 {max} 个字符。",
+      "url_required": "链接地址不能为空。",
+      "url_invalid": "链接格式无效，请输入完整链接，例如 https://example.com。",
+      "url_too_long": "链接长度为 {length} 个字符，超过上限 {max} 个字符。",
       "slug": "短链",
       "comment": "备注",
       "tags": "标签",
