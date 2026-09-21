@@ -121,7 +121,9 @@
       "utm_clear": "清空",
       "utm_invalid_url": "请输入有效 URL 以预览并应用 UTM 参数。",
       "ai_og_generate": "生成 AI OpenGraph",
-      "duplicate_url_hint": "该 URL 已存在为 {shortLink}"
+      "duplicate_url_hint": "该 URL 已存在为 {shortLink}",
+      "proxy_label": "启用反向代理",
+      "proxy_description": "直接透明代理转发目标 URL 内容，不发生 301/302 重定向。适合配置订阅或 API 请求。"
     },
     "dialogs": {
       "discard": {

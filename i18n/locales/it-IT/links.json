@@ -121,7 +121,9 @@
       "utm_clear": "Cancella",
       "utm_invalid_url": "Inserisci un URL valido per visualizzare l'anteprima e applicare i parametri UTM.",
       "ai_og_generate": "Genera OpenGraph AI",
-      "duplicate_url_hint": "Questo URL esiste già come {shortLink}"
+      "duplicate_url_hint": "Questo URL esiste già come {shortLink}",
+      "proxy_label": "Abilita Reverse Proxy",
+      "proxy_description": "Inoltra in modo trasparente il contenuto dell'URL di destinazione senza reindirizzamento 301/302. Ideale per abbonamenti e API."
     },
     "dialogs": {
       "discard": {

@@ -440,21 +440,23 @@ describe('/api/link/edit', { concurrent: false }, () => {
       title: 'test title',
       cloaking: true,
       redirectWithQuery: true,
+      proxy: true,
     })
     expect(setResponse.status).toBe(201)
-    const setData = await setResponse.json() as { link: { comment?: string, title?: string, cloaking?: boolean, redirectWithQuery?: boolean } }
+    const setData = await setResponse.json() as { link: { comment?: string, title?: string, cloaking?: boolean, redirectWithQuery?: boolean, proxy?: boolean } }
     expect(setData.link.comment).toBe('test comment')
     expect(setData.link.title).toBe('test title')
     expect(setData.link.cloaking).toBe(true)
     expect(setData.link.redirectWithQuery).toBe(true)
-
+    expect(setData.link.proxy).toBe(true)
     const removeResponse = await putJson('/api/link/edit', payload)
     expect(removeResponse.status).toBe(201)
-    const removeData = await removeResponse.json() as { link: { comment?: string, title?: string, cloaking?: boolean, redirectWithQuery?: boolean } }
+    const removeData = await removeResponse.json() as { link: { comment?: string, title?: string, cloaking?: boolean, redirectWithQuery?: boolean, proxy?: boolean } }
     expect(removeData.link.comment).toBeUndefined()
     expect(removeData.link.title).toBeUndefined()
     expect(removeData.link.cloaking).toBeUndefined()
     expect(removeData.link.redirectWithQuery).toBeUndefined()
+    expect(removeData.link.proxy).toBeUndefined()
   })
 
   it('removes geo when not provided in edit', async () => {

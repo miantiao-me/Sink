@@ -121,7 +121,9 @@
       "utm_clear": "Limpar",
       "utm_invalid_url": "Introduza um URL válido para pré-visualizar e aplicar os parâmetros UTM.",
       "ai_og_generate": "Gerar OpenGraph da IA",
-      "duplicate_url_hint": "Este URL já existe como {shortLink}"
+      "duplicate_url_hint": "Este URL já existe como {shortLink}",
+      "proxy_label": "Ativar proxy inverso",
+      "proxy_description": "Encaminha de forma transparente o conteúdo do URL de destino sem redirecionamento 301/302. Ideal para assinaturas e APIs."
     },
     "dialogs": {
       "discard": {

@@ -84,6 +84,7 @@ const LinkFieldsSchema = z.object({
   google: z.string().trim().url().max(MAX_URL_LENGTH).optional(),
   cloaking: z.boolean().optional(),
   redirectWithQuery: z.boolean().optional(),
+  proxy: z.boolean().optional(),
   password: LinkPasswordSchema.optional(),
   unsafe: z.boolean().optional(),
   geo: GeoSchema.optional(),

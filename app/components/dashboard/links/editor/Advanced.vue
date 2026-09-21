@@ -107,6 +107,16 @@ async function aiOg() {
             />
           </props.form.Field>
 
+          <props.form.Field v-slot="{ field }" name="proxy">
+            <DashboardLinksEditorFieldSwitch
+              :id="`${idPrefix}-${field.name}`"
+              :model-value="field.state.value"
+              :label="$t('links.form.proxy_label')"
+              :description="$t('links.form.proxy_description')"
+              @update:model-value="field.handleChange"
+            />
+          </props.form.Field>
+
           <props.form.Field v-slot="{ field }" name="unsafe">
             <DashboardLinksEditorFieldSwitch
               :id="`${idPrefix}-${field.name}`"

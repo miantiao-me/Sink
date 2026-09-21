@@ -34,6 +34,7 @@ defineRouteMeta({
               google: { type: 'string', description: 'Google Play Store redirect URL' },
               cloaking: { type: 'boolean', description: 'Enable link cloaking (mask destination URL)' },
               redirectWithQuery: { type: 'boolean', description: 'Append query parameters to destination URL' },
+              proxy: { type: 'boolean', description: 'Enable reverse proxy (transparently forward traffic instead of redirecting)' },
               password: { type: 'string', description: 'Password protection for the link' },
               unsafe: { type: 'boolean', description: 'Mark link as unsafe, showing a warning page before redirect' },
               geo: { type: 'object', additionalProperties: { type: 'string' }, description: 'Geo-routing rules (country code to URL)' },
