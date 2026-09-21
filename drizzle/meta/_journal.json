@@ -36,6 +36,13 @@
       "when": 1786005047738,
       "tag": "0004_quiet_lionheart",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "6",
+      "when": 1789995773114,
+      "tag": "0005_tan_karma",
+      "breakpoints": true
     }
   ]
 }

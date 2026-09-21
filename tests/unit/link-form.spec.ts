@@ -24,6 +24,7 @@ describe('link form values', () => {
       image: '',
       cloaking: false,
       redirectWithQuery: false,
+      proxy: false,
       password: '',
       unsafe: false,
       geo: [],

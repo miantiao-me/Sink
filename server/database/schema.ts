@@ -17,6 +17,7 @@ export const links = sqliteTable('links', {
   google: text(),
   cloaking: integer({ mode: 'boolean' }),
   redirectWithQuery: integer('redirect_with_query', { mode: 'boolean' }),
+  proxy: integer({ mode: 'boolean' }),
   password: text(),
   unsafe: integer({ mode: 'boolean' }),
   geo: text({ mode: 'json' }).$type<Link['geo']>(),
