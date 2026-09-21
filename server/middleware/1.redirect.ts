@@ -1,3 +1,4 @@
+import type { H3Event } from 'h3'
 import type { Link } from '@/types'
 import { parsePath, withQuery } from 'ufo'
 
@@ -47,10 +48,91 @@ function hasOgConfig(link: Link): boolean {
   return !!(link.title || link.image)
 }
 
+// Proxy mode forwards only these standard headers plus `x-*` extension headers
+// (webhook signatures, custom API keys). Credentials-bearing headers like
+// cookie, authorization, and cf-access-* never leave the Sink origin.
+const PROXY_FORWARD_HEADERS = new Set([
+  'accept',
+  'accept-language',
+  'cache-control',
+  'content-type',
+  'if-match',
+  'if-modified-since',
+  'if-none-match',
+  'if-range',
+  'if-unmodified-since',
+  'pragma',
+  'range',
+  'user-agent',
+])
+
+const PROXY_BLOCKED_EXTENSION_PREFIXES = ['x-forwarded-', 'x-link-']
+const PROXY_BLOCKED_EXTENSION_HEADERS = new Set(['x-real-ip'])
+
+function isProxyForwardHeader(name: string): boolean {
+  if (PROXY_FORWARD_HEADERS.has(name))
+    return true
+  return name.startsWith('x-')
+    && !PROXY_BLOCKED_EXTENSION_PREFIXES.some(prefix => name.startsWith(prefix))
+    && !PROXY_BLOCKED_EXTENSION_HEADERS.has(name)
+}
+
+// Hop-by-hop and origin-leaking headers are never reflected to the client.
+const PROXY_SKIPPED_RESPONSE_HEADERS = new Set([
+  'connection',
+  'content-encoding',
+  'content-length',
+  'keep-alive',
+  'proxy-authenticate',
+  'set-cookie',
+  'te',
+  'trailer',
+  'transfer-encoding',
+  'upgrade',
+  'www-authenticate',
+])
+
+async function proxyLinkRequest(event: H3Event, targetUrl: string) {
+  if (!isPublicHttpUrl(targetUrl))
+    throw createError({ status: 403, statusText: 'Proxy target is not allowed' })
+
+  const forwardHeaders = new Headers()
+  for (const [name, value] of Object.entries(getHeaders(event))) {
+    if (value !== undefined && isProxyForwardHeader(name.toLowerCase()))
+      forwardHeaders.set(name, value)
+  }
+  const clientIp = getHeader(event, 'cf-connecting-ip') || getHeader(event, 'x-forwarded-for')
+  if (clientIp)
+    forwardHeaders.set('x-forwarded-for', clientIp)
+  forwardHeaders.set('x-forwarded-proto', getRequestProtocol(event))
+  forwardHeaders.set('x-forwarded-host', getRequestHost(event))
+
+  let targetResponse: Response
+  try {
+    targetResponse = await fetch(targetUrl, {
+      method: event.method,
+      headers: forwardHeaders,
+      body: ['GET', 'HEAD'].includes(event.method) ? undefined : await readRawBody(event),
+      redirect: 'follow',
+      signal: AbortSignal.timeout(30_000),
+    })
+  }
+  catch (cause) {
+    throw createError({ status: 502, statusText: 'Proxy request failed', cause })
+  }
+
+  setResponseStatus(event, targetResponse.status, targetResponse.statusText)
+  for (const [key, value] of targetResponse.headers.entries()) {
+    if (!PROXY_SKIPPED_RESPONSE_HEADERS.has(key.toLowerCase()))
+      setHeader(event, key, value)
+  }
+  return targetResponse.body
+}
+
 export default eventHandler(async (event) => {
   const { pathname: slug } = parsePath(event.path.replace(/^\/|\/$/g, ''))
   const { slugRegex, reserveSlug } = useAppConfig()
-  const { homeURL, linkCacheTtl, caseSensitive, redirectWithQuery, redirectStatusCode, redirectNoStore } = useRuntimeConfig(event)
+  const { homeURL, linkCacheTtl, caseSensitive, redirectWithQuery, redirectStatusCode, redirectNoStore, proxyEnabled } = useRuntimeConfig(event)
   const { cloudflare } = event.context
 
   if (event.path === '/' && homeURL)
@@ -173,39 +255,8 @@ export default eventHandler(async (event) => {
           setHeader(event, 'Cache-Control', 'no-store')
         return sendRedirect(event, finalTargetUrl, +redirectStatusCode)
       }
-      if (link.proxy) {
-        const forwardHeaders = new Headers()
-        const incomingHeaders = getHeaders(event)
-        for (const [k, v] of Object.entries(incomingHeaders)) {
-          if (v !== undefined && !['host', 'connection', 'cf-connecting-ip', 'cf-ray', 'cf-visitor'].includes(k.toLowerCase())) {
-            forwardHeaders.set(k, v)
-          }
-        }
-
-        const clientIp = getHeader(event, 'cf-connecting-ip') || getHeader(event, 'x-forwarded-for')
-        if (clientIp) {
-          forwardHeaders.set('x-forwarded-for', clientIp)
-        }
-        forwardHeaders.set('x-forwarded-proto', getRequestProtocol(event))
-
-        const targetResponse = await fetch(finalTargetUrl, {
-          method: event.method,
-          headers: forwardHeaders,
-          body: ['GET', 'HEAD'].includes(event.method) ? undefined : await readRawBody(event),
-          redirect: 'follow',
-        })
-
-        setResponseStatus(event, targetResponse.status, targetResponse.statusText)
-
-        const skipHeaders = ['content-encoding', 'content-length', 'transfer-encoding', 'connection']
-        for (const [key, value] of targetResponse.headers.entries()) {
-          if (!skipHeaders.includes(key.toLowerCase())) {
-            setHeader(event, key, value)
-          }
-        }
-
-        return targetResponse.body
-      }
+      if (link.proxy && proxyEnabled !== false)
+        return await proxyLinkRequest(event, finalTargetUrl)
 
       if (isSocialBot(userAgent) && hasOgConfig(link)) {
         const baseUrl = `${getRequestProtocol(event)}://${getRequestHost(event)}`

@@ -61,6 +61,10 @@ When reverse proxy mode is enabled on a link, Sink transparently fetches and str
 
 This is ideal for API endpoints, shell install scripts, raw payloads, and configuration subscriptions where redirects or iframes are undesirable.
 
+::: warning
+Proxied content is served from your Sink domain, so only proxy targets you trust. Credential headers (`cookie`, `authorization`, `cf-access-*`) are never forwarded upstream, and upstream `set-cookie` is stripped. Private/local targets are refused. Set `NUXT_PROXY_ENABLED=false` to disable the feature.
+:::
+
 ## Health check
 
 **Dashboard → Check** (and `/api/link/check`) probes target URLs from the server (up to 10 at a time, 1–30s timeout). Private/local addresses are blocked.

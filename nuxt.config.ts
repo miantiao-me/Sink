@@ -22,6 +22,7 @@ export default defineNuxtConfig({
     linkCacheTtl: 60,
     redirectWithQuery: false,
     redirectNoStore: false,
+    proxyEnabled: true,
     homeURL: '',
     cfAccountId: '',
     cfApiToken: '',

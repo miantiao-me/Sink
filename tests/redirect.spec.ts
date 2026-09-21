@@ -190,6 +190,53 @@ describe('/', () => {
     expect(body).toContain('Example Domain')
   })
 
+  it('refuses to proxy private or local targets', async () => {
+    const slug = `proxy-private-${crypto.randomUUID()}`
+
+    const createResponse = await postJson('/api/link/create', {
+      url: 'http://127.0.0.1:9/',
+      slug,
+      proxy: true,
+    })
+    expect(createResponse.status).toBe(201)
+    createdSlugs.push(slug)
+
+    const response = await fetch(`/${slug}`, { redirect: 'manual' })
+    expect(response.status).toBe(403)
+  })
+
+  it('does not forward credential headers to the proxy target', async () => {
+    const slug = `proxy-headers-${crypto.randomUUID()}`
+
+    const createResponse = await postJson('/api/link/create', {
+      url: 'https://httpbin.org/headers',
+      slug,
+      proxy: true,
+    })
+    expect(createResponse.status).toBe(201)
+    createdSlugs.push(slug)
+
+    const response = await fetch(`/${slug}`, {
+      redirect: 'manual',
+      headers: {
+        'Authorization': 'Bearer leaked-token',
+        'Cookie': 'session=secret',
+        'X-Link-Password': 'link-secret',
+        'X-Custom-Header': 'custom-value',
+        'User-Agent': 'SinkProxyTest/1.0',
+      },
+    })
+    expect(response.status).toBe(200)
+
+    const { headers: echoed } = await response.json() as { headers: Record<string, string> }
+    const echoedNames = Object.keys(echoed).map(name => name.toLowerCase())
+    expect(echoedNames).not.toContain('authorization')
+    expect(echoedNames).not.toContain('cookie')
+    expect(echoedNames).not.toContain('x-link-password')
+    expect(echoedNames).toContain('x-custom-header')
+    expect(echoed['User-Agent']).toBe('SinkProxyTest/1.0')
+  })
+
   it('prefers device redirect over geo redirect', async () => {
     const slug = `device-over-geo-${crypto.randomUUID()}`
     const apple = 'https://apps.apple.com/app/sink-test-priority'

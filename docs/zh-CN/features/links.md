@@ -61,6 +61,10 @@ DNS 检查失败时，Sink 会放行链接，而不是拦截。
 
 这非常适用于 API 端点、Shell 安装脚本、纯文本配置以及各种客户端订阅等不希望发生跳转或 iframe 嵌套的场景。
 
+::: warning
+被代理的内容以你的 Sink 域名对外提供，请只代理可信目标。`cookie`、`authorization`、`cf-access-*` 等凭证头不会转发给上游，上游的 `set-cookie` 也会被剥离；私网/本机地址会被拒绝。设置 `NUXT_PROXY_ENABLED=false` 可整体关闭该功能。
+:::
+
 ## 健康检查
 
 **Dashboard → Check**（以及 `/api/link/check`）从服务端探测目标 URL（每次最多 10 条，超时 1–30 秒）。私有/本机地址会被拦截。
