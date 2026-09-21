@@ -12,8 +12,8 @@ const originalGlobals = vi.hoisted(() => {
   const useRuntimeConfig = Object.getOwnPropertyDescriptor(globalThis, 'useRuntimeConfig')
   const useI18n = Object.getOwnPropertyDescriptor(globalThis, 'useI18n')
   Object.assign(globalThis, {
-    useAppConfig: () => ({ slugRegex: /^[a-z0-9]+(?:-[a-z0-9]+)*$/i }),
-    useRuntimeConfig: () => ({ public: { kvBatchLimit: '100', slugDefaultLength: '6' } }),
+    useAppConfig: () => ({ slugRegex: /^[a-z0-9]+(?:-[a-z0-9]+)*$/i, reserveSlug: ['dashboard'] }),
+    useRuntimeConfig: () => ({ public: { kvBatchLimit: '100', slugDefaultLength: '6', maxUrlLength: '16384' } }),
     useI18n: () => ({
       t: (key: string, params?: { count?: number }) => params?.count === undefined
         ? key
