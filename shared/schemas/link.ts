@@ -2,7 +2,10 @@ import { customAlphabet } from 'nanoid'
 import { z } from 'zod'
 import { LINK_PASSWORD_MASK_PREFIX } from '../utils/link-password'
 
-const { slugRegex } = useAppConfig()
+const { slugRegex, reserveSlug } = useAppConfig()
+
+// The shared layer does not receive `app/app.config.ts` types, so annotate what it reads.
+const reservedSlugs = new Set((reserveSlug as string[]).map(slug => slug.toLowerCase()))
 
 const slugDefaultLength = +useRuntimeConfig().public.slugDefaultLength
 const configuredMaxUrlLength = Number(useRuntimeConfig().public.maxUrlLength)
@@ -54,6 +57,15 @@ export const UrlSchema = z.string()
   .max(MAX_URL_LENGTH, `URL must not exceed ${MAX_URL_LENGTH} characters`)
   .url('URL format is invalid')
 export const SlugSchema = z.string().trim().max(2048).regex(new RegExp(slugRegex))
+// `server/middleware/1.redirect.ts` skips reserved slugs before it looks a link up, so a
+// link written to one never redirects. Reject them where new links come in, and compare
+// case-insensitively because write paths lowercase the slug unless `caseSensitive` is set.
+// Never apply this to stored or legacy KV records: links written before this check must
+// stay readable, exportable, and deletable.
+const NewSlugSchema = SlugSchema.refine(
+  slug => !reservedSlugs.has(slug.toLowerCase()),
+  'slug is reserved',
+)
 const TimestampSchema = z.number().int().safe()
 const ExpirationSchema = TimestampSchema.refine(expiration => expiration > Math.floor(Date.now() / 1000), {
   message: 'expiration must be greater than current time',
@@ -80,7 +92,7 @@ const LinkFieldsSchema = z.object({
 
 export const CreateLinkSchema = LinkFieldsSchema.extend({
   id: IdSchema.default(nanoid(10)),
-  slug: SlugSchema.default(nanoid()),
+  slug: NewSlugSchema.default(nanoid()),
   createdAt: TimestampSchema.default(() => Math.floor(Date.now() / 1000)),
   updatedAt: TimestampSchema.default(() => Math.floor(Date.now() / 1000)),
 })
@@ -90,6 +102,7 @@ export const EditLinkSchema = LinkFieldsSchema.extend({
 })
 
 export const ImportLinkSchema = LinkFieldsSchema.extend({
+  slug: NewSlugSchema,
   id: z.preprocess(value => typeof value === 'string' && !value.trim() ? undefined : value, IdSchema.optional()),
   createdAt: TimestampSchema.optional(),
   updatedAt: TimestampSchema.optional(),
