@@ -56,9 +56,19 @@ function postInitialize(id: string | number, protocolVersion = PROTOCOL_VERSION)
   )
 }
 
+// The stateless legacy transport answers POSTs over SSE, so the JSON-RPC
+// envelope arrives inside a `data:` frame instead of a plain JSON body.
+async function readEnvelope(response: Response): Promise<JsonRpcEnvelope> {
+  if (response.headers.get('content-type')?.includes('text/event-stream')) {
+    const dataLine = (await response.text()).split('\n').find(line => line.startsWith('data:'))
+    return JSON.parse(dataLine!.slice(5).trim())
+  }
+  return response.json() as Promise<JsonRpcEnvelope>
+}
+
 async function callTool(name: string, args: Record<string, unknown>) {
   const response = await postRpc(`call-${name}-${crypto.randomUUID()}`, 'tools/call', { name, arguments: args })
-  const payload = await response.json() as JsonRpcEnvelope
+  const payload = await readEnvelope(response)
   return { response, payload }
 }
 
@@ -138,7 +148,7 @@ describe('/api/mcp transport', () => {
 
   it('returns a JSON-RPC error for unknown methods', async () => {
     const response = await postRpc(1, 'resources/list')
-    const payload = await response.json() as JsonRpcEnvelope
+    const payload = await readEnvelope(response)
     expect(payload.error?.code).toBe(-32601)
   })
 })
@@ -149,7 +159,7 @@ describe('/api/mcp handshake', () => {
     expect(response.status).toBe(200)
     expect(response.headers.get('Mcp-Session-Id')).toBeNull()
 
-    const payload = await response.json() as JsonRpcEnvelope
+    const payload = await readEnvelope(response)
     expect(payload.result?.protocolVersion).toBe(PROTOCOL_VERSION)
     expect(payload.result?.serverInfo.name).toBe('sink')
     expect(payload.result?.capabilities.tools).toBeDefined()
@@ -160,7 +170,7 @@ describe('/api/mcp handshake', () => {
     const response = await postInitialize(1, version)
     expect(response.status).toBe(200)
 
-    const payload = await response.json() as JsonRpcEnvelope
+    const payload = await readEnvelope(response)
     expect(payload.result?.protocolVersion).toBe(version)
     expect(payload.result?.serverInfo.name).toBe('sink')
   })
@@ -168,14 +178,14 @@ describe('/api/mcp handshake', () => {
   it('answers ping', async () => {
     const response = await postRpc(1, 'ping')
     expect(response.status).toBe(200)
-    expect((await response.json() as JsonRpcEnvelope).result).toEqual({})
+    expect((await readEnvelope(response)).result).toEqual({})
   })
 
   it('lists tools with input schemas', async () => {
     const response = await postRpc(1, 'tools/list')
     expect(response.status).toBe(200)
 
-    const payload = await response.json() as JsonRpcEnvelope
+    const payload = await readEnvelope(response)
     const names = payload.result?.tools.map((tool: { name: string }) => tool.name)
     expect(names).toContain('create_link')
     expect(names).toContain('get_analytics_metrics')
