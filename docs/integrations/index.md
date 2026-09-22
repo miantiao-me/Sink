@@ -17,7 +17,7 @@ npx skills add miantiao-me/sink
 
 ## MCP Server
 
-Sink serves a Model Context Protocol endpoint at `POST /api/mcp`. It uses the official [`@modelcontextprotocol/sdk`](https://www.npmjs.com/package/@modelcontextprotocol/sdk) Streamable HTTP transport in stateless mode with JSON responses, so current MCP clients work without extra configuration and older protocol versions stay compatible through the SDK's own version negotiation.
+Sink serves a Model Context Protocol endpoint at `POST /api/mcp`. It uses the official [`@modelcontextprotocol/server`](https://www.npmjs.com/package/@modelcontextprotocol/server) SDK v2 entry point, serving modern clients over the per-request transport and 2025-era clients over the stateless fallback with JSON responses, so current MCP clients work without extra configuration and older protocol versions stay compatible through the SDK's own version negotiation.
 
 The endpoint authenticates with the same bearer token as the REST API, so no separate credential is needed. See [API authentication](/api/#authentication).
 

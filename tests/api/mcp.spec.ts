@@ -215,12 +215,18 @@ describe('/api/mcp tools', () => {
   it.each([
     ['business failures', 'get_link', { slug: `missing-${crypto.randomUUID()}` }, '404'],
     ['invalid arguments', 'create_link', { url: 'not-a-url' }, 'Invalid arguments'],
-    ['unknown tools', 'no_such_tool', {}, 'not found'],
   ] as const)('reports %s as tool errors, not protocol errors', async (_label, tool, args, text) => {
     const { response, payload } = await callTool(tool, args)
     expect(response.status).toBe(200)
     expect(payload.result?.isError).toBe(true)
     expect(payload.result?.content[0].text).toContain(text)
+  })
+
+  // SDK v2 rejects unknown tool names at dispatch, before any tool callback runs.
+  it('reports unknown tools as protocol errors', async () => {
+    const { payload } = await callTool('no_such_tool', {})
+    expect(payload.error?.code).toBe(-32602)
+    expect(payload.error?.message).toContain('not found')
   })
 
   it('returns search matches under an object key', async () => {

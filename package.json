@@ -40,7 +40,7 @@
     "prepare": "simple-git-hooks"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.30.0"
+    "@modelcontextprotocol/server": "^2.0.0"
   },
   "devDependencies": {
     "@antfu/eslint-config": "^9.1.0",

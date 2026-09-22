@@ -1,8 +1,7 @@
-import type { McpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
+import type { McpServer } from '@modelcontextprotocol/server'
 import type { H3Event } from 'h3'
-import { McpServer as SdkMcpServer } from '@modelcontextprotocol/sdk/server/mcp.js'
-import { WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/sdk/server/webStandardStreamableHttp.js'
-import { getHeader, getHeaders, getRequestHost, getRequestURL, readRawBody } from 'h3'
+import { createMcpHandler, isJsonContentType, isLegacyRequest, McpServer as SdkMcpServer, WebStandardStreamableHTTPServerTransport } from '@modelcontextprotocol/server'
+import { getHeader, getRequestHost, toWebRequest } from 'h3'
 import { registerMcpTools } from './tools'
 
 /** The version is this endpoint's, independent of the Sink release. */
@@ -56,50 +55,12 @@ function jsonError(status: number, code: number, message: string): Response {
 }
 
 /**
- * Handles a `POST /api/mcp` request with the official SDK's stateless
- * Streamable HTTP transport (`sessionIdGenerator: undefined`,
- * `enableJsonResponse: true`). Legacy protocol versions stay compatible
- * because the SDK negotiates them itself; no session is ever minted.
+ * Serves a 2025-era request on the stateless Streamable HTTP transport.
+ * `enableJsonResponse` keeps answers as plain JSON instead of SSE, matching the
+ * contract this endpoint has always had; `sessionIdGenerator: undefined` means
+ * no session is ever minted.
  */
-export async function handleMcpPost(event: H3Event): Promise<Response> {
-  if (!isAllowedOrigin(event))
-    return jsonError(403, -32600, 'Origin not allowed')
-
-  let rawBody: string | undefined
-  try {
-    rawBody = await readRawBody(event)
-  }
-  catch {
-    return jsonError(500, -32603, 'Failed to read request body')
-  }
-
-  const incoming = getHeaders(event)
-  const headers = new Headers()
-  for (const [key, value] of Object.entries(incoming)) {
-    if (value === undefined)
-      continue
-    if (Array.isArray(value)) {
-      for (const entry of value) headers.append(key, entry)
-    }
-    else {
-      headers.set(key, value)
-    }
-  }
-
-  let url: string
-  try {
-    url = getRequestURL(event).href
-  }
-  catch {
-    return jsonError(500, -32603, 'Failed to resolve request URL')
-  }
-
-  const request = new Request(url, {
-    method: 'POST',
-    headers,
-    body: rawBody ?? null,
-  })
-
+async function handleLegacyRequest(event: H3Event, request: Request): Promise<Response> {
   const transport = new WebStandardStreamableHTTPServerTransport({
     sessionIdGenerator: undefined,
     enableJsonResponse: true,
@@ -109,9 +70,6 @@ export async function handleMcpPost(event: H3Event): Promise<Response> {
   try {
     await server.connect(transport)
     return await transport.handleRequest(request)
-  }
-  catch (error) {
-    return jsonError(500, -32603, error instanceof Error ? error.message : 'Internal server error')
   }
   finally {
     try {
@@ -126,5 +84,56 @@ export async function handleMcpPost(event: H3Event): Promise<Response> {
     catch {
       // Same: the response is already settled.
     }
+  }
+}
+
+/**
+ * Serves a 2026-07-28 envelope request through the SDK entry's per-request
+ * transport; `responseMode: 'json'` keeps answers as plain JSON instead of
+ * holding an SSE stream open in the Worker.
+ */
+async function handleModernRequest(event: H3Event, request: Request): Promise<Response> {
+  const handler = createMcpHandler(() => createMcpServer(event), {
+    // Legacy traffic was already routed away; anything still classified as
+    // legacy here (e.g. a claim-less `server/discover`) is rejected cleanly.
+    legacy: 'reject',
+    responseMode: 'json',
+  })
+
+  try {
+    return await handler.fetch(request)
+  }
+  finally {
+    try {
+      await handler.close()
+    }
+    catch {
+      // Closing a per-request handler never fails the response.
+    }
+  }
+}
+
+/**
+ * Handles a `POST /api/mcp` request. `isLegacyRequest` is the same predicate the
+ * SDK entry runs internally, so it cannot disagree with the modern leg: 2025-era
+ * traffic keeps the stateless JSON contract above, while 2026-07-28 envelope
+ * traffic is served by `createMcpHandler`'s per-request transport.
+ */
+export async function handleMcpPost(event: H3Event): Promise<Response> {
+  if (!isAllowedOrigin(event))
+    return jsonError(403, -32600, 'Origin not allowed')
+
+  const request = toWebRequest(event)
+
+  if (!isJsonContentType(request.headers.get('content-type')))
+    return jsonError(415, -32600, 'Unsupported Media Type: Content-Type must be application/json')
+
+  try {
+    return await (await isLegacyRequest(request)
+      ? handleLegacyRequest(event, request)
+      : handleModernRequest(event, request))
+  }
+  catch (error) {
+    return jsonError(500, -32603, error instanceof Error ? error.message : 'Internal server error')
   }
 }

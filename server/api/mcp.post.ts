@@ -3,7 +3,7 @@ import { handleMcpPost } from '../services/mcp/server'
 defineRouteMeta({
   openAPI: {
     tags: ['MCP'],
-    description: 'Model Context Protocol endpoint (Streamable HTTP, stateless with JSON responses) served by the official @modelcontextprotocol/sdk. Accepts standard MCP messages such as initialize, tools/list, tools/call, and ping. A message without an `id` is a notification and is answered with 202.',
+    description: 'Model Context Protocol endpoint (Streamable HTTP, stateless with JSON responses) served by the official @modelcontextprotocol/server SDK v2. Accepts standard MCP messages such as initialize, tools/list, tools/call, and ping. A message without an `id` is a notification and is answered with 202.',
     security: [{ bearerAuth: [] }],
     requestBody: {
       required: true,

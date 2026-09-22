@@ -17,7 +17,7 @@ npx skills add miantiao-me/sink
 
 ## MCP Server
 
-Sink 在 `POST /api/mcp` 提供 Model Context Protocol 端点。它基于官方 [`@modelcontextprotocol/sdk`](https://www.npmjs.com/package/@modelcontextprotocol/sdk) 的无状态 Streamable HTTP 传输（JSON 响应），因此现有 MCP 客户端无需额外配置即可使用，旧协议版本由 SDK 自身的版本协商保持兼容。
+Sink 在 `POST /api/mcp` 提供 Model Context Protocol 端点。它基于官方 [`@modelcontextprotocol/server`](https://www.npmjs.com/package/@modelcontextprotocol/server) SDK v2 入口：新协议客户端走逐请求传输，2025 版旧客户端走无状态兼容回退（JSON 响应），均无需额外配置即可使用。
 
 该端点使用与 REST API 相同的 Bearer 令牌进行认证，无需单独的凭据。详见 [API 身份认证](/zh-CN/api/#身份认证)。
 

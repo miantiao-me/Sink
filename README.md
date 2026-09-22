@@ -139,7 +139,7 @@ npx skills add miantiao-me/sink
 
 ## 🧰 MCP
 
-Sink serves a built-in MCP endpoint at `POST /api/mcp`, using the official `@modelcontextprotocol/sdk` Streamable HTTP transport in stateless mode with JSON responses while remaining compatible with older clients through the SDK's version negotiation.
+Sink serves a built-in MCP endpoint at `POST /api/mcp`, using the official `@modelcontextprotocol/server` SDK v2, serving modern clients over the per-request transport and 2025-era clients over a stateless fallback with JSON responses.
 
 > Replace the domain below with your own instance, and use the `NUXT_SITE_TOKEN` from your instance's environment variables as the bearer token.
 
