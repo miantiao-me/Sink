@@ -4,8 +4,8 @@ const listQueryLimit = +useRuntimeConfig().listQueryLimit
 
 export const QuerySchema = z.object({
   id: z.string().optional(),
-  startAt: z.coerce.number().int().safe().optional(),
-  endAt: z.coerce.number().int().safe().optional(),
+  startAt: z.coerce.number().int().safe().optional().describe('Start of the window, unix seconds.'),
+  endAt: z.coerce.number().int().safe().optional().describe('End of the window, unix seconds.'),
   url: z.string().optional(),
   slug: z.string().optional(),
   referer: z.string().optional(),

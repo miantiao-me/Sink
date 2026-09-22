@@ -39,6 +39,9 @@
     "postinstall": "pnpm build:map && nuxt prepare",
     "prepare": "simple-git-hooks"
   },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.30.0"
+  },
   "devDependencies": {
     "@antfu/eslint-config": "^9.1.0",
     "@cloudflare/vitest-pool-workers": "^0.18.4",
