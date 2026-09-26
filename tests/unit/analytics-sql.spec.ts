@@ -69,9 +69,16 @@ describe('analytics SQL compiler', () => {
     expect(compiled).not.toContain('?')
   })
 
+  it('quotes hyphenated dataset names', () => {
+    const query = createAnalyticsQuery('sink-site-a')
+      .select(sql<number>`SUM(_sample_interval)`.as('visits'))
+
+    expect(compileAnalyticsQuery(query)).toBe('select SUM(_sample_interval) as visits from "sink-site-a"')
+  })
+
   it.each([
     'sink.events',
-    'sink-events',
+    '"sink"',
     'sink as analytics',
     'sink;drop',
     '`sink`',
