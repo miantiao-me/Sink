@@ -71,11 +71,11 @@ description: Sink 支持的全部环境变量——做什么、填在哪、什�
 
 Workers 要在 Builds 和运行时填相同值。Pages 只填一次，然后重新部署。
 
-| 变量                              | 默认 | 用途                                 |
-| --------------------------------- | ---- | ------------------------------------ |
-| `NUXT_PUBLIC_PREVIEW_MODE`        | 空   | `true` = 演示模式（链接只活 5 分钟） |
-| `NUXT_PUBLIC_SLUG_DEFAULT_LENGTH` | `6`  | 自动生成短链码的长度                 |
-| `NUXT_PUBLIC_KV_BATCH_LIMIT`      | `50` | 导出每页条数；导入每次最多一半       |
+| 变量                              | 默认    | 用途                                 |
+| --------------------------------- | ------- | ------------------------------------ |
+| `NUXT_PUBLIC_PREVIEW_MODE`        | 空      | `true` = 演示模式（链接只活 5 分钟） |
+| `NUXT_PUBLIC_SLUG_DEFAULT_LENGTH` | `6`     | 自动生成短链码的长度                 |
+| `NUXT_PUBLIC_KV_BATCH_LIMIT`      | `50`    | 导出每页条数；导入每次最多一半       |
 | `NUXT_PUBLIC_MAX_URL_LENGTH`      | `16384` | 目标 URL 最大字符数（256-24000）     |
 
 ## 可选配置
@@ -110,7 +110,7 @@ Workers 要在 Builds 和运行时填相同值。Pages 只填一次，然后重�
 | `NUXT_LINK_CACHE_TTL`         | `60`                         | KV 缓存链接的秒数                                                                        |
 | `NUXT_REDIRECT_WITH_QUERY`    | `false`                      | `true` 时把访客查询参数接到目标 URL                                                      |
 | `NUXT_REDIRECT_NO_STORE`      | `false`                      | `true` 时要求浏览器不要缓存这次跳转                                                      |
-| `NUXT_PROXY_ENABLED`          | `true`                       | `false` 时关闭反向代理模式，代理链接回退为普通跳转                                          |
+| `NUXT_LINK_PROXY_ENABLED`     | `false`                      | `true` 时允许链接开启反向代理模式；关闭时存量代理链接回退为普通跳转                      |
 | `NUXT_CASE_SENSITIVE`         | `false`                      | `true` 时自定义短链码区分大小写（`Docs` ≠ `docs`）                                       |
 | `NUXT_DATASET`                | `sink`                       | 访问分析数据集名；必须与 `ANALYTICS` 绑定一致                                            |
 | `NUXT_LIST_QUERY_LIMIT`       | `500`                        | 分析列表最大行数                                                                         |

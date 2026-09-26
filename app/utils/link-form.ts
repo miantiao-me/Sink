@@ -69,6 +69,7 @@ export function normalizeLinkFormSubmitPayload(value: DashboardLinkFormData, isE
     title: value.title || undefined,
     description: value.description || undefined,
     image: value.image || undefined,
+    // Exclusivity is enforced by the visible switches; a hidden stored proxy must not rewrite cloaking.
     cloaking: value.cloaking,
     redirectWithQuery: value.redirectWithQuery,
     proxy: value.proxy,

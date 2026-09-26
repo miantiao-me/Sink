@@ -10,7 +10,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     return
 
   try {
-    const { homeRedirect } = await usePublicConfig()
+    const { homeRedirect } = await fetchPublicConfig()
     if (homeRedirect)
       return navigateTo('/', { external: true })
   }

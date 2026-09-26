@@ -99,6 +99,13 @@ describe('link form submit payload', () => {
     expect(payload.password).toBeUndefined()
   })
 
+  it('passes proxy and cloaking through untouched; exclusivity belongs to the visible switches', () => {
+    expect(normalizeLinkFormSubmitPayload(formValues({ proxy: true, cloaking: true }), true))
+      .toMatchObject({ proxy: true, cloaking: true })
+    expect(normalizeLinkFormSubmitPayload(formValues({ cloaking: true }), false))
+      .toMatchObject({ cloaking: true, proxy: false })
+  })
+
   it('normalizes geo rows into the current record representation', () => {
     const payload = normalizeLinkFormSubmitPayload(formValues({
       geo: [

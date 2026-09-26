@@ -1,6 +1,7 @@
 import { env } from 'cloudflare:workers'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import { deleteStoredLinks, expectMaskedPassword, expectStoredHashedPassword, fetch, fetchWithAuth, getStoredLink, postJson, putJson, setLinkStoreD1Mode } from '../utils'
+import { links } from '../../server/database/schema'
+import { db, deleteStoredLinks, expectMaskedPassword, expectStoredHashedPassword, fetch, fetchWithAuth, getStoredLink, postJson, putJson, setLinkStoreD1Mode } from '../utils'
 
 const createdSlugs = new Set<string>()
 
@@ -434,21 +435,28 @@ describe('/api/link/edit', { concurrent: false }, () => {
     const payload = createLinkPayload()
     expect((await postJson('/api/link/create', payload)).status).toBe(201)
 
-    const setResponse = await putJson('/api/link/edit', {
-      ...payload,
-      comment: 'test comment',
-      title: 'test title',
-      cloaking: true,
-      redirectWithQuery: true,
-      proxy: true,
-    })
-    expect(setResponse.status).toBe(201)
-    const setData = await setResponse.json() as { link: { comment?: string, title?: string, cloaking?: boolean, redirectWithQuery?: boolean, proxy?: boolean } }
-    expect(setData.link.comment).toBe('test comment')
-    expect(setData.link.title).toBe('test title')
-    expect(setData.link.cloaking).toBe(true)
-    expect(setData.link.redirectWithQuery).toBe(true)
-    expect(setData.link.proxy).toBe(true)
+    // Setting `proxy` requires the instance flag; restore the default after.
+    env.NUXT_LINK_PROXY_ENABLED = 'true'
+    try {
+      const setResponse = await putJson('/api/link/edit', {
+        ...payload,
+        comment: 'test comment',
+        title: 'test title',
+        cloaking: true,
+        redirectWithQuery: true,
+        proxy: true,
+      })
+      expect(setResponse.status).toBe(201)
+      const setData = await setResponse.json() as { link: { comment?: string, title?: string, cloaking?: boolean, redirectWithQuery?: boolean, proxy?: boolean } }
+      expect(setData.link.comment).toBe('test comment')
+      expect(setData.link.title).toBe('test title')
+      expect(setData.link.cloaking).toBe(true)
+      expect(setData.link.redirectWithQuery).toBe(true)
+      expect(setData.link.proxy).toBe(true)
+    }
+    finally {
+      delete env.NUXT_LINK_PROXY_ENABLED
+    }
     const removeResponse = await putJson('/api/link/edit', payload)
     expect(removeResponse.status).toBe(201)
     const removeData = await removeResponse.json() as { link: { comment?: string, title?: string, cloaking?: boolean, redirectWithQuery?: boolean, proxy?: boolean } }
@@ -541,5 +549,114 @@ describe('/api/link/delete', { concurrent: false }, () => {
   it('returns 400 when slug is empty', async () => {
     const response = await postJson('/api/link/delete', { slug: '' })
     expect(response.status).toBe(400)
+  })
+})
+
+describe('link proxy write guard', { concurrent: false }, () => {
+  // The flag defaults to off; only tests that explicitly exercise the
+  // enabled contract set it, always restoring the default afterwards.
+
+  it('rejects create and upsert with proxy=true while the flag is off', async () => {
+    const createResponse = await postJson('/api/link/create', {
+      url: 'https://example.com/proxy',
+      slug: trackSlug(`proxy-create-${crypto.randomUUID()}`),
+      proxy: true,
+    })
+    expect(createResponse.status).toBe(403)
+
+    const upsertResponse = await postJson('/api/link/upsert', {
+      url: 'https://example.com/proxy',
+      slug: trackSlug(`proxy-upsert-${crypto.randomUUID()}`),
+      proxy: true,
+    })
+    expect(upsertResponse.status).toBe(403)
+  })
+
+  it('rejects upsert with proxy=true even when the slug already exists', async () => {
+    const payload = createLinkPayload()
+    expect((await postJson('/api/link/create', payload)).status).toBe(201)
+
+    const response = await postJson('/api/link/upsert', { ...payload, proxy: true })
+    expect(response.status).toBe(403)
+  })
+
+  it('rejects editing a plain link to proxy=true while the flag is off', async () => {
+    const payload = createLinkPayload()
+    expect((await postJson('/api/link/create', payload)).status).toBe(201)
+
+    const response = await putJson('/api/link/edit', { ...payload, proxy: true })
+    expect(response.status).toBe(403)
+    expect((await getStoredLink(payload.slug))?.proxy).toBeUndefined()
+  })
+
+  it('fails only the imported items that request proxy=true', async () => {
+    const okSlug = trackSlug(`import-ok-${crypto.randomUUID()}`)
+    const proxySlug = `import-proxy-${crypto.randomUUID()}`
+
+    const response = await postJson('/api/link/import', {
+      version: '1.0',
+      links: [
+        { url: 'https://example.com/plain', slug: okSlug },
+        { url: 'https://example.com/proxied', slug: proxySlug, proxy: true },
+      ],
+    })
+    expect(response.status).toBe(200)
+
+    const data = await response.json() as { success: number, failed: number, failedItems: { slug: string, reason: string }[] }
+    expect(data.success).toBe(1)
+    expect(data.failed).toBe(1)
+    expect(data.failedItems[0]?.slug).toBe(proxySlug)
+    expect(data.failedItems[0]?.reason).toContain('proxy')
+    expect(await getStoredLink(proxySlug)).toBeNull()
+  })
+
+  it('lets edits keep or clear a stored proxy flag while the flag is off', async () => {
+    const slug = trackSlug(`legacy-proxy-${crypto.randomUUID()}`)
+    const id = `legacy-${crypto.randomUUID().slice(0, 8)}`
+    const now = Math.floor(Date.now() / 1000)
+    await db.insert(links).values({
+      slug,
+      id,
+      url: 'https://example.com/legacy',
+      createdAt: now,
+      updatedAt: now,
+      proxy: true,
+      normalizedUrl: 'https://example.com/legacy',
+    })
+    await env.KV.put(`link:${slug}`, JSON.stringify({ slug, id, url: 'https://example.com/legacy', createdAt: now, updatedAt: now, proxy: true, tags: [] }))
+
+    const keepResponse = await putJson('/api/link/edit', {
+      url: 'https://example.com/legacy',
+      slug,
+      proxy: true,
+      comment: 'kept proxy flag',
+    })
+    expect(keepResponse.status).toBe(201)
+    const keepData = await keepResponse.json() as { link: { proxy?: boolean, comment?: string } }
+    expect(keepData.link.proxy).toBe(true)
+    expect(keepData.link.comment).toBe('kept proxy flag')
+
+    const clearResponse = await putJson('/api/link/edit', {
+      url: 'https://example.com/legacy',
+      slug,
+      proxy: false,
+    })
+    expect(clearResponse.status).toBe(201)
+    const clearData = await clearResponse.json() as { link: { proxy?: boolean } }
+    expect(clearData.link.proxy).toBe(false)
+  })
+
+  it('allows proxy writes when NUXT_LINK_PROXY_ENABLED=true', async () => {
+    env.NUXT_LINK_PROXY_ENABLED = 'true'
+    try {
+      const payload = createLinkPayload()
+      const response = await postJson('/api/link/create', { ...payload, proxy: true })
+      expect(response.status).toBe(201)
+      const data = await response.json() as { link: { proxy?: boolean } }
+      expect(data.link.proxy).toBe(true)
+    }
+    finally {
+      delete env.NUXT_LINK_PROXY_ENABLED
+    }
   })
 })

@@ -30,6 +30,24 @@ const { t, locale } = useI18n()
 
 type GeoRoute = DashboardLinkFormData['geo'][number]
 
+const linkProxyEnabled = ref(false)
+
+// Hidden until `/_config` explicitly enables link proxying; stays hidden on failure.
+void fetchPublicConfig()
+  .then(isLinkProxyEnabled)
+  .catch(() => false)
+  .then((enabled) => {
+    linkProxyEnabled.value = enabled
+  })
+
+// Proxy and cloaking are exclusive delivery modes; enabling one turns the other off.
+// A hidden proxy switch keeps its stored value instead of being cleared by cloaking.
+function handleExclusiveSwitch(field: AnyFieldApi, exclusiveField: 'cloaking' | 'proxy', value: boolean) {
+  field.handleChange(value)
+  if (value && (exclusiveField === 'cloaking' || linkProxyEnabled.value))
+    props.form.setFieldValue(exclusiveField, false)
+}
+
 function updateGeoRoute(routes: GeoRoute[], index: number | string, value: Partial<GeoRoute>) {
   const targetIndex = Number(index)
   return routes.map((route, routeIndex) => routeIndex === targetIndex ? { ...route, ...value } : route)
@@ -103,19 +121,21 @@ async function aiOg() {
               :model-value="field.state.value"
               :label="$t('links.form.cloaking_label')"
               :description="$t('links.form.cloaking_description')"
-              @update:model-value="field.handleChange"
+              @update:model-value="handleExclusiveSwitch(field, 'proxy', $event)"
             />
           </props.form.Field>
 
-          <props.form.Field v-slot="{ field }" name="proxy">
-            <DashboardLinksEditorFieldSwitch
-              :id="`${idPrefix}-${field.name}`"
-              :model-value="field.state.value"
-              :label="$t('links.form.proxy_label')"
-              :description="$t('links.form.proxy_description')"
-              @update:model-value="field.handleChange"
-            />
-          </props.form.Field>
+          <template v-if="linkProxyEnabled">
+            <props.form.Field v-slot="{ field }" name="proxy">
+              <DashboardLinksEditorFieldSwitch
+                :id="`${idPrefix}-${field.name}`"
+                :model-value="field.state.value"
+                :label="$t('links.form.proxy_label')"
+                :description="$t('links.form.proxy_description')"
+                @update:model-value="handleExclusiveSwitch(field, 'cloaking', $event)"
+              />
+            </props.form.Field>
+          </template>
 
           <props.form.Field v-slot="{ field }" name="unsafe">
             <DashboardLinksEditorFieldSwitch

@@ -108,6 +108,8 @@ Content-Type: application/json
 **Required**: `slug` (identifies which link to edit), `url`
 **Optional**: other fields to update
 
+> Omitted fields are cleared, so send the full record. Set `"password": ""` to remove password protection; omitting `password` keeps the stored one.
+
 **Response** (201): Same as create
 
 **Errors**: 404 (not found)

@@ -58,7 +58,7 @@ claude mcp add --transport http sink https://your-domain/api/mcp --header "Autho
 | `get_analytics_views`    | 按分钟、小时或天分桶的访问量与访客数。      |
 | `get_analytics_metrics`  | 某个访问日志维度的 Top 值。                 |
 
-写入类工具与 REST API 一样遵循 `NUXT_PUBLIC_PREVIEW_MODE` 和 KV 到 D1 的迁移门控；分析类工具读取与仪表盘相同的采样访问日志，因此结果为估算值。
+写入类工具与 REST API 一样遵循 `NUXT_PUBLIC_PREVIEW_MODE` 和 KV 到 D1 的迁移门控；分析类工具读取与仪表盘相同的采样访问日志，因此结果为估算值。对 `update_link`，`password` 传空字符串会清除访问密码，省略则保留原有密码。
 
 该端点位于 `/api/` 之下，因此不占用短链接命名空间：slug 不能包含斜杠，所以没有短链接会遮蔽它，也无需保留 slug。升级不会夺走实例上已在使用的任何 slug。
 

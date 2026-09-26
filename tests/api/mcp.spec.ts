@@ -1,5 +1,6 @@
-import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { deleteStoredLinks, fetch, fetchWithAuth, setLinkStoreD1Mode } from '../utils'
+import { env } from 'cloudflare:workers'
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { clearLinkMigrationState, deleteStoredLinks, expectStoredHashedPassword, fetch, fetchWithAuth, getStoredLink, setLinkStoreD1Mode } from '../utils'
 
 const MCP_PATH = '/api/mcp'
 const PROTOCOL_VERSION = '2025-11-25'
@@ -194,6 +195,24 @@ describe('/api/mcp handshake', () => {
     expect(createTool.inputSchema.required).toContain('url')
     expect(createTool.annotations.readOnlyHint).toBe(false)
   })
+
+  it('advertises schemas that match the parsed contracts', async () => {
+    const payload = await readEnvelope(await postRpc(1, 'tools/list'))
+    const tools = Object.fromEntries(
+      payload.result?.tools.map((tool: { name: string, inputSchema: any }) => [tool.name, tool.inputSchema]),
+    )
+
+    // update_link parses with the edit contract, where password may be cleared.
+    expect(tools.update_link.required).toEqual(expect.arrayContaining(['url', 'slug']))
+    // create/upsert parse with the create contract, which accepts proxy.
+    expect(Object.keys(tools.create_link.properties)).toEqual(expect.arrayContaining(['url', 'proxy', 'password']))
+    expect(Object.keys(tools.upsert_link.properties)).toEqual(expect.arrayContaining(['url', 'proxy', 'password']))
+    // Only the paginated metrics tool advertises a row limit.
+    expect(tools.get_analytics_counters.properties.limit).toBeUndefined()
+    expect(tools.get_analytics_views.properties.limit).toBeUndefined()
+    expect(tools.get_analytics_metrics.properties.limit).toBeDefined()
+    expect(tools.get_analytics_metrics.required).toContain('type')
+  })
 })
 
 describe('/api/mcp tools', () => {
@@ -255,6 +274,73 @@ describe('/api/mcp tools', () => {
     const { payload: tagged } = await callTool('list_tags', {})
     expect(Array.isArray(tagged.result?.structuredContent.tags)).toBe(true)
   })
+
+  it('clears link protection when update_link sends an empty password', async () => {
+    const slug = trackSlug(`mcp-${crypto.randomUUID()}`)
+    const created = await callTool('create_link', { url: 'https://example.com/mcp-password', slug, password: 'secret123' })
+    expect(created.payload.result?.isError).toBeUndefined()
+    await expectStoredHashedPassword(slug, 'secret123')
+
+    const updated = await callTool('update_link', { url: 'https://example.com/mcp-password', slug, password: '' })
+    expect(updated.payload.result?.isError).toBeUndefined()
+    expect((await getStoredLink(slug))?.password).toBeUndefined()
+
+    // Omitting the field afterwards keeps it cleared instead of restoring one.
+    const kept = await callTool('update_link', { url: 'https://example.com/mcp-password', slug })
+    expect(kept.payload.result?.isError).toBeUndefined()
+    expect((await getStoredLink(slug))?.password).toBeUndefined()
+  })
+})
+
+describe('/api/mcp analytics tools', () => {
+  it.each([
+    ['get_analytics_counters', { slug: 'abc' }],
+    ['get_analytics_views', { unit: 'day', clientTimezone: 'Asia/Shanghai' }],
+    ['get_analytics_metrics', { type: 'browser', limit: 5 }],
+  ] as const)('answers %s with the WAE result shape', async (tool, args) => {
+    const { response, payload } = await callTool(tool, args)
+    expect(response.status).toBe(200)
+    expect(payload.result?.isError).toBeUndefined()
+    expect(payload.result?.structuredContent.data).toEqual(expect.any(Array))
+  })
+
+  it.each([
+    ['get_analytics_views', {}, 'unit'],
+    ['get_analytics_metrics', {}, 'type'],
+  ] as const)('rejects %s without its required argument', async (tool, args, field) => {
+    const { payload } = await callTool(tool, args)
+    expect(payload.result?.isError).toBe(true)
+    expect(payload.result?.content[0].text).toContain(field)
+  })
+})
+
+describe('link store gate', () => {
+  // The gate sits in middleware for the REST link routes while the MCP tools
+  // reach the store through the same assertion inside their handlers.
+  it('locks link tools but not analytics while migration is pending', async () => {
+    await clearLinkMigrationState()
+
+    const { payload: locked } = await callTool('list_links', {})
+    expect(locked.result?.isError).toBe(true)
+    expect(locked.result?.content[0].text).toContain('423')
+
+    const { payload: counters } = await callTool('get_analytics_counters', {})
+    expect(counters.result?.isError).toBeUndefined()
+    expect(counters.result?.structuredContent.data).toEqual(expect.any(Array))
+  })
+
+  it('locks REST link store routes but leaves store-free link APIs open', async () => {
+    await clearLinkMigrationState()
+
+    expect((await fetchWithAuth('/api/link/list')).status).toBe(423)
+
+    const runSpy = vi.spyOn(env.AI, 'run').mockRejectedValue(new Error('Workers AI unavailable'))
+    const toMarkdownSpy = vi.spyOn(env.AI, 'toMarkdown').mockRejectedValue(new Error('Markdown conversion unavailable'))
+    const response = await fetchWithAuth(`/api/link/ai?url=${encodeURIComponent('https://example.com/gate-check')}`)
+    expect(response.status).toBe(200)
+    runSpy.mockRestore()
+    toMarkdownSpy.mockRestore()
+  })
 })
 
 describe('/api/mcp path normalization', () => {
@@ -268,6 +354,53 @@ describe('/api/mcp path normalization', () => {
       path,
     )
     expect(response.status).toBe(status)
+  })
+})
+
+describe('/api/mcp link proxy guard', () => {
+  // The MCP write tools share the same business guard as the REST routes via
+  // link-processing; with NUXT_LINK_PROXY_ENABLED unset they must refuse to
+  // turn proxy on.
+  it('rejects create_link and upsert_link with proxy=true while the flag is off', async () => {
+    const created = await callTool('create_link', {
+      url: 'https://example.com/mcp-proxy',
+      slug: trackSlug(`mcp-proxy-${crypto.randomUUID()}`),
+      proxy: true,
+    })
+    expect(created.payload.result?.isError).toBe(true)
+    expect(created.payload.result?.content[0].text).toContain('403')
+
+    const upserted = await callTool('upsert_link', {
+      url: 'https://example.com/mcp-proxy',
+      slug: trackSlug(`mcp-proxy-${crypto.randomUUID()}`),
+      proxy: true,
+    })
+    expect(upserted.payload.result?.isError).toBe(true)
+    expect(upserted.payload.result?.content[0].text).toContain('403')
+  })
+
+  it('rejects update_link turning proxy on while the flag is off', async () => {
+    const slug = trackSlug(`mcp-proxy-${crypto.randomUUID()}`)
+    const created = await callTool('create_link', { url: 'https://example.com/mcp-plain', slug })
+    expect(created.payload.result?.isError).toBeUndefined()
+
+    const updated = await callTool('update_link', { url: 'https://example.com/mcp-plain', slug, proxy: true })
+    expect(updated.payload.result?.isError).toBe(true)
+    expect(updated.payload.result?.content[0].text).toContain('403')
+    expect((await getStoredLink(slug))?.proxy).toBeUndefined()
+  })
+
+  it('allows proxy writes when NUXT_LINK_PROXY_ENABLED=true', async () => {
+    env.NUXT_LINK_PROXY_ENABLED = 'true'
+    try {
+      const slug = trackSlug(`mcp-proxy-${crypto.randomUUID()}`)
+      const created = await callTool('create_link', { url: 'https://example.com/mcp-proxy', slug, proxy: true })
+      expect(created.payload.result?.isError).toBeUndefined()
+      expect(created.payload.result?.structuredContent.link.proxy).toBe(true)
+    }
+    finally {
+      delete env.NUXT_LINK_PROXY_ENABLED
+    }
   })
 })
 

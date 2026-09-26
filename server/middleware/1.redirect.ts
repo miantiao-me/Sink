@@ -1,6 +1,7 @@
 import type { H3Event } from 'h3'
 import type { Link } from '@/types'
 import { parsePath, withQuery } from 'ufo'
+import { proxyLinkRequest } from '../services/link-proxy'
 
 const SOCIAL_BOTS = [
   'applebot',
@@ -48,91 +49,91 @@ function hasOgConfig(link: Link): boolean {
   return !!(link.title || link.image)
 }
 
-// Proxy mode forwards only these standard headers plus `x-*` extension headers
-// (webhook signatures, custom API keys). Credentials-bearing headers like
-// cookie, authorization, and cf-access-* never leave the Sink origin.
-const PROXY_FORWARD_HEADERS = new Set([
-  'accept',
-  'accept-language',
-  'cache-control',
-  'content-type',
-  'if-match',
-  'if-modified-since',
-  'if-none-match',
-  'if-range',
-  'if-unmodified-since',
-  'pragma',
-  'range',
-  'user-agent',
-])
+// Form confirmations on proxied links must never be forwarded upstream: the
+// body contains the link password, and the request stream was already consumed.
+// After a successful POST we grant a short-lived HttpOnly cookie scoped to the
+// slug and answer 303 so the browser retries as a plain GET.
+//
+// Cookie value: `<grant>.<expiresAt>.<hmac>` where grant is 'p' (password ok),
+// 'u' (unsafe confirmed) or 'pu' (both). The HMAC is keyed by the site token
+// over the slug, grant, expiry, link.updatedAt and current password — so any
+// edit to the link, a password rotation, or the expiry itself invalidates the
+// grant. Signature checks go through crypto.subtle.verify.
+type ProxyGateGrant = 'p' | 'u' | 'pu'
 
-const PROXY_BLOCKED_EXTENSION_PREFIXES = ['x-forwarded-', 'x-link-']
-const PROXY_BLOCKED_EXTENSION_HEADERS = new Set(['x-real-ip'])
+const PROXY_GATE_COOKIE_TTL = 3600
 
-function isProxyForwardHeader(name: string): boolean {
-  if (PROXY_FORWARD_HEADERS.has(name))
-    return true
-  return name.startsWith('x-')
-    && !PROXY_BLOCKED_EXTENSION_PREFIXES.some(prefix => name.startsWith(prefix))
-    && !PROXY_BLOCKED_EXTENSION_HEADERS.has(name)
+function proxyGateCookieName(slug: string): string {
+  return `pw_${slug}`
 }
 
-// Hop-by-hop and origin-leaking headers are never reflected to the client.
-const PROXY_SKIPPED_RESPONSE_HEADERS = new Set([
-  'connection',
-  'content-encoding',
-  'content-length',
-  'keep-alive',
-  'proxy-authenticate',
-  'set-cookie',
-  'te',
-  'trailer',
-  'transfer-encoding',
-  'upgrade',
-  'www-authenticate',
-])
+async function proxyGateSecret(event: H3Event): Promise<CryptoKey> {
+  const { siteToken } = useRuntimeConfig(event)
+  return await crypto.subtle.importKey(
+    'raw',
+    new TextEncoder().encode(`sink-link-gate:${siteToken}`),
+    { name: 'HMAC', hash: 'SHA-256' },
+    false,
+    ['sign', 'verify'],
+  )
+}
 
-async function proxyLinkRequest(event: H3Event, targetUrl: string) {
-  if (!isPublicHttpUrl(targetUrl))
-    throw createError({ status: 403, statusText: 'Proxy target is not allowed' })
+function toHex(bytes: ArrayBuffer | Uint8Array): string {
+  return [...new Uint8Array(bytes instanceof Uint8Array ? bytes : bytes)].map(b => b.toString(16).padStart(2, '0')).join('')
+}
 
-  const forwardHeaders = new Headers()
-  for (const [name, value] of Object.entries(getHeaders(event))) {
-    if (value !== undefined && isProxyForwardHeader(name.toLowerCase()))
-      forwardHeaders.set(name, value)
-  }
-  const clientIp = getHeader(event, 'cf-connecting-ip') || getHeader(event, 'x-forwarded-for')
-  if (clientIp)
-    forwardHeaders.set('x-forwarded-for', clientIp)
-  forwardHeaders.set('x-forwarded-proto', getRequestProtocol(event))
-  forwardHeaders.set('x-forwarded-host', getRequestHost(event))
+function fromHex(hex: string): Uint8Array<ArrayBuffer> {
+  const bytes = new Uint8Array(hex.length / 2)
+  for (let i = 0; i < bytes.length; i++)
+    bytes[i] = Number.parseInt(hex.slice(i * 2, i * 2 + 2), 16)
+  return bytes
+}
 
-  let targetResponse: Response
-  try {
-    targetResponse = await fetch(targetUrl, {
-      method: event.method,
-      headers: forwardHeaders,
-      body: ['GET', 'HEAD'].includes(event.method) ? undefined : await readRawBody(event),
-      redirect: 'follow',
-      signal: AbortSignal.timeout(30_000),
-    })
-  }
-  catch (cause) {
-    throw createError({ status: 502, statusText: 'Proxy request failed', cause })
+function gatePayload(slug: string, grant: string, expiresAt: number, link: Link): string {
+  return `${slug}.${grant}.${expiresAt}.${link.updatedAt}.${link.password ?? ''}`
+}
+
+async function signProxyGate(event: H3Event, slug: string, grant: ProxyGateGrant, link: Link): Promise<string> {
+  const expiresAt = Math.floor(Date.now() / 1000) + PROXY_GATE_COOKIE_TTL
+  const signature = await crypto.subtle.sign('HMAC', await proxyGateSecret(event), new TextEncoder().encode(gatePayload(slug, grant, expiresAt, link)))
+  return `${grant}.${expiresAt}.${toHex(signature)}`
+}
+
+async function readProxyGateCookie(event: H3Event, slug: string, link: Link): Promise<{ password: boolean, unsafe: boolean }> {
+  const denied = { password: false, unsafe: false }
+  const raw = getHeader(event, 'cookie') || ''
+  const match = raw.match(new RegExp(`(?:^|;\\s*)${proxyGateCookieName(slug)}=([^;]*)`))
+  const parts = match?.[1]?.split('.')
+  const grant = parts?.[0] ?? ''
+  const expiresAt = Number(parts?.[1])
+  const signature = parts?.length === 3 ? parts[2]! : ''
+  if (!/^(?:p|u|pu)$/.test(grant)
+    || !Number.isSafeInteger(expiresAt) || expiresAt <= 0
+    || !/^[\da-f]{64}$/.test(signature)) {
+    return denied
   }
 
-  setResponseStatus(event, targetResponse.status, targetResponse.statusText)
-  for (const [key, value] of targetResponse.headers.entries()) {
-    if (!PROXY_SKIPPED_RESPONSE_HEADERS.has(key.toLowerCase()))
-      setHeader(event, key, value)
-  }
-  return targetResponse.body
+  if (expiresAt <= Math.floor(Date.now() / 1000))
+    return denied
+
+  const payload = new TextEncoder().encode(gatePayload(slug, grant, expiresAt, link))
+  if (!await crypto.subtle.verify('HMAC', await proxyGateSecret(event), fromHex(signature), payload))
+    return denied
+
+  return { password: grant.includes('p'), unsafe: grant.includes('u') }
+}
+
+async function grantProxyGateAndRedirect(event: H3Event, slug: string, grant: ProxyGateGrant, link: Link) {
+  const value = await signProxyGate(event, slug, grant, link)
+  setHeader(event, 'Set-Cookie', `${proxyGateCookieName(slug)}=${value}; Path=/${slug}; HttpOnly; Secure; SameSite=Lax; Max-Age=${PROXY_GATE_COOKIE_TTL}`)
+  setHeader(event, 'Cache-Control', 'no-store')
+  return sendRedirect(event, `/${slug}`, 303)
 }
 
 export default eventHandler(async (event) => {
   const { pathname: slug } = parsePath(event.path.replace(/^\/|\/$/g, ''))
   const { slugRegex, reserveSlug } = useAppConfig()
-  const { homeURL, linkCacheTtl, caseSensitive, redirectWithQuery, redirectStatusCode, redirectNoStore, proxyEnabled } = useRuntimeConfig(event)
+  const { homeURL, linkCacheTtl, caseSensitive, redirectWithQuery, redirectStatusCode, redirectNoStore, linkProxyEnabled } = useRuntimeConfig(event)
   const { cloudflare } = event.context
 
   if (event.path === '/' && homeURL)
@@ -181,29 +182,69 @@ export default eventHandler(async (event) => {
       const deviceRedirectUrl = getDeviceRedirectUrl(userAgent, link)
       const finalTargetUrl = deviceRedirectUrl ?? targetUrl
 
+      // Reverse proxying is opt-in per link AND requires the instance flag
+      // (NUXT_LINK_PROXY_ENABLED). With the flag off, stored proxy links keep
+      // their data and degrade to plain redirects.
+      const isProxyLink = !!link.proxy && !!linkProxyEnabled
+      const gate = { password: false, unsafe: false }
+
+      // Grant cookies are only honored on safe methods; everything else must
+      // authenticate per-request via header or form POST.
+      if (isProxyLink && (event.method === 'GET' || event.method === 'HEAD')) {
+        const granted = await readProxyGateCookie(event, slug, link)
+        gate.password = granted.password
+        gate.unsafe = granted.unsafe
+      }
+
+      // Header credentials win on POST so authenticated clients can stream
+      // JSON/binary bodies straight through: x-link-password authenticates and
+      // x-link-confirm: true carries the unsafe confirmation. The form body is
+      // only consumed for form POSTs without header auth — every other POST
+      // body must stay unread so it can be proxied upstream.
+      const headerPassword = getHeader(event, 'x-link-password')
+      const headerConfirmed = getHeader(event, 'x-link-confirm') === 'true'
+      const consumesFormPost = event.method === 'POST'
+        && (!isProxyLink || (!headerPassword && !headerConfirmed
+          && /^application\/(?:x-www-form-urlencoded|form-data)/i.test(getHeader(event, 'content-type') || '')))
+
       // Password protection check
       if (link.password) {
-        const headerPassword = getHeader(event, 'x-link-password')
-
-        if (event.method === 'POST') {
+        if (event.method === 'POST' && consumesFormPost) {
           const body = await readBody(event)
           const submittedPassword = typeof body?.password === 'string' ? body.password : ''
+          // A confirm-only POST may rely on a still-valid 'p' grant cookie
+          // (issued by an earlier password form round-trip on proxied links).
+          const cookieGrant = isProxyLink && !submittedPassword
+            ? await readProxyGateCookie(event, slug, link)
+            : null
+          const passwordOk = await verifyLinkPassword(submittedPassword, link.password) || !!cookieGrant?.password
 
-          if (!await verifyLinkPassword(submittedPassword, link.password)) {
+          if (!passwordOk) {
             return sendNoStoreHtml(generatePasswordHtml(slug, { hasError: true, locale: getLocale() }))
           }
 
           // Password correct - show unsafe warning if needed
           if (link.unsafe && body?.confirm !== 'true') {
-            return sendNoStoreHtml(generateUnsafeWarningHtml(slug, finalTargetUrl, { password: submittedPassword, locale: getLocale() }))
+            return sendNoStoreHtml(generateUnsafeWarningHtml(slug, finalTargetUrl, { password: submittedPassword || undefined, locale: getLocale() }))
           }
+
+          if (isProxyLink)
+            return await grantProxyGateAndRedirect(event, slug, link.unsafe ? 'pu' : 'p', link)
+        }
+        else if (event.method === 'POST' && isProxyLink && !headerPassword) {
+          // A proxied POST without header auth must not have its body consumed;
+          // it cannot be authenticated by form, so it is denied outright.
+          throw createError({ status: 403, statusText: 'Password required' })
+        }
+        else if (gate.password) {
+          // Valid proxy gate cookie; nothing more to check here
         }
         else if (headerPassword) {
           if (!await verifyLinkPassword(headerPassword, link.password)) {
             throw createError({ status: 403, statusText: 'Incorrect password' })
           }
           // Header-password path: check unsafe warning via x-link-confirm header
-          if (link.unsafe && getHeader(event, 'x-link-confirm') !== 'true') {
+          if (link.unsafe && !headerConfirmed) {
             throw createError({ status: 403, statusText: 'Unsafe link: confirmation required (set x-link-confirm: true header)' })
           }
         }
@@ -212,11 +253,24 @@ export default eventHandler(async (event) => {
         }
       }
 
+      // Cookie-granted visitors skipping the password form still have to
+      // confirm unsafe links once.
+      if (link.password && link.unsafe && gate.password && !gate.unsafe) {
+        return sendNoStoreHtml(generateUnsafeWarningHtml(slug, finalTargetUrl, { locale: getLocale() }))
+      }
+
       // Unsafe link warning (for links without password)
-      if (!link.password && link.unsafe) {
+      if (!link.password && link.unsafe && !gate.unsafe && !headerConfirmed) {
         if (event.method === 'POST') {
+          if (isProxyLink && !consumesFormPost) {
+            throw createError({ status: 403, statusText: 'Unsafe link: confirmation required (set x-link-confirm: true header)' })
+          }
           const body = await readBody(event)
-          if (body?.confirm !== 'true') {
+          if (body?.confirm === 'true') {
+            if (isProxyLink)
+              return await grantProxyGateAndRedirect(event, slug, 'u', link)
+          }
+          else {
             return sendNoStoreHtml(generateUnsafeWarningHtml(slug, finalTargetUrl, { locale: getLocale() }))
           }
         }
@@ -255,8 +309,10 @@ export default eventHandler(async (event) => {
           setHeader(event, 'Cache-Control', 'no-store')
         return sendRedirect(event, finalTargetUrl, +redirectStatusCode)
       }
-      if (link.proxy && proxyEnabled !== false)
-        return await proxyLinkRequest(event, finalTargetUrl)
+      if (isProxyLink) {
+        const gated = !!(link.password || link.unsafe)
+        return sendWebResponse(event, await proxyLinkRequest(event, finalTargetUrl, { privateCache: gated }))
+      }
 
       if (isSocialBot(userAgent) && hasOgConfig(link)) {
         const baseUrl = `${getRequestProtocol(event)}://${getRequestHost(event)}`

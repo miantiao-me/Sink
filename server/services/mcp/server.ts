@@ -1,6 +1,6 @@
 import type { McpServer } from '@modelcontextprotocol/server'
 import type { H3Event } from 'h3'
-import { createMcpHandler, isJsonContentType, McpServer as SdkMcpServer } from '@modelcontextprotocol/server'
+import { createMcpHandler, McpServer as SdkMcpServer } from '@modelcontextprotocol/server'
 import { getHeader, getRequestHost, toWebRequest } from 'h3'
 import { version } from '../../../package.json'
 import { registerMcpTools } from './tools'
@@ -59,28 +59,23 @@ function jsonError(status: number, code: number, message: string): Response {
  * 2026-07-28 envelope traffic runs on the per-request transport while
  * `legacy: 'stateless'` keeps 2025-era clients working on a fresh
  * `sessionIdGenerator: undefined` transport per request — no session is ever
- * minted. `responseMode: 'json'` avoids holding SSE streams open for modern
- * exchanges; legacy answers follow the 2025 streamable-HTTP contract.
+ * minted. The SDK itself rejects non-JSON bodies (415) and bad versions, and
+ * its default `auto` response mode answers every exchange here as a single
+ * JSON body because no Sink tool emits mid-call messages. Transport-level
+ * failures are reported through `onerror` and answered as a fixed
+ * `Internal server error` JSON-RPC response.
  */
 export async function handleMcpRequest(event: H3Event): Promise<Response> {
   if (!isAllowedOrigin(event))
     return jsonError(403, -32600, 'Origin not allowed')
 
-  const request = toWebRequest(event)
-
-  if (!isJsonContentType(request.headers.get('content-type')))
-    return jsonError(415, -32600, 'Unsupported Media Type: Content-Type must be application/json')
-
   const handler = createMcpHandler(() => createMcpServer(event), {
     legacy: 'stateless',
-    responseMode: 'json',
+    onerror: error => console.error('[mcp]', error),
   })
 
   try {
-    return await handler.fetch(request)
-  }
-  catch (error) {
-    return jsonError(500, -32603, error instanceof Error ? error.message : 'Internal server error')
+    return await handler.fetch(toWebRequest(event))
   }
   finally {
     try {

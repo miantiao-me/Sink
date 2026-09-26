@@ -23,15 +23,33 @@ export interface LinkResponse {
 }
 
 /**
- * Preview instances accept reads but reject link mutations. The write
- * operations below enforce it, and the REST routes call it again up front so a
- * preview instance answers 403 without first validating the request body.
+ * Preview instances cap link lifetime instead of rejecting creation outright,
+ * so the guard only protects mutations of existing links (edit, delete, bulk
+ * import). The write operations below enforce it, and the REST routes call it
+ * again up front so a preview instance answers 403 without first validating
+ * the request body.
  */
 export function assertLinkWritesAllowed(event: H3Event, action: string): void {
   if (useRuntimeConfig(event).public.previewMode) {
     throw createError({
       status: 403,
       statusText: `Preview mode cannot ${action} links.`,
+    })
+  }
+}
+
+/**
+ * Reverse proxying requires NUXT_LINK_PROXY_ENABLED at the instance level.
+ * All write paths (create, upsert, import, edit, MCP tools) funnel through
+ * this guard: it refuses turning `proxy` on while the feature is disabled,
+ * but still lets a stored proxy link keep its flag across edits and lets
+ * callers explicitly clear it.
+ */
+export function assertLinkProxyWriteAllowed(event: H3Event, requestedProxy: boolean | undefined, existingProxy?: boolean): void {
+  if (requestedProxy === true && existingProxy !== true && !useRuntimeConfig(event).linkProxyEnabled) {
+    throw createError({
+      status: 403,
+      statusText: 'Link proxy mode is disabled on this instance.',
     })
   }
 }
@@ -88,6 +106,7 @@ async function applyEditableLinkPassword(newLink: Link, password?: string): Prom
 }
 
 export async function saveNewLink(event: H3Event, link: Link): Promise<LinkResponse> {
+  assertLinkProxyWriteAllowed(event, link.proxy)
   await prepareIncomingLink(event, link)
   await hashNewLinkPassword(link)
 
@@ -98,6 +117,7 @@ export async function saveNewLink(event: H3Event, link: Link): Promise<LinkRespo
 }
 
 export async function upsertLink(event: H3Event, link: Link): Promise<LinkResponse & { status: 'created' | 'existing' }> {
+  assertLinkProxyWriteAllowed(event, link.proxy)
   await prepareIncomingLink(event, link)
 
   const existingLink = await getAuthoritativeLink(event, link.slug)
@@ -123,6 +143,8 @@ export async function replaceLink(event: H3Event, link: EditLink): Promise<LinkR
   const existingLink = await getAnyAuthoritativeLink(event, link.slug)
   if (!existingLink)
     throw createError({ status: 404, statusText: 'Link not found' })
+
+  assertLinkProxyWriteAllowed(event, link.proxy, existingLink.proxy)
 
   if (link.url !== existingLink.url)
     await detectUnsafeLink(event, link)

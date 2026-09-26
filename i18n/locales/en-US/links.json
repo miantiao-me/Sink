@@ -78,7 +78,7 @@
       "redirect_with_query_label": "Redirect with Query Parameters",
       "redirect_with_query_description": "Append query parameters from the short link to the destination URL. Overrides global setting.",
       "cloaking_label": "Enable Link Cloaking",
-      "cloaking_description": "Show your short link in the browser address bar instead of the destination URL. May not work for sites that block iframe embedding.",
+      "cloaking_description": "Show your short link in the browser address bar instead of the destination URL. May not work for sites that block iframe embedding. Cannot be combined with reverse proxy.",
       "unsafe_label": "Mark as Unsafe",
       "unsafe_description": "Show a warning page before redirecting. Visitors must confirm to continue.",
       "password_label": "Password Protection",
@@ -123,7 +123,7 @@
       "ai_og_generate": "Generate AI OpenGraph",
       "duplicate_url_hint": "This URL already exists as {shortLink}",
       "proxy_label": "Enable Reverse Proxy",
-      "proxy_description": "Transparently proxy and forward content from destination URL without 301/302 redirect. Ideal for subscriptions and APIs."
+      "proxy_description": "Transparently proxies content from the destination URL without a 301/302 redirect. Ideal for subscriptions and APIs. Cannot be combined with link cloaking."
     },
     "dialogs": {
       "discard": {

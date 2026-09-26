@@ -1,10 +1,10 @@
 import type { H3Event } from 'h3'
 import type { RawBuilder } from 'kysely'
-import type { Query } from '#shared/schemas/query'
+import type { FilterQuery, Query } from '#shared/schemas/query'
 import type { BlobsMap, DoublesMap } from './access-log'
 import { sql } from 'kysely'
 import { z } from 'zod'
-import { QuerySchema } from '#shared/schemas/query'
+import { FilterQuerySchema, QuerySchema } from '#shared/schemas/query'
 import { blobsMap, doublesMap, logsMap } from './access-log'
 import { createAnalyticsQuery } from './analytics-sql'
 import { buildAnalyticsFilter } from './query-filter'
@@ -22,7 +22,7 @@ const ClientTimezoneSchema = z.string()
   .default('Etc/UTC')
   .describe('IANA timezone used to bucket timestamps.')
 
-export const ViewsQuerySchema = QuerySchema.extend({
+export const ViewsQuerySchema = FilterQuerySchema.extend({
   unit: z.enum(['minute', 'hour', 'day']).describe('Time bucket size.'),
   clientTimezone: ClientTimezoneSchema,
 })
@@ -31,11 +31,11 @@ export const MetricsQuerySchema = QuerySchema.extend({
   type: z.enum(validMetricTypes).describe('The access-log dimension to group by.'),
 })
 
-export const HeatmapQuerySchema = QuerySchema.extend({
+export const HeatmapQuerySchema = FilterQuerySchema.extend({
   clientTimezone: ClientTimezoneSchema,
 })
 
-export const StatsExportQuerySchema = QuerySchema.refine(
+export const StatsExportQuerySchema = FilterQuerySchema.refine(
   query => query.startAt === undefined || query.endAt === undefined || query.startAt <= query.endAt,
   { message: 'startAt must be less than or equal to endAt', path: ['startAt'] },
 )
@@ -43,6 +43,7 @@ export const StatsExportQuerySchema = QuerySchema.refine(
 export type ViewsQuery = z.infer<typeof ViewsQuerySchema>
 export type MetricsQuery = z.infer<typeof MetricsQuerySchema>
 export type HeatmapQuery = z.infer<typeof HeatmapQuerySchema>
+export type StatsExportQuery = z.infer<typeof StatsExportQuerySchema>
 
 /** Weighted distinct count: COUNT(DISTINCT col) * SUM(_sample_interval) / COUNT() ≈ actual distinct count */
 function weightedDistinct(column: string): RawBuilder<number> {
@@ -54,19 +55,17 @@ function weightedReferers(column: string): RawBuilder<number> {
   return sql<number>`ROUND((COUNT(DISTINCT ${reference}) - MAX(if(${reference} = ${sql.lit('')}, ${sql.lit(1)}, ${sql.lit(0)}))) * SUM(_sample_interval) / COUNT())`
 }
 
-function queryLimit(query: Query): number {
-  return Math.max(0, Math.floor(query.limit))
-}
-
 /** The dataset query every analytics endpoint starts from, with the shared filters applied. */
-function filteredQuery(query: Query, event: H3Event) {
-  const filter = buildAnalyticsFilter(query)
+function filteredQuery(query: FilterQuery, event: H3Event) {
+  // buildAnalyticsFilter types its argument as the paginated Query for
+  // historical reasons; the limit it never reads is filled with a placeholder.
+  const filter = buildAnalyticsFilter({ ...query, limit: 0 })
   const { dataset } = useRuntimeConfig(event)
   const analyticsQuery = createAnalyticsQuery(dataset)
   return filter ? analyticsQuery.where(filter) : analyticsQuery
 }
 
-export function buildCountersQuery(query: Query, event: H3Event) {
+export function buildCountersQuery(query: FilterQuery, event: H3Event) {
   const statement = filteredQuery(query, event).select([
     sql<number>`SUM(_sample_interval)`.as('visits'),
     weightedDistinct(logsMap.ip!).as('visitors'),
@@ -101,7 +100,7 @@ export function buildMetricsQuery(query: MetricsQuery, event: H3Event) {
     ])
     .groupBy('name')
     .orderBy('count', 'desc')
-    .limit(sql.lit(queryLimit(query)))
+    .limit(sql.lit(query.limit))
 }
 
 export function buildHeatmapQuery(query: HeatmapQuery, event: H3Event) {
@@ -120,7 +119,7 @@ export function buildHeatmapQuery(query: HeatmapQuery, event: H3Event) {
     .orderBy('hour')
 }
 
-export function buildAccessExportQuery(query: Query, event: H3Event) {
+export function buildAccessExportQuery(query: StatsExportQuery, event: H3Event) {
   return filteredQuery(query, event)
     .select([
       sql.ref(logsMap.slug!).as('slug'),
@@ -137,7 +136,7 @@ export function buildEventsQuery(query: Query, event: H3Event) {
   return filteredQuery(query, event)
     .selectAll()
     .orderBy('timestamp', 'desc')
-    .limit(sql.lit(queryLimit(query)))
+    .limit(sql.lit(query.limit))
 }
 
 export function buildLocationsQuery(query: Query, event: H3Event) {
@@ -153,5 +152,5 @@ export function buildLocationsQuery(query: Query, event: H3Event) {
     ])
     .groupBy(['blob8', 'double1', 'double2'])
     .orderBy('count', 'desc')
-    .limit(sql.lit(queryLimit(query)))
+    .limit(sql.lit(query.limit))
 }

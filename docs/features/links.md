@@ -57,12 +57,18 @@ Cloaking shows the target site inside the page while the address bar still shows
 
 ## Reverse proxy mode
 
-When reverse proxy mode is enabled on a link, Sink transparently fetches and streams content from the destination URL via Cloudflare Workers without issuing HTTP 301/302 redirects.
+Reverse proxy mode is **off by default**. Set `NUXT_LINK_PROXY_ENABLED=true` to allow links on your instance to opt into it; while disabled, `proxy` cannot be enabled on new or imported links, existing proxy links keep their flag but fall back to plain redirects, and edits may only turn `proxy` off or leave it unchanged.
+
+When enabled on a link, Sink transparently fetches and streams content from the destination URL via Cloudflare Workers without issuing HTTP 301/302 redirects.
 
 This is ideal for API endpoints, shell install scripts, raw payloads, and configuration subscriptions where redirects or iframes are undesirable.
 
 ::: warning
-Proxied content is served from your Sink domain, so only proxy targets you trust. Credential headers (`cookie`, `authorization`, `cf-access-*`) are never forwarded upstream, and upstream `set-cookie` is stripped. Private/local targets are refused. Set `NUXT_PROXY_ENABLED=false` to disable the feature.
+Proxied content is served from your Sink domain, so only proxy targets you trust. Every proxied response carries a CSP `sandbox` without `allow-same-origin` and `nosniff`: scripts still run, but in an opaque origin that cannot read Sink cookies or storage, and a missing or malformed upstream Content-Type is downgraded to `application/octet-stream`. This limits — not eliminates — the risk of active content. Credential headers (`cookie`, `authorization`, `cf-access-*`) are never forwarded upstream, and upstream `set-cookie` plus origin-scoped control headers (`Clear-Site-Data`, `Refresh`, HSTS, …) are stripped.
+
+Upstream redirects are followed only to validated public `http(s)` URLs (with loop and depth limits); private/local targets are refused, and redirects that would need to replay a request body are returned to the client instead of being followed. The literal-IP checks cannot defend against DNS rebinding on hostname targets, so proxy only hosts you control or trust.
+
+For password-protected or unsafe links, the confirmation `POST` is never forwarded upstream: it returns `303` back to the link with a short-lived grant cookie, and gated responses are marked `private, no-store`.
 :::
 
 ## Health check

@@ -78,7 +78,7 @@
       "redirect_with_query_label": "Redirecionar com parâmetros de consulta",
       "redirect_with_query_description": "Anexar parâmetros de consulta do link curto à URL de destino. Substitui a configuração global.",
       "cloaking_label": "Habilitar mascaramento de link",
-      "cloaking_description": "Mostrar seu link curto na barra de endereço do navegador em vez da URL de destino. Pode não funcionar em sites que bloqueiam incorporação de iframe.",
+      "cloaking_description": "Mostrar seu link curto na barra de endereço do navegador em vez da URL de destino. Pode não funcionar em sites que bloqueiam incorporação de iframe. Não pode ser combinado com proxy reverso.",
       "unsafe_label": "Marcar como inseguro",
       "unsafe_description": "Mostrar uma página de aviso antes do redirecionamento. Os visitantes devem confirmar para continuar.",
       "password_label": "Proteção por senha",
@@ -123,7 +123,7 @@
       "ai_og_generate": "Gerar OpenGraph da IA",
       "duplicate_url_hint": "Esta URL já existe como {shortLink}",
       "proxy_label": "Habilitar proxy reverso",
-      "proxy_description": "Encaminha de forma transparente o conteúdo do URL de destino sem redirecionamento 301/302. Ideal para assinaturas e APIs."
+      "proxy_description": "Encaminha de forma transparente o conteúdo do URL de destino sem redirecionamento 301/302. Ideal para assinaturas e APIs. Não pode ser combinado com mascaramento de link."
     },
     "dialogs": {
       "discard": {

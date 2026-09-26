@@ -57,12 +57,18 @@ DNS 检查失败时，Sink 会放行链接，而不是拦截。
 
 ## 反向代理模式
 
+反向代理模式**默认关闭**。设置 `NUXT_LINK_PROXY_ENABLED=true` 后，实例上的链接才能开启它；关闭期间无法为新建或导入的链接打开 `proxy`，存量代理链接保留标志但回退为普通跳转，编辑时也只能关闭 `proxy` 或保持不变。
+
 当链接开启反向代理模式时，Sink 会在 Cloudflare Worker 边缘直接透明代理抓取并流式返回目标 URL 内容，不发生 HTTP 301/302 重定向。
 
 这非常适用于 API 端点、Shell 安装脚本、纯文本配置以及各种客户端订阅等不希望发生跳转或 iframe 嵌套的场景。
 
 ::: warning
-被代理的内容以你的 Sink 域名对外提供，请只代理可信目标。`cookie`、`authorization`、`cf-access-*` 等凭证头不会转发给上游，上游的 `set-cookie` 也会被剥离；私网/本机地址会被拒绝。设置 `NUXT_PROXY_ENABLED=false` 可整体关闭该功能。
+被代理的内容以你的 Sink 域名对外提供，请只代理可信目标。所有代理响应都附带 CSP `sandbox`（不含 `allow-same-origin`）与 `nosniff`：脚本仍会运行，但运行在隔离的 opaque origin 中，无法读取 Sink 域名的 Cookie 或本地存储；上游缺失或非法的 Content-Type 会被降级为 `application/octet-stream`。这只是降低而非消除活动内容风险。`cookie`、`authorization`、`cf-access-*` 等凭证头不会转发给上游，上游的 `set-cookie` 以及 `Clear-Site-Data`、`Refresh`、HSTS 等源级控制头也会被剥离。
+
+上游重定向只会跟随到校验过的公网 `http(s)` 地址（有跳数与循环限制），私网/本机目标会被拒绝；需要回放请求体的重定向不会跟随，而是原样返回给客户端。字面 IP 检查无法防御针对域名目标的 DNS rebinding，因此只应代理自己可控或可信的主机。
+
+对密码保护或待确认的 unsafe 链接，确认用的 `POST` 不会转发给上游：会以 `303` 回到链接并附带一个短时效的授权 Cookie，且此类响应一律标记为 `private, no-store`。
 :::
 
 ## 健康检查

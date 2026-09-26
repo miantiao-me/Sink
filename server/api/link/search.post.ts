@@ -1,5 +1,4 @@
-import { z } from 'zod'
-import { UrlSchema } from '#shared/schemas/link'
+import { ExactUrlSearchSchema } from '#shared/schemas/link'
 
 defineRouteMeta({
   openAPI: {
@@ -7,25 +6,9 @@ defineRouteMeta({
     security: [{ bearerAuth: [] }],
     requestBody: {
       required: true,
-      content: {
-        'application/json': {
-          schema: {
-            type: 'object',
-            required: ['url'],
-            properties: {
-              url: { type: 'string', description: 'Normalized target URL to match exactly' },
-              limit: { type: 'integer', minimum: 1, maximum: 1000, default: 20 },
-            },
-          },
-        },
-      },
+      content: { 'application/json': {} },
     },
   },
-})
-
-const ExactUrlSearchSchema = z.object({
-  url: UrlSchema,
-  limit: z.coerce.number().int().min(1).max(1000).default(20),
 })
 
 export default eventHandler(async (event) => {

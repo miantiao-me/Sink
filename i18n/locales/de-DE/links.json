@@ -78,7 +78,7 @@
       "redirect_with_query_label": "Mit Query-Parametern weiterleiten",
       "redirect_with_query_description": "Query-Parameter des Kurzlinks an die Ziel-URL anhängen. Überschreibt die globale Einstellung.",
       "cloaking_label": "Link-Cloaking aktivieren",
-      "cloaking_description": "Zeigt Ihren Kurzlink in der Adressleiste des Browsers anstelle der Ziel-URL an. Funktioniert möglicherweise nicht bei Websites, die iframe-Einbettung blockieren.",
+      "cloaking_description": "Zeigt Ihren Kurzlink in der Adressleiste des Browsers anstelle der Ziel-URL an. Funktioniert möglicherweise nicht bei Websites, die iframe-Einbettung blockieren. Kann nicht mit Reverse-Proxy kombiniert werden.",
       "unsafe_label": "Als unsicher markieren",
       "unsafe_description": "Vor der Weiterleitung eine Warnseite anzeigen. Besucher müssen bestätigen, um fortzufahren.",
       "password_label": "Passwortschutz",
@@ -123,7 +123,7 @@
       "ai_og_generate": "KI-OpenGraph generieren",
       "duplicate_url_hint": "Diese URL existiert bereits als {shortLink}",
       "proxy_label": "Reverse-Proxy aktivieren",
-      "proxy_description": "Leitet Inhalte der Ziel-URL transparent weiter, ohne 301/302-Weiterleitung. Ideal für Subscriptions und APIs."
+      "proxy_description": "Leitet Inhalte der Ziel-URL transparent weiter, ohne 301/302-Weiterleitung. Ideal für Abonnements und APIs. Kann nicht mit Link-Cloaking kombiniert werden."
     },
     "dialogs": {
       "discard": {

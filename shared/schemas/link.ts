@@ -43,12 +43,12 @@ const TagsSchema = z.preprocess((value) => {
 export const LinkPasswordSchema = z.string().trim().min(1).max(128).refine(
   password => !password.startsWith(LINK_PASSWORD_MASK_PREFIX),
   'masked password cannot be submitted',
-)
+).describe('Password protection for the link.')
 
 export const EditLinkPasswordSchema = z.string().trim().max(128).refine(
   password => !password.startsWith(LINK_PASSWORD_MASK_PREFIX),
   'masked password cannot be submitted',
-).optional()
+).optional().describe('Password protection for the link. An empty string clears it; omitting keeps the stored one.')
 
 const IdSchema = z.string().trim().min(1).max(26)
 export const UrlSchema = z.string()
@@ -74,9 +74,9 @@ const ExpirationSchema = TimestampSchema.refine(expiration => expiration > Math.
 
 /** The writable link fields. Descriptions carry into the generated MCP tool schemas. */
 export const LinkFieldsSchema = z.object({
-  url: UrlSchema,
-  slug: SlugSchema,
-  comment: z.string().trim().max(2048).optional(),
+  url: UrlSchema.describe('The target URL.'),
+  slug: SlugSchema.describe('The slug identifying the short link.'),
+  comment: z.string().trim().max(2048).optional().describe('Optional internal note.'),
   expiration: ExpirationSchema.optional().describe('Unix seconds. Must be in the future.'),
   title: z.string().trim().max(256).optional().describe('Overrides the title in the link preview.'),
   description: z.string().trim().max(2048).optional().describe('Overrides the description in the link preview.'),
@@ -89,7 +89,7 @@ export const LinkFieldsSchema = z.object({
   password: LinkPasswordSchema.optional(),
   unsafe: z.boolean().optional().describe('Show a warning page before redirecting.'),
   geo: GeoSchema.optional().describe('Geo-routing rules mapping a two-letter country code to a URL.'),
-  tags: TagsSchema,
+  tags: TagsSchema.describe('Up to 10 normalized link tags, each 1-32 characters.'),
 })
 
 export const CreateLinkSchema = LinkFieldsSchema.extend({
@@ -138,6 +138,11 @@ export const LinkFilterQuerySchema = z.object({
 export const SearchLinksQuerySchema = LinkFilterQuerySchema.extend({
   limit: LinkQueryLimitSchema,
 })
+
+/** POST /api/link/search body: an exact URL match kept out of the query string. */
+export const ExactUrlSearchSchema = SearchLinksQuerySchema
+  .pick({ url: true, limit: true })
+  .extend({ url: UrlSchema.describe('Normalized target URL to match exactly.') })
 
 export const ListLinksQuerySchema = z.object({
   limit: LinkQueryLimitSchema,

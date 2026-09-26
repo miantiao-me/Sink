@@ -58,7 +58,7 @@ Any client that supports an HTTP transport with custom headers can connect the s
 | `get_analytics_views`    | Visits and visitors bucketed by minute, hour, or day. |
 | `get_analytics_metrics`  | Top values for one access-log dimension.              |
 
-The write tools honor `NUXT_PUBLIC_PREVIEW_MODE` and the KV-to-D1 migration gate exactly as the REST API does, and analytics tools read the same sampled access log as the dashboard, so their counts are estimates.
+The write tools honor `NUXT_PUBLIC_PREVIEW_MODE` and the KV-to-D1 migration gate exactly as the REST API does, and analytics tools read the same sampled access log as the dashboard, so their counts are estimates. For `update_link`, sending an empty `password` clears protection while omitting it keeps the stored one.
 
 The endpoint sits under `/api/` so it stays out of the short-link namespace: a slug cannot contain a slash, so no link can shadow it and no reserved slug is needed. Upgrading never takes a slug away from an instance that already uses one.
 
