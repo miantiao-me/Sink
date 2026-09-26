@@ -83,11 +83,15 @@ export async function proxyLinkRequest(event: H3Event, targetUrl: string, option
     throw createError({ status: 403, statusText: 'Proxy target is not allowed' })
 
   const method = options.method ?? event.method
+  // The timeout only bounds waiting for response headers; a signal that stays
+  // armed would also abort long downloads or event streams mid-body.
+  const controller = new AbortController()
+  const timer = setTimeout(() => controller.abort(), PROXY_TIMEOUT_MS)
   const init: RequestInit & { duplex?: 'half' } = {
     method,
     headers: buildForwardHeaders(event),
     redirect: 'follow',
-    signal: AbortSignal.timeout(PROXY_TIMEOUT_MS),
+    signal: controller.signal,
   }
   if (method !== 'GET' && method !== 'HEAD') {
     // Required by the spec (and Cloudflare Workers) when body is a stream.
@@ -101,6 +105,9 @@ export async function proxyLinkRequest(event: H3Event, targetUrl: string, option
   }
   catch (cause) {
     throw createError({ status: 502, statusText: 'Proxy request failed', cause })
+  }
+  finally {
+    clearTimeout(timer)
   }
 
   return buildUpstreamResponse(upstream, options.privateCache ?? false)

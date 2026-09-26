@@ -52,7 +52,10 @@ export default eventHandler(async (event) => {
   const { pathname: slug } = parsePath(event.path.replace(/^\/|\/$/g, ''))
   const { slugRegex, reserveSlug } = useAppConfig()
   const { linkCacheTtl, caseSensitive, redirectWithQuery, redirectStatusCode, redirectNoStore } = useRuntimeConfig(event)
-  const { homeURL, linkProxyEnabled } = useRuntimeConfig(event).public
+  const runtimeConfig = useRuntimeConfig(event)
+  const { linkProxyEnabled } = runtimeConfig.public
+  // runtimeConfig.homeURL reads the deprecated NUXT_HOME_URL at runtime.
+  const homeURL = runtimeConfig.public.homeURL || runtimeConfig.homeURL
   const { cloudflare } = event.context
 
   if (event.path === '/' && homeURL)
@@ -191,18 +194,19 @@ export default eventHandler(async (event) => {
           setHeader(event, 'Cache-Control', 'no-store')
         return sendRedirect(event, finalTargetUrl, +redirectStatusCode)
       }
-      if (isProxyLink) {
-        return sendWebResponse(event, await proxyLinkRequest(event, finalTargetUrl, {
-          method: formConfirmed ? 'GET' : event.method,
-          privateCache: !!(link.password || link.unsafe),
-        }))
-      }
-
+      // Link previews use the configured OG metadata even for proxied links.
       if (isSocialBot(userAgent) && hasOgConfig(link)) {
         const baseUrl = `${getRequestProtocol(event)}://${getRequestHost(event)}`
         const html = generateOgHtml(link, targetUrl, baseUrl)
         setHeader(event, 'Content-Type', 'text/html; charset=utf-8')
         return html
+      }
+
+      if (isProxyLink) {
+        return sendWebResponse(event, await proxyLinkRequest(event, finalTargetUrl, {
+          method: formConfirmed ? 'GET' : event.method,
+          privateCache: !!(link.password || link.unsafe),
+        }))
       }
 
       if (link.cloaking) {

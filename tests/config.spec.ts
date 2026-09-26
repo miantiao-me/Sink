@@ -42,4 +42,17 @@ describe('public runtime config overrides', () => {
     expect(response.status).toBe(302)
     expect(response.headers.get('location')).toBe('https://home.example.com')
   })
+
+  it('still honors the deprecated NUXT_HOME_URL', async () => {
+    const legacyEnv = env as unknown as Record<string, string>
+    legacyEnv.NUXT_HOME_URL = 'https://legacy-home.example.com'
+    try {
+      const response = await fetch('/', { redirect: 'manual' })
+      expect(response.status).toBe(302)
+      expect(response.headers.get('location')).toBe('https://legacy-home.example.com')
+    }
+    finally {
+      delete legacyEnv.NUXT_HOME_URL
+    }
+  })
 })

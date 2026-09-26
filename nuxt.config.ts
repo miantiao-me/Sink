@@ -22,6 +22,8 @@ export default defineNuxtConfig({
     linkCacheTtl: 60,
     redirectWithQuery: false,
     redirectNoStore: false,
+    // Deprecated NUXT_HOME_URL alias; kept so pre-public deployments keep redirecting `/`.
+    homeURL: '',
     cfAccountId: '',
     cfApiToken: '',
     dataset: 'sink',
@@ -42,7 +44,7 @@ export default defineNuxtConfig({
       slugDefaultLength: '6',
       kvBatchLimit: '50',
       maxUrlLength: '16384',
-      homeURL: '',
+      homeURL: process.env.NUXT_HOME_URL || '',
       linkProxyEnabled: false,
     },
   },

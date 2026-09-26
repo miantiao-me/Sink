@@ -82,6 +82,10 @@ On Workers, set the same value in Builds and runtime. On Pages, set once, then r
 
 `NUXT_PUBLIC_*` values are baked into the built UI and read at runtime, so changes need a rebuild before the client picks them up.
 
+`NUXT_HOME_URL` is the deprecated name of `NUXT_PUBLIC_HOME_URL`. It still works, but rename it when you next change your settings.
+
+Click analytics store the target URL in Workers Analytics Engine, which limits all blobs in a data point to 16 KB in total. When the URL plus the other click fields (user agent, referer, and so on) exceeds that size, which is possible near the default 16384-character limit, the click still redirects but is missing from analytics. Lower `NUXT_PUBLIC_MAX_URL_LENGTH` if complete analytics matter more than long URLs.
+
 ## Optional
 
 ### Build-time options

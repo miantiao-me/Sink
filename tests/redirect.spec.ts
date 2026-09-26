@@ -231,6 +231,21 @@ describe('/', () => {
     expect(upstreamCalls('upstream.test').length).toBe(1)
   })
 
+  it('serves OG HTML to social bots instead of proxying', async () => {
+    mockUpstream({
+      'og-proxy.test': () => new Response('must not be fetched'),
+    })
+    const slug = await createProxyLink('https://og-proxy.test/', { title: 'Proxied preview title' })
+
+    const response = await fetch(`/${slug}`, {
+      redirect: 'manual',
+      headers: { 'User-Agent': 'Twitterbot/1.0' },
+    })
+    expect(response.status).toBe(200)
+    expect(await response.text()).toContain('<meta property="og:title" content="Proxied preview title">')
+    expect(upstreamCalls('og-proxy.test').length).toBe(0)
+  })
+
   it('degrades a stored proxy link to a plain redirect while the flag is off', async () => {
     mockUpstream({
       'degraded.test': () => new Response('must not be fetched'),
