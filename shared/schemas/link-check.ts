@@ -17,9 +17,9 @@ export const LinkCheckTargetSchema = z.object({
 })
 
 export const LinkCheckRequestSchema = z.object({
-  cursor: z.string().trim().max(1024).optional(),
-  limit: z.coerce.number().int().min(1).max(10).default(6),
-  timeout: z.coerce.number().int().min(1).max(30).default(6),
+  cursor: z.string().trim().max(1024).optional().describe('Pagination cursor from a previous response.'),
+  limit: z.coerce.number().int().min(1).max(10).default(6).describe('Maximum number of links to check per page.'),
+  timeout: z.coerce.number().int().min(1).max(30).default(6).describe('Timeout in seconds for each link check.'),
 }).strict()
 
 export const LinkCheckConfigSchema = z.object({

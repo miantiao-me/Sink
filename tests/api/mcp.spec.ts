@@ -190,7 +190,9 @@ describe('/api/mcp handshake', () => {
     const payload = await readEnvelope(response)
     const names = payload.result?.tools.map((tool: { name: string }) => tool.name)
     expect(names).toContain('create_link')
+    expect(names).toContain('check_links')
     expect(names).toContain('get_analytics_metrics')
+    expect(names).toContain('get_analytics_heatmap')
 
     const createTool = payload.result?.tools.find((tool: { name: string }) => tool.name === 'create_link')
     expect(createTool.inputSchema.required).toContain('url')
@@ -213,6 +215,8 @@ describe('/api/mcp handshake', () => {
     expect(tools.get_analytics_views.properties.limit).toBeUndefined()
     expect(tools.get_analytics_metrics.properties.limit).toBeDefined()
     expect(tools.get_analytics_metrics.required).toContain('type')
+    expect(tools.get_analytics_heatmap.properties.limit).toBeUndefined()
+    expect(tools.get_analytics_heatmap.properties.clientTimezone).toBeDefined()
   })
 })
 
@@ -291,6 +295,26 @@ describe('/api/mcp tools', () => {
     expect(kept.payload.result?.isError).toBeUndefined()
     expect((await getStoredLink(slug))?.password).toBeUndefined()
   })
+
+  // Outbound checks are stubbed: the assertion covers the response shape,
+  // not whatever the network returns for the stored target.
+  it('reports link check results with pagination fields', async () => {
+    const slug = trackSlug(`mcp-${crypto.randomUUID()}`)
+    await callTool('create_link', { url: 'https://example.com/mcp-check', slug })
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('Blocked test outbound request'))
+
+    try {
+      const { payload } = await callTool('check_links', { limit: 3, timeout: 1 })
+      expect(payload.result?.isError).toBeUndefined()
+      const page = payload.result?.structuredContent
+      expect(Array.isArray(page.results)).toBe(true)
+      expect(page.results.length).toBeLessThanOrEqual(3)
+      expect(typeof page.list_complete).toBe('boolean')
+    }
+    finally {
+      fetchSpy.mockRestore()
+    }
+  })
 })
 
 describe('/api/mcp analytics tools', () => {
@@ -298,6 +322,7 @@ describe('/api/mcp analytics tools', () => {
     ['get_analytics_counters', { slug: 'abc' }],
     ['get_analytics_views', { unit: 'day', clientTimezone: 'Asia/Shanghai' }],
     ['get_analytics_metrics', { type: 'browser', limit: 5 }],
+    ['get_analytics_heatmap', { clientTimezone: 'Asia/Shanghai' }],
   ] as const)('answers %s with the WAE result shape', async (tool, args) => {
     const { response, payload } = await callTool(tool, args)
     expect(response.status).toBe(200)

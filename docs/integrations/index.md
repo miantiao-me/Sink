@@ -54,9 +54,11 @@ Any client that supports an HTTP transport with custom headers can connect the s
 | `update_link`            | Replace every writable field of an existing link.     |
 | `upsert_link`            | Return the existing link for a slug, or create it.    |
 | `delete_link`            | Permanently delete a link.                            |
+| `check_links`            | Check stored link targets, paginated by slug.         |
 | `get_analytics_counters` | Total visits, visitors, and referers.                 |
 | `get_analytics_views`    | Visits and visitors bucketed by minute, hour, or day. |
 | `get_analytics_metrics`  | Top values for one access-log dimension.              |
+| `get_analytics_heatmap`  | Visits and visitors by weekday and hour of day.       |
 
 The write tools honor `NUXT_PUBLIC_PREVIEW_MODE` and the KV-to-D1 migration gate exactly as the REST API does, and analytics tools read the same sampled access log as the dashboard, so their counts are estimates. For `update_link`, sending an empty `password` clears protection while omitting it keeps the stored one.
 

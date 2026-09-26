@@ -11,15 +11,19 @@ import {
   ListLinksQuerySchema,
   SearchLinksQuerySchema,
 } from '#shared/schemas/link'
+import { LinkCheckRequestSchema } from '#shared/schemas/link-check'
 import { FilterQuerySchema } from '#shared/schemas/query'
 import {
   buildCountersQuery,
+  buildHeatmapQuery,
   buildMetricsQuery,
   buildViewsQuery,
+  HeatmapQuerySchema,
   MetricsQuerySchema,
   ViewsQuerySchema,
 } from '../../utils/analytics-queries'
 import { useWAE } from '../../utils/cloudflare'
+import { checkLinksPage } from '../../utils/link-check'
 import { sanitizeLinkPassword, sanitizeLinksPassword } from '../../utils/link-password'
 import { removeLink, replaceLink, saveNewLink, upsertLink } from '../../utils/link-processing'
 import { countLinks, getLinkWithMetadata, listLinks, listTags, normalizeSlug, searchLinks } from '../../utils/link-store'
@@ -106,6 +110,15 @@ const linkTools: McpToolDefinition[] = [
     },
   }),
   defineTool({
+    name: 'check_links',
+    description: 'Fetch the target URL of each stored link, alphabetically by slug with cursor pagination, and report its HTTP status. URLs that are not public HTTP(S) are skipped with an error.',
+    inputSchema: LinkCheckRequestSchema,
+    annotations: { readOnlyHint: true, openWorldHint: true },
+    handler(event, args) {
+      return checkLinksPage(event, args)
+    },
+  }),
+  defineTool({
     name: 'create_link',
     description: 'Create a short link. Fails when the slug is already taken; use upsert_link to reuse an existing link instead.',
     inputSchema: CreateLinkSchema,
@@ -170,6 +183,15 @@ const analyticsTools: McpToolDefinition[] = [
     annotations: { readOnlyHint: true },
     async handler(event, args) {
       return useWAE(event, buildMetricsQuery(args, event))
+    },
+  }),
+  defineTool({
+    name: 'get_analytics_heatmap',
+    description: `Visits and visitors bucketed by weekday and hour of day in the given timezone. ${FILTER_NOTE}`,
+    inputSchema: HeatmapQuerySchema,
+    annotations: { readOnlyHint: true },
+    async handler(event, args) {
+      return useWAE(event, buildHeatmapQuery(args, event))
     },
   }),
 ]

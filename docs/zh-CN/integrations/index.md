@@ -54,9 +54,11 @@ claude mcp add --transport http sink https://your-domain/api/mcp --header "Autho
 | `update_link`            | 替换现有链接的全部可写字段。                |
 | `upsert_link`            | 返回该 slug 的现有链接，不存在时创建。      |
 | `delete_link`            | 永久删除链接。                              |
+| `check_links`            | 按 slug 分页检查已存链接的目标 URL。        |
 | `get_analytics_counters` | 总访问量、访客数与来源数。                  |
 | `get_analytics_views`    | 按分钟、小时或天分桶的访问量与访客数。      |
 | `get_analytics_metrics`  | 某个访问日志维度的 Top 值。                 |
+| `get_analytics_heatmap`  | 按星期几和小时分桶的访问量与访客数。        |
 
 写入类工具与 REST API 一样遵循 `NUXT_PUBLIC_PREVIEW_MODE` 和 KV 到 D1 的迁移门控；分析类工具读取与仪表盘相同的采样访问日志，因此结果为估算值。对 `update_link`，`password` 传空字符串会清除访问密码，省略则保留原有密码。
 
