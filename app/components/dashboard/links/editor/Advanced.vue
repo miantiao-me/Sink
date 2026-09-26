@@ -30,21 +30,14 @@ const { t, locale } = useI18n()
 
 type GeoRoute = DashboardLinkFormData['geo'][number]
 
-const linkProxyEnabled = ref(false)
-
-// Hidden until `/_config` explicitly enables link proxying; stays hidden on failure.
-void fetchPublicConfig()
-  .then(isLinkProxyEnabled)
-  .catch(() => false)
-  .then((enabled) => {
-    linkProxyEnabled.value = enabled
-  })
+// Runtime env parsing turns NUXT_PUBLIC_LINK_PROXY_ENABLED into a boolean.
+const linkProxyEnabled = !!useRuntimeConfig().public.linkProxyEnabled
 
 // Proxy and cloaking are exclusive delivery modes; enabling one turns the other off.
 // A hidden proxy switch keeps its stored value instead of being cleared by cloaking.
 function handleExclusiveSwitch(field: AnyFieldApi, exclusiveField: 'cloaking' | 'proxy', value: boolean) {
   field.handleChange(value)
-  if (value && (exclusiveField === 'cloaking' || linkProxyEnabled.value))
+  if (value && (exclusiveField === 'cloaking' || linkProxyEnabled))
     props.form.setFieldValue(exclusiveField, false)
 }
 

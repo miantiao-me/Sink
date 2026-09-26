@@ -48,7 +48,6 @@ export default eventHandler(async (event) => {
       const index = offset + chunkIndex
 
       try {
-        assertLinkProxyWriteAllowed(event, linkData.proxy)
         const slug = normalizeSlug(event, linkData.slug)
         const now = Math.floor(Date.now() / 1000)
         const link = {

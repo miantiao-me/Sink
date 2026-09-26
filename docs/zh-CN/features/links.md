@@ -57,19 +57,52 @@ DNS 检查失败时，Sink 会放行链接，而不是拦截。
 
 ## 反向代理模式
 
-反向代理模式**默认关闭**。设置 `NUXT_LINK_PROXY_ENABLED=true` 后，实例上的链接才能开启它；关闭期间无法为新建或导入的链接打开 `proxy`，存量代理链接保留标志但回退为普通跳转，编辑时也只能关闭 `proxy` 或保持不变。
+开启反向代理模式后，访问短链（`/:slug`）时，Cloudflare Worker 会在边缘直接请求目标 URL 并把响应流式返回给客户端，而不会返回 HTTP 301/302 重定向。
 
-当链接开启反向代理模式时，Sink 会在 Cloudflare Worker 边缘直接透明代理抓取并流式返回目标 URL 内容，不发生 HTTP 301/302 重定向。
+Sink 采用极简代理设计，不做全站代理，也不使用额外域名或子域名，仅对短链本身的单次请求进行转发。
 
-这非常适用于 API 端点、Shell 安装脚本、纯文本配置以及各种客户端订阅等不希望发生跳转或 iframe 嵌套的场景。
+### 适用场景
 
-::: warning
-被代理的内容以你的 Sink 域名对外提供，请只代理可信目标。所有代理响应都附带 CSP `sandbox`（不含 `allow-same-origin`）与 `nosniff`：脚本仍会运行，但运行在隔离的 opaque origin 中，无法读取 Sink 域名的 Cookie 或本地存储；上游缺失或非法的 Content-Type 会被降级为 `application/octet-stream`。这只是降低而非消除活动内容风险。`cookie`、`authorization`、`cf-access-*` 等凭证头不会转发给上游，上游的 `set-cookie` 以及 `Clear-Site-Data`、`Refresh`、HSTS 等源级控制头也会被剥离。
+- **API 接口：** 转发 API 请求或 Webhook，透传 `Authorization` 及自定义请求头，调用方直接获取接口响应。
+- **Shell 安装脚本：** 支持形如 `curl -fsSL https://sink.example/install | bash` 的一键安装命令。
+- **原始文本与配置：** 托管 Raw 文本片段、JSON 数据或远程客户端订阅配置。
+- **单文件下载：** 直链下载单个文件，无需跳转到原始存储或外部网盘地址。
 
-上游重定向只会跟随到校验过的公网 `http(s)` 地址（有跳数与循环限制），私网/本机目标会被拒绝；需要回放请求体的重定向不会跟随，而是原样返回给客户端。字面 IP 检查无法防御针对域名目标的 DNS rebinding，因此只应代理自己可控或可信的主机。
+### 不适用场景与限制
 
-对密码保护或待确认的 unsafe 链接，确认用的 `POST` 不会转发给上游：会以 `303` 回到链接并附带一个短时效的授权 Cookie，且此类响应一律标记为 `private, no-store`。
+反向代理模式**不适合普通多资源网页**。
+
+代理只作用于短链本身这单次请求，Sink 具备以下明确边界：
+
+- **不改写资源路径：** 不会改写 HTML 或 CSS 中的相对路径与根路径引用。
+- **不处理子路径：** 请求 `/:slug/subpath` 不会被转发到目标地址。
+- **不转发运行时请求：** 不会代理网页运行时的动态 `import()`、`fetch()` 或 WebSocket 连接。
+
+例如，若代理的目标网页包含 `<script src="/assets/app.js">` 或 `<link rel="stylesheet" href="./style.css">`，浏览器在加载这些资源时会直接请求 Sink 自身的域名（如 `https://sink.example/assets/app.js`），导致 404 错误、样式丢失及脚本执行异常。只有所有静态资源均使用绝对外部 URL（例如完整 CDN 链接）的独立页面才可能正常展示。
+
+### 如何开启
+
+反向代理模式**默认关闭**。
+
+1. **设置环境变量：** 在部署环境中添加 `NUXT_PUBLIC_LINK_PROXY_ENABLED=true`。
+2. **重新构建与部署：** 该项属于客户端公开配置（`NUXT_PUBLIC_*`），修改后需重新构建并部署实例，前端才能生效。
+
+该配置仅影响访问行为：当未开启该环境变量时，已配置代理的短链在访问时会自动退化为普通的 HTTP 重定向。
+
+### 安全说明与防护机制
+
+::: warning 同源安全风险
+被代理的内容直接在你的 Sink 域名下提供，且**不包含 CSP sandbox 隔离**。
+
+这意味着上游返回的活动内容（HTML、JavaScript、SVG 等）会直接在 Sink 的**同源环境**中执行，可以读取该域名下的 Cookie 和 localStorage（包括管理后台的认证 Token）。**切勿代理不受信或不可控的目标。**
 :::
+
+Sink 保留了以下防护机制：
+
+- **私网目标拦截：** 仅允许代理公网 `http(s)` 目标，拦截 `localhost`、IPv4 私网与保留段，以及 IPv6 的 `::`、`::1`、ULA、链路本地、组播和 `::ffff:` 映射地址。字面 IP 检查无法防御针对域名的 DNS rebinding。上游重定向由运行时自动跟随，仅对初始目标进行公网校验。
+- **请求头过滤：** 客户端请求中的 `cookie`、`host`、hop-by-hop 头、`content-length`、`cf-*`、`x-forwarded-*`、`x-real-ip` 与 `x-link-*` 不会转发给上游；`authorization` 及其他自定义请求头会透传。Sink 会自动补全 `x-forwarded-for`、`x-forwarded-proto` 和 `x-forwarded-host`。
+- **响应头过滤：** 剥离上游返回的 hop-by-hop 头与 `set-cookie`。响应始终附加 `X-Content-Type-Options: nosniff`。
+- **受保护链接隔离：** 密码验证或不安全警告表单确认后，会在同一次请求中以不带请求体的 GET 请求上游，表单中的密码绝不会发往上游。API 客户端可直接通过 `x-link-password` 和 `x-link-confirm: true` 请求头透传请求体（JSON/二进制）。带有密码或 unsafe 的链接响应统一附加 `Cache-Control: private, no-store`。
 
 ## 健康检查
 
@@ -77,4 +110,4 @@ DNS 检查失败时，Sink 会放行链接，而不是拦截。
 
 ## 全站重定向选项
 
-可改默认跳转状态码（默认 `301`）、要求浏览器不缓存跳转、重定向首页（`NUXT_HOME_URL`），以及未知短链码去向（`NUXT_NOT_FOUND_REDIRECT`，始终 **302**）。见[配置参考](/zh-CN/configuration/#高级默认值)。
+可改默认跳转状态码（默认 `301`）、要求浏览器不缓存跳转、重定向首页（`NUXT_PUBLIC_HOME_URL`），以及未知短链码去向（`NUXT_NOT_FOUND_REDIRECT`，始终 **302**）。见[配置参考](/zh-CN/configuration/#高级默认值)。

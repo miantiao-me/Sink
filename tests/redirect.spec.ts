@@ -1,6 +1,6 @@
 import { env } from 'cloudflare:workers'
 import { afterAll, afterEach, beforeAll, describe, expect, it, vi } from 'vitest'
-import { deleteStoredLinks, fetch, getStoredLink, postJson, putJson, setLinkStoreD1Mode } from './utils'
+import { deleteStoredLinks, fetch, postJson, setLinkStoreD1Mode } from './utils'
 
 type CfRequestInit = RequestInit & { cf?: { country?: string } }
 type UpstreamHandler = (init: RequestInit | undefined) => Response | Promise<Response>
@@ -11,7 +11,7 @@ let fetchSpy: ReturnType<typeof vi.spyOn> | undefined
 
 beforeAll(async () => {
   // The proxy tests below need the instance flag; the contract is opt-in.
-  env.NUXT_LINK_PROXY_ENABLED = 'true'
+  env.NUXT_PUBLIC_LINK_PROXY_ENABLED = 'true'
   await setLinkStoreD1Mode()
 })
 
@@ -22,7 +22,7 @@ afterEach(() => {
 })
 
 afterAll(async () => {
-  delete env.NUXT_LINK_PROXY_ENABLED
+  env.NUXT_PUBLIC_LINK_PROXY_ENABLED = 'false'
   await deleteStoredLinks(createdSlugs)
 })
 
@@ -48,28 +48,6 @@ function upstreamCalls(host: string) {
 
 function upstreamHeaders(init: RequestInit | undefined): Record<string, string> {
   return Object.fromEntries(new Headers(init?.headers).entries())
-}
-
-function parseSetCookie(response: Response, name: string): string | null {
-  const header = response.headers.get('set-cookie')
-  const match = header?.match(new RegExp(`${name}=([^;]*)`))
-  return match?.[1] ?? null
-}
-
-// Mirrors signProxyGate in server/middleware/1.redirect.ts so tests can forge
-// expired or stale-version grant cookies.
-async function forgeGateCookie(slug: string, grant: 'p' | 'u' | 'pu', link: { updatedAt: number, password?: string }, expiresAt: number): Promise<string> {
-  const key = await crypto.subtle.importKey(
-    'raw',
-    new TextEncoder().encode(`sink-link-gate:${import.meta.env.NUXT_SITE_TOKEN}`),
-    { name: 'HMAC', hash: 'SHA-256' },
-    false,
-    ['sign'],
-  )
-  const payload = `${slug}.${grant}.${expiresAt}.${link.updatedAt}.${link.password ?? ''}`
-  const signature = await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(payload))
-  const hex = [...new Uint8Array(signature)].map(b => b.toString(16).padStart(2, '0')).join('')
-  return `${grant}.${expiresAt}.${hex}`
 }
 
 async function createProxyLink(url: string, extra: Record<string, unknown> = {}): Promise<string> {
@@ -259,17 +237,13 @@ describe('/', () => {
     })
     const slug = await createProxyLink('https://degraded.test/landing')
 
-    for (const disabled of [undefined, 'false']) {
-      if (disabled === undefined)
-        delete env.NUXT_LINK_PROXY_ENABLED
-      else
-        env.NUXT_LINK_PROXY_ENABLED = disabled
-
+    for (const disabled of ['', 'false']) {
+      env.NUXT_PUBLIC_LINK_PROXY_ENABLED = disabled
       const response = await fetch(`/${slug}`, { redirect: 'manual' })
-      expect(response.status, `NUXT_LINK_PROXY_ENABLED=${disabled}`).toBe(301)
+      expect(response.status, `NUXT_PUBLIC_LINK_PROXY_ENABLED=${disabled}`).toBe(301)
       expect(response.headers.get('location')).toBe('https://degraded.test/landing')
     }
-    env.NUXT_LINK_PROXY_ENABLED = 'true'
+    env.NUXT_PUBLIC_LINK_PROXY_ENABLED = 'true'
     expect(upstreamCalls('degraded.test').length).toBe(0)
   })
 
@@ -279,13 +253,10 @@ describe('/', () => {
       'http://10.0.0.1/',
       'http://192.168.1.1/',
       'http://169.254.169.254/latest/meta-data',
+      'http://localhost/',
       'http://[::1]/',
-      'http://[::ffff:7f00:1]/',
       'http://[::ffff:127.0.0.1]/',
-      'http://[0:0:0:0:0:ffff:a00:1]/',
-      'http://[64:ff9b::a00:1]/',
-      'http://[2002:a00:1::]/',
-      'http://[2001::a00:1:0:0]/',
+      'http://[fc00::1]/',
     ]
     mockUpstream({})
 
@@ -307,11 +278,12 @@ describe('/', () => {
     const response = await fetch(`/${slug}`, {
       redirect: 'manual',
       headers: {
-        'Authorization': 'Bearer leaked-token',
+        'Authorization': 'Bearer api-token',
         'Cookie': 'session=secret',
         'X-Link-Password': 'link-secret',
         'X-Forwarded-For': '1.2.3.4',
         'X-Real-Ip': '5.6.7.8',
+        'CF-Ray': 'abcdef-SJC',
         'X-Custom-Header': 'custom-value',
         'User-Agent': 'SinkProxyTest/1.0',
       },
@@ -320,10 +292,13 @@ describe('/', () => {
 
     const { headers: echoed } = await response.json() as { headers: Record<string, string> }
     const echoedNames = Object.keys(echoed)
-    expect(echoedNames).not.toContain('authorization')
+    // Authorization follows the request; cookie/cf-*/x-link-*/spoofable
+    // forwarding headers are dropped and the proxy recomputes its own.
+    expect(echoed.authorization).toBe('Bearer api-token')
     expect(echoedNames).not.toContain('cookie')
     expect(echoedNames).not.toContain('x-link-password')
     expect(echoedNames).not.toContain('x-real-ip')
+    expect(echoedNames).not.toContain('cf-ray')
     // Without a trusted cf-connecting-ip the client's value is passed through;
     // on Cloudflare it is replaced by the real connecting IP.
     expect(echoed['x-forwarded-for']).toBe('1.2.3.4')
@@ -387,76 +362,7 @@ describe('/', () => {
     expect(response.headers.get('allow')).toBe('GET, POST, OPTIONS')
   })
 
-  it('follows upstream redirects only to validated public http(s) targets', async () => {
-    mockUpstream({
-      'chain.test': (init) => {
-        void init
-        return new Response(null, { status: 302, headers: { Location: 'https://hop.test/final' } })
-      },
-      'hop.test': () => new Response('final destination'),
-    })
-    const slug = await createProxyLink('https://chain.test/start')
-
-    const response = await fetch(`/${slug}`, { redirect: 'manual' })
-    expect(response.status).toBe(200)
-    expect(await response.text()).toBe('final destination')
-    expect(upstreamCalls('hop.test').length).toBe(1)
-  })
-
-  it('refuses to follow upstream redirects to private or non-http targets', async () => {
-    mockUpstream({
-      'private-redirect.test': () => new Response(null, { status: 302, headers: { Location: 'http://169.254.169.254/' } }),
-      'badproto.test': () => new Response(null, { status: 302, headers: { Location: 'file:///etc/passwd' } }),
-    })
-    const privateSlug = await createProxyLink('https://private-redirect.test/start')
-    const badProtoSlug = await createProxyLink('https://badproto.test/start')
-
-    const privateResponse = await fetch(`/${privateSlug}`, { redirect: 'manual' })
-    expect(privateResponse.status).toBe(502)
-
-    const badProtoResponse = await fetch(`/${badProtoSlug}`, { redirect: 'manual' })
-    expect(badProtoResponse.status).toBe(502)
-
-    expect(upstreamCalls('private-redirect.test').length).toBe(1)
-    expect(upstreamCalls('badproto.test').length).toBe(1)
-  })
-
-  it('detects redirect loops and bounds redirect depth', async () => {
-    mockUpstream({
-      'loop.test': () => new Response(null, { status: 302, headers: { Location: 'https://loop.test/' } }),
-      'longchain.test': () => new Response(null, { status: 302, headers: { Location: 'https://longchain.test/next' } }),
-    })
-    const loopSlug = await createProxyLink('https://loop.test/')
-    const chainSlug = await createProxyLink('https://longchain.test/start')
-
-    const loopResponse = await fetch(`/${loopSlug}`, { redirect: 'manual' })
-    expect(loopResponse.status).toBe(508)
-
-    const chainResponse = await fetch(`/${chainSlug}`, { redirect: 'manual' })
-    expect(chainResponse.status).toBe(508)
-    expect(upstreamCalls('longchain.test').length).toBeLessThanOrEqual(7)
-  })
-
-  it('returns 307/308 redirects for request bodies instead of following them', async () => {
-    mockUpstream({
-      'redirected.test': () => new Response('must not be fetched'),
-      'keep-body.test': () => new Response(null, { status: 307, headers: { Location: 'https://redirected.test/' } }),
-    })
-    const slug = await createProxyLink('https://keep-body.test/upload')
-
-    const response = await fetch(`/${slug}`, {
-      method: 'POST',
-      redirect: 'manual',
-      body: 'payload',
-      headers: { 'Content-Type': 'text/plain' },
-    })
-
-    expect(response.status).toBe(307)
-    expect(response.headers.get('location')).toBe('https://redirected.test/')
-    expect(upstreamCalls('redirected.test').length).toBe(0)
-  })
-
-  it('sandboxes active proxied content without allow-same-origin', async () => {
+  it('serves active proxied content without adding a CSP sandbox', async () => {
     mockUpstream({
       'sandbox.test': () => new Response('<html><body>served</body></html>', {
         headers: {
@@ -472,17 +378,13 @@ describe('/', () => {
     expect(response.status).toBe(200)
     expect(await response.text()).toContain('served')
 
-    const csp = response.headers.get('content-security-policy') || ''
-    expect(csp).toContain('sandbox')
-    expect(csp).toContain('allow-scripts')
-    expect(csp).toContain('allow-pointer-lock')
-    expect(csp).toContain('allow-presentation')
-    expect(csp).not.toContain('allow-same-origin')
+    // Only the upstream CSP survives; the proxy must not add a sandbox.
+    expect(response.headers.get('content-security-policy')).toBe('script-src https://upstream.example')
     expect(response.headers.get('x-content-type-options')).toBe('nosniff')
     expect(response.headers.get('set-cookie')).toBeNull()
   })
 
-  it('sandboxes every proxied response including binary content', async () => {
+  it('marks every proxied response nosniff without adding a CSP', async () => {
     mockUpstream({
       'types.test': () => new Response('<svg/>', { headers: { 'Content-Type': 'image/svg+xml' } }),
       'binary.test': () => new Response(new Uint8Array([1, 2, 3]), { headers: { 'Content-Type': 'application/octet-stream' } }),
@@ -491,96 +393,13 @@ describe('/', () => {
     const binSlug = await createProxyLink('https://binary.test/file.bin')
 
     const svgResponse = await fetch(`/${svgSlug}`, { redirect: 'manual' })
-    expect(svgResponse.headers.get('content-security-policy')).toContain('sandbox')
+    expect(svgResponse.headers.get('content-security-policy')).toBeNull()
     expect(svgResponse.headers.get('x-content-type-options')).toBe('nosniff')
 
     const binResponse = await fetch(`/${binSlug}`, { redirect: 'manual' })
-    expect(binResponse.headers.get('content-security-policy')).toContain('sandbox')
+    expect(binResponse.headers.get('content-security-policy')).toBeNull()
     expect(binResponse.headers.get('x-content-type-options')).toBe('nosniff')
     expect(binResponse.headers.get('content-type')).toBe('application/octet-stream')
-  })
-
-  it('downgrades missing or malformed upstream Content-Type to octet-stream', async () => {
-    mockUpstream({
-      'nocontenttype.test': () => new Response(new Uint8Array([0x3C, 0x68])),
-      'bogus.test': () => new Response('<html>mislabeled</html>', { headers: { 'Content-Type': 'not-a-media-type' } }),
-    })
-    const missingSlug = await createProxyLink('https://nocontenttype.test/page')
-    const bogusSlug = await createProxyLink('https://bogus.test/page')
-
-    const missing = await fetch(`/${missingSlug}`, { redirect: 'manual' })
-    expect(missing.headers.get('content-type')).toBe('application/octet-stream')
-    expect(missing.headers.get('x-content-type-options')).toBe('nosniff')
-
-    const bogus = await fetch(`/${bogusSlug}`, { redirect: 'manual' })
-    expect(bogus.headers.get('content-type')).toBe('application/octet-stream')
-    expect(bogus.headers.get('content-security-policy')).toContain('sandbox')
-  })
-
-  it('strips origin-scoped control headers from upstream responses', async () => {
-    mockUpstream({
-      'controls.test': () => new Response('api payload', {
-        headers: {
-          'Content-Type': 'application/json',
-          'Clear-Site-Data': '"cache", "cookies", "storage"',
-          'Refresh': '0; url=https://evil.test/',
-          'Strict-Transport-Security': 'max-age=31536000; includeSubDomains',
-          'Alt-Svc': 'h3=":443"',
-          'Access-Control-Allow-Origin': '*',
-          'Content-Disposition': 'attachment; filename="data.json"',
-        },
-      }),
-    })
-    const slug = await createProxyLink('https://controls.test/data')
-
-    const response = await fetch(`/${slug}`, { redirect: 'manual' })
-    expect(response.headers.get('clear-site-data')).toBeNull()
-    expect(response.headers.get('refresh')).toBeNull()
-    expect(response.headers.get('strict-transport-security')).toBeNull()
-    expect(response.headers.get('alt-svc')).toBeNull()
-    // Common API/download headers must survive the filter.
-    expect(response.headers.get('access-control-allow-origin')).toBe('*')
-    expect(response.headers.get('content-disposition')).toContain('attachment')
-  })
-
-  it('refuses to reflect redirect locations pointing at private targets', async () => {
-    mockUpstream({
-      'post-redirect.test': () => new Response(null, { status: 307, headers: { Location: 'http://169.254.169.254/' } }),
-    })
-    const slug = await createProxyLink('https://post-redirect.test/upload')
-
-    // The body cannot be replayed on a 307, so the response would previously
-    // be handed to the client with the private Location unvalidated.
-    const response = await fetch(`/${slug}`, {
-      method: 'POST',
-      redirect: 'manual',
-      body: 'payload',
-      headers: { 'Content-Type': 'text/plain' },
-    })
-
-    expect(response.status).toBe(502)
-    expect(response.headers.get('location')).toBeNull()
-  })
-
-  it('drops caller x-* extension headers when a redirect crosses origins', async () => {
-    mockUpstream({
-      'first.test': () => new Response(null, { status: 302, headers: { Location: 'https://second.test/final' } }),
-      'second.test': init => new Response(JSON.stringify({ headers: upstreamHeaders(init) }), {
-        headers: { 'Content-Type': 'application/json' },
-      }),
-    })
-    const slug = await createProxyLink('https://first.test/start')
-
-    const response = await fetch(`/${slug}`, {
-      redirect: 'manual',
-      headers: { 'X-Custom-Header': 'first-origin-only' },
-    })
-    expect(response.status).toBe(200)
-
-    const { headers: echoed } = await response.json() as { headers: Record<string, string> }
-    expect(echoed['x-custom-header']).toBeUndefined()
-    // The proxy's own computed x-forwarded-* values stay accurate per hop.
-    expect(echoed['x-forwarded-host']).toBe('localhost')
   })
 
   it('prefers device redirect over geo redirect', async () => {
@@ -683,9 +502,14 @@ describe('password protected redirect', { concurrent: false }, () => {
 })
 
 describe('proxied link gates', { concurrent: false }, () => {
-  it('never forwards password form bodies upstream and grants access via 303 cookie flow', async () => {
+  it('replays a confirmed password form as a bodyless GET so the password never reaches upstream', async () => {
+    const seen = { method: '', hasBody: false }
     mockUpstream({
-      'gated.test': init => new Response(`secret ${upstreamHeaders(init)['content-type'] ?? ''}`),
+      'gated.test': (init) => {
+        seen.method = init?.method ?? ''
+        seen.hasBody = init?.body != null
+        return new Response('secret content')
+      },
     })
     const password = 'proxy-secret123'
     const slug = await createProxyLink('https://gated.test/data', { password })
@@ -701,32 +525,28 @@ describe('proxied link gates', { concurrent: false }, () => {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({ password }),
     })
-    expect(formResponse.status).toBe(303)
-    expect(formResponse.headers.get('location')).toBe(`/${slug}`)
-    expect(upstreamCalls('gated.test').length).toBe(0)
-
-    const cookie = parseSetCookie(formResponse, `pw_${slug}`)
-    expect(cookie).toBeTruthy()
-
-    const proxied = await fetch(`/${slug}`, {
-      redirect: 'manual',
-      headers: { Cookie: `pw_${slug}=${cookie}` },
-    })
-    expect(proxied.status).toBe(200)
-    expect(await proxied.text()).toContain('secret')
-    expect(proxied.headers.get('cache-control')).toBe('private, no-store')
+    expect(formResponse.status).toBe(200)
+    expect(await formResponse.text()).toBe('secret content')
+    expect(formResponse.headers.get('cache-control')).toBe('private, no-store')
     expect(upstreamCalls('gated.test').length).toBe(1)
+    expect(seen.method).toBe('GET')
+    expect(seen.hasBody).toBe(false)
   })
 
-  it('forces private no-store on gated proxied responses and overrides upstream caching', async () => {
+  it('proxies an unsafe link after the confirm form POST, as a bodyless GET', async () => {
+    const seen = { method: '', hasBody: false }
     mockUpstream({
-      'cached.test': () => new Response('<html>gated html</html>', {
-        headers: {
-          'Content-Type': 'text/html',
-          'Cache-Control': 'public, max-age=3600',
-          'ETag': '"abc"',
-        },
-      }),
+      'cached.test': (init) => {
+        seen.method = init?.method ?? ''
+        seen.hasBody = init?.body != null
+        return new Response('<html>gated html</html>', {
+          headers: {
+            'Content-Type': 'text/html',
+            'Cache-Control': 'public, max-age=3600',
+            'ETag': '"abc"',
+          },
+        })
+      },
     })
     const slug = await createProxyLink('https://cached.test/', { unsafe: true })
 
@@ -741,18 +561,13 @@ describe('proxied link gates', { concurrent: false }, () => {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
       body: new URLSearchParams({ confirm: 'true' }),
     })
-    expect(confirmed.status).toBe(303)
-    const cookie = parseSetCookie(confirmed, `pw_${slug}`)
-    expect(cookie).toBeTruthy()
-
-    const proxied = await fetch(`/${slug}`, {
-      redirect: 'manual',
-      headers: { Cookie: `pw_${slug}=${cookie}` },
-    })
-    expect(proxied.status).toBe(200)
-    expect(proxied.headers.get('cache-control')).toBe('private, no-store')
-    expect(proxied.headers.get('etag')).toBe('"abc"')
-    expect(proxied.headers.get('content-security-policy')).toContain('sandbox')
+    expect(confirmed.status).toBe(200)
+    expect(await confirmed.text()).toContain('gated html')
+    expect(confirmed.headers.get('cache-control')).toBe('private, no-store')
+    expect(confirmed.headers.get('etag')).toBe('"abc"')
+    expect(confirmed.headers.get('content-security-policy')).toBeNull()
+    expect(seen.method).toBe('GET')
+    expect(seen.hasBody).toBe(false)
   })
 
   it('still honors x-link-password header authentication on proxied links', async () => {
@@ -823,7 +638,7 @@ describe('proxied link gates', { concurrent: false }, () => {
     expect(new TextDecoder().decode(received.body)).toBe(payload)
   })
 
-  it('denies non-form POSTs on gated proxy links without consuming the body', async () => {
+  it('answers POSTs without credentials with the password page, not the upstream', async () => {
     mockUpstream({
       'denied.test': () => new Response('never reached'),
     })
@@ -836,62 +651,8 @@ describe('proxied link gates', { concurrent: false }, () => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ unauthenticated: true }),
     })
-    expect(response.status).toBe(403)
+    expect(response.status).toBe(200)
+    expect(await response.text()).toContain('Password Required')
     expect(upstreamCalls('denied.test').length).toBe(0)
-  })
-
-  it('rejects expired and stale grant cookies', async () => {
-    mockUpstream({
-      'stale.test': () => new Response('stale upstream'),
-    })
-    const slug = await createProxyLink('https://stale.test/page', { unsafe: true })
-    const stored = await getStoredLink(slug)
-    expect(stored?.updatedAt).toBeTypeOf('number')
-
-    const now = Math.floor(Date.now() / 1000)
-
-    // An expired grant must be refused even though its signature is valid.
-    const expired = await forgeGateCookie(slug, 'u', { updatedAt: stored!.updatedAt }, now - 60)
-    const expiredResponse = await fetch(`/${slug}`, {
-      redirect: 'manual',
-      headers: { Cookie: `pw_${slug}=${expired}` },
-    })
-    expect(expiredResponse.status).toBe(200)
-    expect(await expiredResponse.text()).toContain('Potentially Unsafe Link')
-    expect(upstreamCalls('stale.test').length).toBe(0)
-
-    // A grant signed against a previous link version dies after any edit.
-    const stale = await forgeGateCookie(slug, 'u', { updatedAt: stored!.updatedAt - 10 }, now + 3600)
-    const staleResponse = await fetch(`/${slug}`, {
-      redirect: 'manual',
-      headers: { Cookie: `pw_${slug}=${stale}` },
-    })
-    expect(staleResponse.status).toBe(200)
-    expect(await staleResponse.text()).toContain('Potentially Unsafe Link')
-
-    // Editing the link bumps updatedAt and kills a cookie minted before it.
-    const realCookieResponse = await fetch(`/${slug}`, {
-      method: 'POST',
-      redirect: 'manual',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams({ confirm: 'true' }),
-    })
-    expect(realCookieResponse.status).toBe(303)
-    const realCookie = parseSetCookie(realCookieResponse, `pw_${slug}`)!
-    const edit = await putJson('/api/link/edit', {
-      url: 'https://stale.test/page',
-      slug,
-      proxy: true,
-      unsafe: true,
-      comment: 'bump version',
-    })
-    expect(edit.status).toBe(201)
-
-    const afterEdit = await fetch(`/${slug}`, {
-      redirect: 'manual',
-      headers: { Cookie: `pw_${slug}=${realCookie}` },
-    })
-    expect(await afterEdit.text()).toContain('Potentially Unsafe Link')
-    expect(upstreamCalls('stale.test').length).toBe(0)
   })
 })

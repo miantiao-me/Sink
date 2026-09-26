@@ -38,22 +38,6 @@ export function assertLinkWritesAllowed(event: H3Event, action: string): void {
   }
 }
 
-/**
- * Reverse proxying requires NUXT_LINK_PROXY_ENABLED at the instance level.
- * All write paths (create, upsert, import, edit, MCP tools) funnel through
- * this guard: it refuses turning `proxy` on while the feature is disabled,
- * but still lets a stored proxy link keep its flag across edits and lets
- * callers explicitly clear it.
- */
-export function assertLinkProxyWriteAllowed(event: H3Event, requestedProxy: boolean | undefined, existingProxy?: boolean): void {
-  if (requestedProxy === true && existingProxy !== true && !useRuntimeConfig(event).linkProxyEnabled) {
-    throw createError({
-      status: 403,
-      statusText: 'Link proxy mode is disabled on this instance.',
-    })
-  }
-}
-
 /** An explicit `unsafe` flag from the caller wins over the safety lookup. */
 async function detectUnsafeLink(event: H3Event, link: Pick<Link, 'url' | 'unsafe'>): Promise<void> {
   if (link.unsafe === undefined && !await isSafeUrl(event, link.url))
@@ -106,7 +90,6 @@ async function applyEditableLinkPassword(newLink: Link, password?: string): Prom
 }
 
 export async function saveNewLink(event: H3Event, link: Link): Promise<LinkResponse> {
-  assertLinkProxyWriteAllowed(event, link.proxy)
   await prepareIncomingLink(event, link)
   await hashNewLinkPassword(link)
 
@@ -117,7 +100,6 @@ export async function saveNewLink(event: H3Event, link: Link): Promise<LinkRespo
 }
 
 export async function upsertLink(event: H3Event, link: Link): Promise<LinkResponse & { status: 'created' | 'existing' }> {
-  assertLinkProxyWriteAllowed(event, link.proxy)
   await prepareIncomingLink(event, link)
 
   const existingLink = await getAuthoritativeLink(event, link.slug)
@@ -143,8 +125,6 @@ export async function replaceLink(event: H3Event, link: EditLink): Promise<LinkR
   const existingLink = await getAnyAuthoritativeLink(event, link.slug)
   if (!existingLink)
     throw createError({ status: 404, statusText: 'Link not found' })
-
-  assertLinkProxyWriteAllowed(event, link.proxy, existingLink.proxy)
 
   if (link.url !== existingLink.url)
     await detectUnsafeLink(event, link)

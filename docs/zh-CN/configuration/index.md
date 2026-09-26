@@ -71,12 +71,16 @@ description: Sink 支持的全部环境变量——做什么、填在哪、什�
 
 Workers 要在 Builds 和运行时填相同值。Pages 只填一次，然后重新部署。
 
-| 变量                              | 默认    | 用途                                 |
-| --------------------------------- | ------- | ------------------------------------ |
-| `NUXT_PUBLIC_PREVIEW_MODE`        | 空      | `true` = 演示模式（链接只活 5 分钟） |
-| `NUXT_PUBLIC_SLUG_DEFAULT_LENGTH` | `6`     | 自动生成短链码的长度                 |
-| `NUXT_PUBLIC_KV_BATCH_LIMIT`      | `50`    | 导出每页条数；导入每次最多一半       |
-| `NUXT_PUBLIC_MAX_URL_LENGTH`      | `16384` | 目标 URL 最大字符数（256-24000）     |
+| 变量                              | 默认    | 用途                                                                |
+| --------------------------------- | ------- | ------------------------------------------------------------------- |
+| `NUXT_PUBLIC_PREVIEW_MODE`        | 空      | `true` = 演示模式（链接只活 5 分钟）                                |
+| `NUXT_PUBLIC_SLUG_DEFAULT_LENGTH` | `6`     | 自动生成短链码的长度                                                |
+| `NUXT_PUBLIC_KV_BATCH_LIMIT`      | `50`    | 导出每页条数；导入每次最多一半                                      |
+| `NUXT_PUBLIC_MAX_URL_LENGTH`      | `16384` | 目标 URL 最大字符数（256-24000）                                    |
+| `NUXT_PUBLIC_HOME_URL`            | 空      | 非空则把 `/` 重定向到该 URL；空则显示 Sink 首页                     |
+| `NUXT_PUBLIC_LINK_PROXY_ENABLED`  | `false` | `true` 时允许链接开启反向代理模式；关闭时存量代理链接回退为普通跳转 |
+
+`NUXT_PUBLIC_*` 的值会打进构建出的页面、同时也在运行时读取，所以修改后需要重新构建，客户端才能拿到新值。
 
 ## 可选配置
 
@@ -93,7 +97,6 @@ Workers 要在 Builds 和运行时填相同值。Pages 只填一次，然后重�
 
 | 变量                                                | 用途                                                           |
 | --------------------------------------------------- | -------------------------------------------------------------- |
-| `NUXT_HOME_URL`                                     | 非空则把 `/` 重定向到该 URL；空则显示 Sink 首页                |
 | `NUXT_NOT_FOUND_REDIRECT`                           | 未知短链码跳到哪里（**始终 HTTP 302**）                        |
 | `NUXT_CF_ACCESS_TEAM_DOMAIN` + `NUXT_CF_ACCESS_AUD` | 两个都设 → 启用 [Cloudflare Access](./cloudflare-access)       |
 | `NUXT_SAFE_BROWSING_DOH`                            | 用于检查不安全域名的 DNS-over-HTTPS 地址（未设置 `unsafe` 时） |
@@ -110,7 +113,6 @@ Workers 要在 Builds 和运行时填相同值。Pages 只填一次，然后重�
 | `NUXT_LINK_CACHE_TTL`         | `60`                         | KV 缓存链接的秒数                                                                        |
 | `NUXT_REDIRECT_WITH_QUERY`    | `false`                      | `true` 时把访客查询参数接到目标 URL                                                      |
 | `NUXT_REDIRECT_NO_STORE`      | `false`                      | `true` 时要求浏览器不要缓存这次跳转                                                      |
-| `NUXT_LINK_PROXY_ENABLED`     | `false`                      | `true` 时允许链接开启反向代理模式；关闭时存量代理链接回退为普通跳转                      |
 | `NUXT_CASE_SENSITIVE`         | `false`                      | `true` 时自定义短链码区分大小写（`Docs` ≠ `docs`）                                       |
 | `NUXT_DATASET`                | `sink`                       | 访问分析数据集名；必须与 `ANALYTICS` 绑定一致                                            |
 | `NUXT_LIST_QUERY_LIMIT`       | `500`                        | 分析列表最大行数                                                                         |

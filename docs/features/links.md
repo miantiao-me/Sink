@@ -57,19 +57,52 @@ Cloaking shows the target site inside the page while the address bar still shows
 
 ## Reverse proxy mode
 
-Reverse proxy mode is **off by default**. Set `NUXT_LINK_PROXY_ENABLED=true` to allow links on your instance to opt into it; while disabled, `proxy` cannot be enabled on new or imported links, existing proxy links keep their flag but fall back to plain redirects, and edits may only turn `proxy` off or leave it unchanged.
+When reverse proxy mode is enabled on a link, visiting `/:slug` makes the Cloudflare Worker fetch the destination URL and stream the response directly to the client without issuing HTTP 301/302 redirects.
 
-When enabled on a link, Sink transparently fetches and streams content from the destination URL via Cloudflare Workers without issuing HTTP 301/302 redirects.
+Sink intentionally uses a simple, single-request proxy model: it does not act as a full website proxy, does not assign separate domains or subdomains, and only forwards the single request made to the short code itself.
 
-This is ideal for API endpoints, shell install scripts, raw payloads, and configuration subscriptions where redirects or iframes are undesirable.
+### Suitable use cases
 
-::: warning
-Proxied content is served from your Sink domain, so only proxy targets you trust. Every proxied response carries a CSP `sandbox` without `allow-same-origin` and `nosniff`: scripts still run, but in an opaque origin that cannot read Sink cookies or storage, and a missing or malformed upstream Content-Type is downgraded to `application/octet-stream`. This limits — not eliminates — the risk of active content. Credential headers (`cookie`, `authorization`, `cf-access-*`) are never forwarded upstream, and upstream `set-cookie` plus origin-scoped control headers (`Clear-Site-Data`, `Refresh`, HSTS, …) are stripped.
+- **API endpoints:** Forward API requests or webhooks with `Authorization` and custom headers passed through, returning responses directly to the caller.
+- **Shell install scripts:** Support one-line commands such as `curl -fsSL https://sink.example/install | bash`.
+- **Raw text and configurations:** Serve raw snippets, JSON payloads, or remote subscription configurations.
+- **Single file downloads:** Provide direct file downloads without bouncing visitors through external storage links.
 
-Upstream redirects are followed only to validated public `http(s)` URLs (with loop and depth limits); private/local targets are refused, and redirects that would need to replay a request body are returned to the client instead of being followed. The literal-IP checks cannot defend against DNS rebinding on hostname targets, so proxy only hosts you control or trust.
+### Unsuitable use cases and limitations
 
-For password-protected or unsafe links, the confirmation `POST` is never forwarded upstream: it returns `303` back to the link with a short-lived grant cookie, and gated responses are marked `private, no-store`.
+Reverse proxy mode is **not intended for standard multi-asset web pages**.
+
+Because proxying applies only to the single request to `/:slug`, Sink:
+
+- **Does not rewrite asset paths** inside HTML or CSS.
+- **Does not route subpaths** (requests to `/:slug/subpath` are not forwarded to the destination).
+- **Does not proxy runtime requests** such as dynamic `import()`, `fetch()`, or WebSockets.
+
+For example, if the destination page references `<script src="/assets/app.js">` or `<link rel="stylesheet" href="./style.css">`, the browser will request those files from your Sink domain (`https://sink.example/assets/app.js`), resulting in 404 errors, broken styles, and script failures. Only self-contained pages whose assets use absolute external URLs (such as CDN links) can render properly.
+
+### How to enable
+
+Reverse proxy mode is **off by default**.
+
+1. **Set the environment variable:** Add `NUXT_PUBLIC_LINK_PROXY_ENABLED=true` to your deployment environment.
+2. **Rebuild and deploy:** Because this is a `NUXT_PUBLIC_*` configuration, changing it requires rebuilding and redeploying the application for the client to register the change.
+
+This flag only controls resolution: when disabled, links configured with proxy mode simply fall back to standard HTTP redirects when visited.
+
+### Security notes and protections
+
+::: warning Same-origin security risk
+Proxied responses are served under your Sink domain and execute in the **same origin without a CSP sandbox**.
+
+Any active upstream content (HTML, JavaScript, SVG) runs in the same origin as your Sink dashboard and can access cookies and `localStorage` (including dashboard site tokens). **Never proxy untrusted or unknown destinations.**
 :::
+
+Sink enforces the following built-in protections:
+
+- **Private target blocking:** Only public `http(s)` targets are allowed. Requests to `localhost`, IPv4 private/reserved ranges, and IPv6 `::`, `::1`, ULA, link-local, multicast, or `::ffff:` mapped addresses are blocked. Literal-IP checks cannot defend against DNS rebinding on hostname targets. Upstream redirects are followed automatically by the runtime, and only the initial target is validated.
+- **Request header filtering:** Client `cookie`, `host`, hop-by-hop headers, `content-length`, `cf-*`, `x-forwarded-*`, `x-real-ip`, and `x-link-*` headers are stripped; `authorization` and other custom headers are forwarded. Sink automatically populates `x-forwarded-for`, `x-forwarded-proto`, and `x-forwarded-host`.
+- **Response header filtering:** Upstream hop-by-hop headers and `set-cookie` headers are stripped. Responses always include `X-Content-Type-Options: nosniff`.
+- **Protected link isolation:** When a visitor confirms a password or unsafe warning form, the upstream request is made within the same request as a bodyless GET, ensuring submitted passwords are never sent upstream. API clients can stream request bodies (JSON or binary) directly by passing `x-link-password` and `x-link-confirm: true` headers. Responses for password-protected or unsafe links are always marked `Cache-Control: private, no-store`.
 
 ## Health check
 
@@ -77,4 +110,4 @@ For password-protected or unsafe links, the confirmation `POST` is never forward
 
 ## Site-wide redirect options
 
-You can change the default redirect code (default `301`), ask browsers not to cache redirects, redirect the homepage (`NUXT_HOME_URL`), and redirect unknown short codes (`NUXT_NOT_FOUND_REDIRECT`, always **302**). See [configuration](/configuration/#advanced-defaults).
+You can change the default redirect code (default `301`), ask browsers not to cache redirects, redirect the homepage (`NUXT_PUBLIC_HOME_URL`), and redirect unknown short codes (`NUXT_NOT_FOUND_REDIRECT`, always **302**). See [configuration](/configuration/#advanced-defaults).
