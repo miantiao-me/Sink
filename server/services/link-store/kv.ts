@@ -1,6 +1,7 @@
 import type { H3Event } from 'h3'
 import type { Link } from '#shared/schemas/link'
 import { parseLegacyKvLink } from '#shared/schemas/link'
+import { getKvNamespace, requireCloudflareEnv } from '../../utils/bindings'
 import { getExpiration } from '../../utils/time'
 
 export interface LegacyKvLinkResult {
@@ -21,8 +22,38 @@ function logCacheError(operation: string, slug: string, error: unknown): void {
   })
 }
 
+/**
+ * Callers fall back to D1 when KV is absent, so a missing binding is logged
+ * rather than thrown. It is reported per operation because every request is
+ * degraded for as long as the binding is gone.
+ */
+function getLinkCache(event: H3Event, operation: string, slug: string): KVNamespace | null {
+  const kv = getKvNamespace(requireCloudflareEnv(event))
+  if (!kv)
+    console.error({ event: 'link_cache.binding.missing', operation, slug })
+
+  return kv
+}
+
+async function readLinkCacheEntry(kv: KVNamespace, slug: string, cacheTtl?: number) {
+  try {
+    return await kv.getWithMetadata(`link:${slug}`, { type: 'json', cacheTtl })
+  }
+  catch (error) {
+    logCacheError('read', slug, error)
+    return null
+  }
+}
+
 export async function readLegacyKvLink(event: H3Event, slug: string, cacheTtl?: number): Promise<LegacyKvLinkResult> {
-  const result = await event.context.cloudflare.env.KV.getWithMetadata(`link:${slug}`, { type: 'json', cacheTtl })
+  const kv = getLinkCache(event, 'read', slug)
+  if (!kv)
+    return { link: null, metadata: null }
+
+  const result = await readLinkCacheEntry(kv, slug, cacheTtl)
+  if (!result)
+    return { link: null, metadata: null }
+
   const parsed = parseLegacyKvLink(result.value, slug)
   const metadata = result.metadata as Record<string, unknown> | null
   const metadataExpiration = typeof metadata?.expiration === 'number' ? metadata.expiration : undefined
@@ -38,9 +69,13 @@ export async function readLegacyKvLink(event: H3Event, slug: string, cacheTtl?: 
 }
 
 export async function putLinkCache(event: H3Event, link: Link, effectiveExpiresAt?: number | null): Promise<boolean> {
+  const kv = getLinkCache(event, 'put', link.slug)
+  if (!kv)
+    return false
+
   const expiration = effectiveExpiresAt === undefined ? getExpiration(event, link.expiration) : effectiveExpiresAt ?? undefined
   try {
-    await event.context.cloudflare.env.KV.put(`link:${link.slug}`, JSON.stringify(link), { expiration })
+    await kv.put(`link:${link.slug}`, JSON.stringify(link), { expiration })
     return true
   }
   catch (error) {
@@ -50,8 +85,12 @@ export async function putLinkCache(event: H3Event, link: Link, effectiveExpiresA
 }
 
 export async function deleteLinkCache(event: H3Event, slug: string): Promise<void> {
+  const kv = getLinkCache(event, 'delete', slug)
+  if (!kv)
+    return
+
   try {
-    await event.context.cloudflare.env.KV.delete(`link:${slug}`)
+    await kv.delete(`link:${slug}`)
   }
   catch (error) {
     logCacheError('delete', slug, error)

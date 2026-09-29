@@ -5,10 +5,11 @@ import { desc, eq } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/d1'
 import { createError } from 'h3'
 import { linkMigrationRuns } from '../../database/schema'
+import { requireCloudflareEnv, requireD1Database } from '../../utils/bindings'
 import { buildD1LinkValues } from './d1'
 
 export async function readCompletedLinkMigrationMarker(env: Cloudflare.Env): Promise<LinkMigrationMarker | null> {
-  const [run] = await drizzle(env.DB)
+  const [run] = await drizzle(requireD1Database(env))
     .select({
       scanned: linkMigrationRuns.scanned,
       inserted: linkMigrationRuns.inserted,
@@ -39,7 +40,7 @@ export async function readCompletedLinkMigrationMarker(env: Cloudflare.Env): Pro
  * callers never operate on a store that is not yet authoritative.
  */
 export async function assertLinkStoreReady(event: H3Event): Promise<void> {
-  if (await readCompletedLinkMigrationMarker(event.context.cloudflare.env))
+  if (await readCompletedLinkMigrationMarker(requireCloudflareEnv(event)))
     return
 
   throw createError({
@@ -50,7 +51,7 @@ export async function assertLinkStoreReady(event: H3Event): Promise<void> {
 
 export async function insertMigratedKvLink(event: H3Event, link: Link, effectiveExpiresAt?: number): Promise<boolean> {
   const values = buildD1LinkValues(event, link, effectiveExpiresAt)
-  const { DB } = event.context.cloudflare.env
+  const DB = requireD1Database(requireCloudflareEnv(event))
   const insert = DB.prepare(`
     INSERT INTO links (
       slug, id, url, comment, created_at, updated_at, expiration, title,

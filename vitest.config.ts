@@ -1,3 +1,4 @@
+import { fileURLToPath } from 'node:url'
 import { cloudflareTest, readD1Migrations } from '@cloudflare/vitest-pool-workers'
 import { loadEnv } from 'vite'
 import { defineConfig } from 'vitest/config'
@@ -41,6 +42,13 @@ export default defineConfig(async ({ mode }) => ({
       },
     }),
   ],
+  // Nitro resolves #shared during the build, so unit tests that import server
+  // modules directly need the alias declared here.
+  resolve: {
+    alias: {
+      '#shared': fileURLToPath(new URL('./shared', import.meta.url)),
+    },
+  },
   test: {
     env: loadEnv(mode, process.cwd(), ''),
     isolate: false,
