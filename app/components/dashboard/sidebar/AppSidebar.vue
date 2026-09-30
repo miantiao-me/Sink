@@ -1,7 +1,9 @@
 <script setup lang="ts">
+import type { RouteLocationRaw } from 'vue-router'
+
 interface NavItem {
   title: string
-  url: string
+  to: RouteLocationRaw
   icon: Component
   isActive: boolean
 }
@@ -12,25 +14,25 @@ const { isActive } = useDashboardRoute()
 const platformItems = computed<NavItem[]>(() => [
   {
     title: 'nav.links',
-    url: '/dashboard/links',
+    to: { name: 'links' },
     icon: DASHBOARD_ROUTES.links.icon,
     isActive: isActive('links'),
   },
   {
     title: 'nav.analysis',
-    url: '/dashboard/analysis',
+    to: { name: 'analysis' },
     icon: DASHBOARD_ROUTES.analysis.icon,
     isActive: isActive('analysis'),
   },
   {
     title: 'nav.realtime',
-    url: '/dashboard/realtime',
+    to: { name: 'realtime' },
     icon: DASHBOARD_ROUTES.realtime.icon,
     isActive: isActive('realtime'),
   },
   {
     title: 'nav.check',
-    url: '/dashboard/check',
+    to: { name: 'check' },
     icon: DASHBOARD_ROUTES.check.icon,
     isActive: isActive('check'),
   },
@@ -39,7 +41,7 @@ const platformItems = computed<NavItem[]>(() => [
 const settingsItems = computed<NavItem[]>(() => [
   {
     title: 'nav.migrate',
-    url: '/dashboard/migrate',
+    to: { name: 'migrate' },
     icon: DASHBOARD_ROUTES.migrate.icon,
     isActive: isActive('migrate'),
   },

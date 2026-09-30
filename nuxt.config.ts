@@ -46,12 +46,14 @@ export default defineNuxtConfig({
       maxUrlLength: '16384',
       homeURL: process.env.NUXT_HOME_URL || '',
       linkProxyEnabled: false,
+      // Origin that serves the dashboard, for example https://dash.example.com. When set, that
+      // host serves the dashboard from its root plus `/api/**` and `/_docs/**`, and resolves no
+      // short links; every other host resolves short links only. Empty means one host serves
+      // everything, with the dashboard under `/dashboard`. See shared/utils/host-surface.ts.
+      dashboardURL: '',
     },
   },
   routeRules: {
-    '/dashboard': {
-      redirect: '/dashboard/links',
-    },
     '/api/**': {
       cors: process.env.NUXT_API_CORS === 'true',
     },

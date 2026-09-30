@@ -1,5 +1,9 @@
 <script setup lang="ts">
+import { dashboardHref } from '@/utils/dashboard-url'
+
 const { documentation } = useAppConfig()
+const { dashboardURL } = useRuntimeConfig().public
+const dashboardLink = dashboardHref()
 </script>
 
 <template>
@@ -48,7 +52,7 @@ const { documentation } = useAppConfig()
               size="lg"
               variant="outline"
             >
-              <NuxtLink to="/dashboard" :title="$t('dashboard.title')">
+              <NuxtLink :to="dashboardLink" :external="!!dashboardURL" :title="$t('dashboard.title')">
                 {{ $t('dashboard.title') }}
               </NuxtLink>
             </Button>

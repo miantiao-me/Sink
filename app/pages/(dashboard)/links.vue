@@ -60,7 +60,7 @@ onMounted(() => {
           {{ $t('links.migration_gate.retry') }}
         </Button>
         <Button variant="outline" as-child>
-          <NuxtLink to="/dashboard/migrate?tab=d1">
+          <NuxtLink :to="{ name: 'migrate', query: { tab: 'd1' } }">
             {{ $t('links.migration_gate.open_migration') }}
           </NuxtLink>
         </Button>

@@ -1,5 +1,6 @@
 import type { NitroFetchOptions, NitroFetchRequest } from 'nitropack'
 import { getAuthToken, removeAuthToken } from '@/utils/auth-token'
+import { dashboardPath } from '@/utils/dashboard-url'
 
 type APIOptions = Omit<NitroFetchOptions<NitroFetchRequest>, 'headers'> & {
   headers?: Record<string, string>
@@ -23,8 +24,9 @@ export async function useAPI(api: string, options?: APIOptions): Promise<unknown
   catch (error: unknown) {
     if (typeof error === 'object' && error !== null && 'status' in error && error.status === 401) {
       removeAuthToken()
-      if (import.meta.client && window.location.pathname !== '/dashboard/login')
-        window.location.assign('/dashboard/login')
+      const loginPath = dashboardPath('/login')
+      if (import.meta.client && window.location.pathname !== loginPath)
+        window.location.assign(loginPath)
     }
     throw error
   }

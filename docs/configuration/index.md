@@ -78,11 +78,48 @@ On Workers, set the same value in Builds and runtime. On Pages, set once, then r
 | `NUXT_PUBLIC_KV_BATCH_LIMIT`      | `50`    | Export page size; import accepts at most half per request                                          |
 | `NUXT_PUBLIC_MAX_URL_LENGTH`      | `16384` | Maximum target URL length in characters (256-24000)                                                |
 | `NUXT_PUBLIC_HOME_URL`            | empty   | Non-empty URL redirects `/`; empty shows the Sink homepage                                         |
+| `NUXT_PUBLIC_DASHBOARD_URL`       | empty   | Origin that serves the dashboard, for example `https://dash.example.com`. See below                |
 | `NUXT_PUBLIC_LINK_PROXY_ENABLED`  | `false` | `true` allows links to opt into reverse proxy mode; off, stored proxy links fall back to redirects |
 
 `NUXT_PUBLIC_*` values are baked into the built UI and read at runtime, so changes need a rebuild before the client picks them up.
 
 `NUXT_HOME_URL` is the deprecated name of `NUXT_PUBLIC_HOME_URL`. It still works, but rename it when you next change your settings.
+
+### Giving the dashboard its own subdomain
+
+`NUXT_PUBLIC_DASHBOARD_URL` splits one deployment across two hostnames. Set it to the origin you want the dashboard on, then add that hostname to the same Worker or Pages project as a second custom domain. No second deployment is involved.
+
+With it set to `https://dash.example.com`:
+
+| Request                           | Result                                                               |
+| --------------------------------- | -------------------------------------------------------------------- |
+| `dash.example.com/`               | Redirects to `/links`                                                |
+| `dash.example.com/links`          | The dashboard. Every page sits at the root of this host              |
+| `dash.example.com/api/**`         | The API. This host is the only one that answers it                   |
+| `dash.example.com/abc`            | Not found. This host never resolves short links                      |
+| `example.com/abc`                 | The short link, as before                                            |
+| `example.com/api/**`, `/_docs/**` | Not found                                                            |
+| `example.com/dashboard`           | An ordinary short link, if you created one with the slug `dashboard` |
+
+Point API clients, scripts, and MCP integrations at the dashboard host once you set this. Requests to `/api/**` on a short-link host return 404 even with a valid `NUXT_SITE_TOKEN`, because the host is checked before the token.
+
+Leave it empty and one host serves everything, with the dashboard under `/dashboard` as before:
+
+| Request                           | Result                                      |
+| --------------------------------- | ------------------------------------------- |
+| `example.com/`                    | The homepage                                |
+| `example.com/dashboard`           | Redirects to `/dashboard/links`             |
+| `example.com/dashboard/links`     | The dashboard                               |
+| `example.com/api/**`, `/_docs/**` | Served here, because there is no other host |
+| `example.com/abc`                 | The short link                              |
+
+`dashboard` is the only reserved slug, and only while the variable is empty. Creating a link with that slug is rejected with a validation error.
+
+Unlike the other public overrides above, this one does not need a rebuild: where the dashboard pages are mounted is decided when the app starts, so changing the variable and letting the new version roll out is enough.
+
+### Removing the variable again
+
+The dashboard moves back under `/dashboard`, and a link with the slug `dashboard` created while the variable was set stops redirecting: `/dashboard` goes to the dashboard instead. The link record is untouched, so it still appears in the dashboard and in exports, and you can edit or delete it. Rename its slug to get the redirect back.
 
 Click analytics store the target URL in Workers Analytics Engine, which limits all blobs in a data point to 16 KB in total. When the URL plus the other click fields (user agent, referer, and so on) exceeds that size, which is possible near the default 16384-character limit, the click still redirects but is missing from analytics. Lower `NUXT_PUBLIC_MAX_URL_LENGTH` if complete analytics matter more than long URLs.
 

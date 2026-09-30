@@ -29,7 +29,7 @@ function logOut() {
     return
   }
 
-  navigateTo('/dashboard/login')
+  navigateTo({ name: 'login' })
 }
 </script>
 

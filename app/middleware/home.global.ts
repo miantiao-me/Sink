@@ -1,15 +1,22 @@
-// When NUXT_PUBLIC_HOME_URL is set, `/` must always resolve through the server
-// (server/middleware/1.redirect.ts) instead of the prerendered SPA homepage.
+import { isDashboardHost } from '@/utils/dashboard-url'
+
+// What `/` means depends on the host, and on SPA navigations there is no server request to
+// decide it. The initial load is already handled by `server/middleware/0.host.ts` (dashboard
+// host) and `server/middleware/1.redirect.ts` (NUXT_PUBLIC_HOME_URL), so only client-side
+// navigations to `/` need handling here.
 export default defineNuxtRouteMiddleware((to, from) => {
   if (import.meta.server)
     return
 
-  // Initial load (from === to) is already handled server-side; only SPA
-  // navigations bypass the server and need a forced full-page load.
   if (to.path !== '/' || from.path === '/')
     return
 
-  const { homeURL } = useRuntimeConfig().public
+  const { homeURL, dashboardURL } = useRuntimeConfig().public
+
+  // Only a dedicated dashboard host has no homepage of its own.
+  if (dashboardURL && isDashboardHost(dashboardURL))
+    return navigateTo({ name: 'links' })
+
   if (homeURL)
     return navigateTo(homeURL, { external: true })
 })

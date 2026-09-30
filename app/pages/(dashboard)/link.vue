@@ -31,7 +31,7 @@ async function loadLink(currentSlug = slug.value) {
   loadError.value = false
   resetCounters()
   if (!currentSlug) {
-    await navigateTo('/dashboard/links', { replace: true })
+    await navigateTo({ name: 'links' }, { replace: true })
     return
   }
 
@@ -70,7 +70,7 @@ linksStore.onLinkUpdate(({ link: updatedLink, type }) => {
     return
 
   if (type === 'delete') {
-    navigateTo('/dashboard/links', { replace: true })
+    navigateTo({ name: 'links' }, { replace: true })
   }
   else if (type === 'edit') {
     link.value = updatedLink

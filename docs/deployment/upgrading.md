@@ -17,6 +17,12 @@ description: Upgrade Sink by syncing your GitHub fork and redeploying.
 2. In Cloudflare (Workers Builds or Pages), redeploy the updated `master` branch
 3. Wait for the deploy to finish (database updates run as part of deploy)
 
+## Optional: the dashboard can have its own hostname
+
+Nothing changes unless you ask for it. The dashboard stays at `/dashboard/links` and `dashboard` stays a reserved slug.
+
+Set [`NUXT_PUBLIC_DASHBOARD_URL`](/configuration/#giving-the-dashboard-its-own-subdomain) and add that hostname to the same Worker or Pages project, and the dashboard moves to the root of that host (`dash.example.com/links`), `/dashboard` is freed for use as a short-link slug, and only that host answers `/api/**` — so repoint API clients and MCP integrations at it. Old `/dashboard/...` bookmarks stop working. The homepage **Dashboard** button always points at the right place.
+
 ## Upgrading a very old install (links only in KV)
 
 If your instance stored links only in KV (older Sink versions), keep that KV data and follow [storage setup / migration](/storage/kv-to-d1).

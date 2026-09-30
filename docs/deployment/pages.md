@@ -87,4 +87,10 @@ For a manual CLI deployment, build first. `pnpm deploy:pages` assumes `dist` alr
 Until storage setup finishes, creating links may fail with “storage not ready” (HTTP 423).
 :::
 
+## 5. Optional: a separate hostname for the dashboard
+
+To reach the dashboard at `dash.your-domain` instead of on your short-link hostname, add it to the **same** Pages project under **Custom domains**, then set `NUXT_PUBLIC_DASHBOARD_URL=https://dash.your-domain` in the project's variables and redeploy. One project, two hostnames.
+
+That host then serves the dashboard and `/api/**`; your short-link host serves short links only and returns 404 for `/api/**`. Details and the full behavior table: [configuration](/configuration/#giving-the-dashboard-its-own-subdomain).
+
 Manual [backups](/features/backups) work on Pages; automatic daily backups are configured for Workers only in this repo.

@@ -69,4 +69,10 @@ Start a build from `master` and wait until it finishes.
 Until storage setup finishes, creating links may fail with “storage not ready” (HTTP 423).
 :::
 
+## 5. Optional: a separate hostname for the dashboard
+
+To reach the dashboard at `dash.your-domain` instead of on your short-link hostname, add it to the **same** Worker under **Settings → Domains & Routes → Add → Custom domain**, then set `NUXT_PUBLIC_DASHBOARD_URL=https://dash.your-domain` in the Worker's runtime variables. One Worker, two hostnames, one deploy.
+
+That host then serves the dashboard and `/api/**`; your short-link host serves short links only and returns 404 for `/api/**`. Details and the full behavior table: [configuration](/configuration/#giving-the-dashboard-its-own-subdomain).
+
 Later upgrades: [Upgrading Sink](./upgrading).

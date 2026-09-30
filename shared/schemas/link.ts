@@ -1,11 +1,17 @@
 import { customAlphabet } from 'nanoid'
 import { z } from 'zod'
+import { resolveDashboardRoutePrefix } from '../utils/host-surface'
 import { LINK_PASSWORD_MASK_PREFIX } from '../utils/link-password'
 
-const { slugRegex, reserveSlug } = useAppConfig()
-
-// The shared layer does not receive `app/app.config.ts` types, so annotate what it reads.
-const reservedSlugs = new Set((reserveSlug as string[]).map(slug => slug.toLowerCase()))
+const { slugRegex } = useAppConfig()
+// Without a dashboard host the dashboard is mounted under this path on the short-link host, so
+// a link with that slug could never resolve: `server/middleware/0.host.ts` sends the path to the
+// dashboard before any lookup. Reject it for new links. Configuring a dashboard host empties the
+// prefix, which is what makes `dashboard` usable as a slug.
+const dashboardRoutePrefix = resolveDashboardRoutePrefix(useRuntimeConfig().public.dashboardURL)
+const reservedSlugs = new Set(
+  dashboardRoutePrefix ? [dashboardRoutePrefix.replace(/^\//, '').toLowerCase()] : [],
+)
 
 const slugDefaultLength = +useRuntimeConfig().public.slugDefaultLength
 const configuredMaxUrlLength = Number(useRuntimeConfig().public.maxUrlLength)
@@ -57,11 +63,9 @@ export const UrlSchema = z.string()
   .max(MAX_URL_LENGTH, `URL must not exceed ${MAX_URL_LENGTH} characters`)
   .url('URL format is invalid')
 export const SlugSchema = z.string().trim().max(2048).regex(new RegExp(slugRegex))
-// `server/middleware/1.redirect.ts` skips reserved slugs before it looks a link up, so a
-// link written to one never redirects. Reject them where new links come in, and compare
-// case-insensitively because write paths lowercase the slug unless `caseSensitive` is set.
-// Never apply this to stored or legacy KV records: links written before this check must
-// stay readable, exportable, and deletable.
+// Compared case-insensitively because write paths lowercase the slug unless `caseSensitive`
+// is set. Never apply this to stored or legacy KV records: links written before this check
+// must stay readable, exportable, and deletable.
 const NewSlugSchema = SlugSchema.refine(
   slug => !reservedSlugs.has(slug.toLowerCase()),
   'slug is reserved',

@@ -49,8 +49,13 @@ function hasOgConfig(link: Link): boolean {
 }
 
 export default eventHandler(async (event) => {
+  // The dashboard host serves the admin SPA only, so a path there is never a short link
+  // and must 404 rather than resolve. `0.host.ts` decides which surface this host is.
+  if (event.context.hostSurface === 'dashboard')
+    return
+
   const { pathname: slug } = parsePath(event.path.replace(/^\/|\/$/g, ''))
-  const { slugRegex, reserveSlug } = useAppConfig()
+  const { slugRegex } = useAppConfig()
   const { linkCacheTtl, caseSensitive, redirectWithQuery, redirectStatusCode, redirectNoStore } = useRuntimeConfig(event)
   const runtimeConfig = useRuntimeConfig(event)
   const { linkProxyEnabled } = runtimeConfig.public
@@ -67,7 +72,7 @@ export default eventHandler(async (event) => {
     return
   }
 
-  if (slug && !reserveSlug.includes(slug) && slugRegex.test(slug) && cloudflare) {
+  if (slug && slugRegex.test(slug) && cloudflare) {
     let link: Link | null = null
 
     const lowerCaseSlug = slug.toLowerCase()

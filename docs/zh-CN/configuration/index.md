@@ -78,11 +78,48 @@ Workers 要在 Builds 和运行时填相同值。Pages 只填一次，然后重�
 | `NUXT_PUBLIC_KV_BATCH_LIMIT`      | `50`    | 导出每页条数；导入每次最多一半                                      |
 | `NUXT_PUBLIC_MAX_URL_LENGTH`      | `16384` | 目标 URL 最大字符数（256-24000）                                    |
 | `NUXT_PUBLIC_HOME_URL`            | 空      | 非空则把 `/` 重定向到该 URL；空则显示 Sink 首页                     |
+| `NUXT_PUBLIC_DASHBOARD_URL`       | 空      | 提供仪表盘的源，例如 `https://dash.example.com`，见下文             |
 | `NUXT_PUBLIC_LINK_PROXY_ENABLED`  | `false` | `true` 时允许链接开启反向代理模式；关闭时存量代理链接回退为普通跳转 |
 
 `NUXT_PUBLIC_*` 的值会打进构建出的页面、同时也在运行时读取，所以修改后需要重新构建，客户端才能拿到新值。
 
 `NUXT_HOME_URL` 是 `NUXT_PUBLIC_HOME_URL` 的旧名称，目前仍然有效，建议下次调整配置时改成新名称。
+
+### 给仪表盘单独的子域名
+
+`NUXT_PUBLIC_DASHBOARD_URL` 把同一个部署拆到两个域名上。把它设为你想让仪表盘使用的源，然后把该域名作为第二个自定义域添加到同一个 Worker 或 Pages 项目。不涉及第二次部署。
+
+设为 `https://dash.example.com` 后：
+
+| 请求                              | 结果                                                |
+| --------------------------------- | --------------------------------------------------- |
+| `dash.example.com/`               | 重定向到 `/links`                                   |
+| `dash.example.com/links`          | 仪表盘。该域名下所有页面都在根路径                  |
+| `dash.example.com/api/**`         | API。只有该域名会响应                               |
+| `dash.example.com/abc`            | 404。该域名从不解析短链接                           |
+| `example.com/abc`                 | 短链接，与之前一致                                  |
+| `example.com/api/**`、`/_docs/**` | 404                                                 |
+| `example.com/dashboard`           | 如果你创建了 slug 为 `dashboard` 的链接，就是短链接 |
+
+设置后请把 API 客户端、脚本和 MCP 集成指向仪表盘域名。短链接域名上的 `/api/**` 即使带有效的 `NUXT_SITE_TOKEN` 也返回 404，因为域名的判断发生在令牌校验之前。
+
+留空则一个域名提供全部内容，仪表盘仍在 `/dashboard` 下，与以往一致：
+
+| 请求                              | 结果                         |
+| --------------------------------- | ---------------------------- |
+| `example.com/`                    | 首页                         |
+| `example.com/dashboard`           | 重定向到 `/dashboard/links`  |
+| `example.com/dashboard/links`     | 仪表盘                       |
+| `example.com/api/**`、`/_docs/**` | 在这里提供，因为没有其他域名 |
+| `example.com/abc`                 | 短链接                       |
+
+`dashboard` 是唯一的保留 slug，且仅在该变量为空时保留。用它创建链接会返回校验错误。
+
+与上面其他公共覆盖项不同，该变量不需要重新构建：仪表盘页面挂载在哪里是在应用启动时决定的，改完变量等新版本生效即可。
+
+### 再次移除该变量
+
+仪表盘回到 `/dashboard` 下；在变量生效期间创建的 slug 为 `dashboard` 的链接会停止跳转，`/dashboard` 改为进入仪表盘。链接记录本身不受影响，仍会出现在仪表盘和导出中，你可以编辑或删除它。改掉它的 slug 即可恢复跳转。
 
 点击统计会把目标 URL 写入 Workers Analytics Engine，而它限制每个数据点的全部 blob 合计不超过 16 KB。当 URL 加上其他点击字段（User-Agent、Referer 等）超过这个大小时（URL 接近默认上限 16384 字符时可能发生），跳转仍然正常，但这次点击不会出现在统计里。如果统计完整比支持超长 URL 更重要，请调低 `NUXT_PUBLIC_MAX_URL_LENGTH`。
 

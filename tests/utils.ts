@@ -8,27 +8,35 @@ import { LINK_PASSWORD_HASH_PREFIX, LINK_PASSWORD_MASK_PREFIX } from '../shared/
 
 export const db = drizzle(env.DB)
 
-export function fetchWithAuth(path: string, options?: RequestInit): Promise<Response> {
-  const request = new Request(`http://localhost${path}`, {
-    ...options,
+/** Origin every helper uses unless a test passes `origin` to address a second host. */
+export const DEFAULT_ORIGIN = 'http://localhost'
+
+type FetchOptions = RequestInit & { origin?: string }
+
+export function fetchWithAuth(path: string, options?: FetchOptions): Promise<Response> {
+  const { origin = DEFAULT_ORIGIN, ...init } = options ?? {}
+  const request = new Request(`${origin}${path}`, {
+    ...init,
     headers: {
-      ...options?.headers,
+      ...init.headers,
       Authorization: `Bearer ${import.meta.env.NUXT_SITE_TOKEN}`,
     },
   })
   return exports.default.fetch(request)
 }
 
-export function fetch(path: string, options?: RequestInit): Promise<Response> {
-  return exports.default.fetch(new Request(`http://localhost${path}`, options))
+export function fetch(path: string, options?: FetchOptions): Promise<Response> {
+  const { origin = DEFAULT_ORIGIN, ...init } = options ?? {}
+  return exports.default.fetch(new Request(`${origin}${path}`, init))
 }
 
-export function postJson(path: string, body: unknown, withAuth = true): Promise<Response> {
+export function postJson(path: string, body: unknown, withAuth = true, origin?: string): Promise<Response> {
   const fn = withAuth ? fetchWithAuth : fetch
   return fn(path, {
     method: 'POST',
     body: JSON.stringify(body),
     headers: { 'Content-Type': 'application/json' },
+    origin,
   })
 }
 
