@@ -5,7 +5,7 @@
   "private": true,
   "packageManager": "pnpm@11.11.0",
   "engines": {
-    "node": ">=24"
+    "node": ">=24.22.1"
   },
   "scripts": {
     "dev": "nuxt dev --port 7465",
