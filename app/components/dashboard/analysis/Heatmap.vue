@@ -288,7 +288,7 @@ watch([effectiveTimeRange, effectiveFilters, retryKey], async (_values, _oldValu
                   >
                     <TooltipTrigger as-child>
                       <button
-                        :ref="element => setCellButton(element, arrayIdx * hours.length + hour)"
+                        :ref="(element: unknown) => setCellButton(element, arrayIdx * hours.length + hour)"
                         type="button"
                         class="
                           relative block size-full rounded-sm border-0 p-0
