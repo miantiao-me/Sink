@@ -7,6 +7,7 @@ import { drizzle } from 'drizzle-orm/d1'
 import { createError } from 'h3'
 import { parseURL, stringifyParsedURL } from 'ufo'
 import { links, linkTags, linkTombstones, tags } from '../../database/schema'
+import { requireCloudflareEnv, requireD1Database } from '../../utils/bindings'
 import { getExpiration } from '../../utils/time'
 
 const D1_CURSOR_PREFIX = 'd1:v1:'
@@ -58,7 +59,7 @@ function withoutQuery(url: string): string {
 }
 
 function getDatabase(event: H3Event) {
-  return drizzle(event.context.cloudflare.env.DB)
+  return drizzle(requireD1Database(requireCloudflareEnv(event)))
 }
 
 function activeCondition(now = Math.floor(Date.now() / 1000)) {
@@ -370,7 +371,7 @@ export async function d1ListLinks(event: H3Event, options: ListLinksOptions): Pr
 }
 
 export async function* d1IterateAllLinks(env: Cloudflare.Env): AsyncIterable<Link> {
-  const db = drizzle(env.DB)
+  const db = drizzle(requireD1Database(env))
   let lastSlug: string | undefined
 
   do {

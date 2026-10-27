@@ -81,8 +81,12 @@ function completedResult(): LinkMigrationRunResult {
 export default eventHandler(async (event): Promise<LinkMigrationRunResult> => {
   const body = await readBody<Record<string, unknown> | null>(event)
   const input = LinkMigrationRunSchema.parse(Object.assign({}, getQuery(event), body))
-  const { DB, KV } = event.context.cloudflare.env
-  const db = drizzle(DB)
+  const env = requireCloudflareEnv(event)
+  // KV is the source this run copies from. Without the binding the listing below
+  // would look complete after scanning nothing, marking the migration done and
+  // leaving every legacy KV link unreachable.
+  const KV = requireKvNamespace(env)
+  const db = drizzle(requireD1Database(env))
   const now = Math.floor(Date.now() / 1000)
   let run: MigrationRunRow | null
 
@@ -96,7 +100,7 @@ export default eventHandler(async (event): Promise<LinkMigrationRunResult> => {
       throw createError({ status: 400, statusText: 'Migration cursor does not match force mode' })
   }
   else {
-    const completedRun = await readCompletedLinkMigrationMarker(event.context.cloudflare.env)
+    const completedRun = await readCompletedLinkMigrationMarker(env)
     if (completedRun && !input.force)
       return completedResult()
 

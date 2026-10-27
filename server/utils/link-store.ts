@@ -47,7 +47,7 @@ export async function getLink(event: H3Event, slug: string, cacheTtl?: number): 
   if (cached.link)
     return cached.link
 
-  if (!await readCompletedLinkMigrationMarker(event.context.cloudflare.env))
+  if (!await readCompletedLinkMigrationMarker(requireCloudflareEnv(event)))
     return null
 
   const stored = await d1GetActiveLink(event, slug)

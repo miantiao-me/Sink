@@ -9,7 +9,7 @@ defineRouteMeta({
 })
 
 export default eventHandler(async (event): Promise<LinkMigrationStatus> => {
-  const marker = await readCompletedLinkMigrationMarker(event.context.cloudflare.env)
+  const marker = await readCompletedLinkMigrationMarker(requireCloudflareEnv(event))
   return {
     completed: marker !== null,
     marker,
