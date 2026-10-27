@@ -94,7 +94,12 @@ export const LinkFieldsSchema = z.object({
 
 export const CreateLinkSchema = LinkFieldsSchema.extend({
   id: IdSchema.default(nanoid(10)),
-  slug: NewSlugSchema.default(nanoid()),
+  // `default()` only fires on `undefined`, so a blank slug would fail the slug pattern
+  // instead of generating one. Normalized the way `ImportLinkSchema` handles an empty `id`.
+  slug: z.preprocess(
+    value => typeof value === 'string' && !value.trim() ? undefined : value,
+    NewSlugSchema.default(nanoid()),
+  ).describe('The slug identifying the short link. Omit it or send an empty string to generate one.'),
   createdAt: TimestampSchema.default(() => Math.floor(Date.now() / 1000)),
   updatedAt: TimestampSchema.default(() => Math.floor(Date.now() / 1000)),
 })

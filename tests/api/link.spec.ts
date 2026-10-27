@@ -104,6 +104,16 @@ describe('/api/link/create', { concurrent: false }, () => {
     expect(data.link.tags).toEqual([])
   })
 
+  it('generates a slug when an empty one is sent', async () => {
+    const response = await postJson('/api/link/create', { url: 'https://example.com/blank-slug', slug: '' })
+    expect(response.status).toBe(201)
+
+    const data = await response.json() as { link: { slug: string }, shortLink: string }
+    trackSlug(data.link.slug)
+    expect(data.link.slug).not.toBe('')
+    expect(data.shortLink).toContain(data.link.slug)
+  })
+
   it('creates new link with valid data', async () => {
     const payload = createLinkPayload()
     const response = await postJson('/api/link/create', payload)
