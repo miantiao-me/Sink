@@ -37,8 +37,8 @@
   "kv_namespaces": [
     {
       "binding": "KV",
-      "preview_id": "ef93d42dc4b34969bab404d2e80f8dd3", // Override with DEPLOY_KV_PREVIEW_NAMESPACE_ID (falls back to DEPLOY_KV_NAMESPACE_ID)
-      "id": "ef93d42dc4b34969bab404d2e80f8dd3" // Override with DEPLOY_KV_NAMESPACE_ID
+      "preview_id": "ba1685480321435a8da2eb4456c1ba5f", // Override with DEPLOY_KV_PREVIEW_NAMESPACE_ID (falls back to DEPLOY_KV_NAMESPACE_ID)
+      "id": "ba1685480321435a8da2eb4456c1ba5f" // Override with DEPLOY_KV_NAMESPACE_ID
     }
   ],
   "d1_databases": [
