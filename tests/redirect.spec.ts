@@ -671,3 +671,34 @@ describe('proxied link gates', { concurrent: false }, () => {
     expect(upstreamCalls('denied.test').length).toBe(0)
   })
 })
+
+describe('not found redirect', { concurrent: false }, () => {
+  const notFoundRedirect = 'https://example.com/not-found'
+  let previous: string | undefined
+
+  beforeAll(() => {
+    previous = env.NUXT_NOT_FOUND_REDIRECT
+    env.NUXT_NOT_FOUND_REDIRECT = notFoundRedirect
+  })
+
+  afterAll(() => {
+    env.NUXT_NOT_FOUND_REDIRECT = previous ?? ''
+  })
+
+  it('redirects an unknown slug', async () => {
+    const response = await fetch(`/missing-${crypto.randomUUID()}`, { redirect: 'manual' })
+    expect(response.status).toBe(302)
+    expect(response.headers.get('Location')).toBe(notFoundRedirect)
+  })
+
+  it.each(['!', '%C3%A4', 'caf%C3%A9', 'hello!world'])('redirects a path that can never be a slug: /%s', async (slug) => {
+    const response = await fetch(`/${slug}`, { redirect: 'manual' })
+    expect(response.status).toBe(302)
+    expect(response.headers.get('Location')).toBe(notFoundRedirect)
+  })
+
+  it.each(['/favicon.ico', '/robots.txt', '/dashboard'])('leaves %s to the app', async (path) => {
+    const response = await fetch(path, { redirect: 'manual' })
+    expect(response.headers.get('Location')).not.toBe(notFoundRedirect)
+  })
+})
