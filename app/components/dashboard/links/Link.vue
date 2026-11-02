@@ -81,6 +81,7 @@ const shortLink = computed(() => `${origin}/${props.link.slug}`)
 const linkIcon = computed(() => `https://unavatar.webp.se/${getLinkHost(props.link.url)}?fallback=https://sink.cool/icon.png`)
 const isExpired = computed(() => Boolean(props.link.expiration && props.link.expiration <= Math.floor(Date.now() / 1000)))
 const noteText = computed(() => props.link.comment?.trim() ?? '')
+const noteTitle = computed(() => noteText.value.split('\n')[0]?.trim() ?? '')
 const summaryText = computed(() => props.link.title?.trim() || props.link.description?.trim() || '')
 const tags = computed(() => props.link.tags ?? [])
 const visibleTags = computed(() => tags.value.slice(0, 2))
@@ -137,13 +138,18 @@ function copyLink() {
                       "
                       :to="getDashboardLinkDetailLocation(link.slug)"
                     >
-                      <span class="sm:hidden">{{ link.slug }}</span>
-                      <span
-                        class="
-                          hidden
-                          sm:inline
-                        "
-                      >{{ host }}/{{ link.slug }}</span>
+                      <template v-if="noteTitle">
+                        {{ noteTitle }}
+                      </template>
+                      <template v-else>
+                        <span class="sm:hidden">{{ link.slug }}</span>
+                        <span
+                          class="
+                            hidden
+                            sm:inline
+                          "
+                        >{{ host }}/{{ link.slug }}</span>
+                      </template>
                     </NuxtLink>
                   </TooltipTrigger>
                   <TooltipContent class="max-w-[90svw] break-all">
@@ -187,6 +193,15 @@ function copyLink() {
               </Badge>
             </div>
 
+            <p v-if="noteTitle" class="truncate text-sm text-muted-foreground">
+              <span class="sm:hidden">{{ link.slug }}</span>
+              <span
+                class="
+                  hidden
+                  sm:inline
+                "
+              >{{ host }}/{{ link.slug }}</span>
+            </p>
             <p v-if="summaryText" class="truncate text-sm">
               {{ summaryText }}
             </p>
@@ -283,6 +298,9 @@ function copyLink() {
           </DropdownMenu>
         </div>
       </div>
+      <p class="truncate text-sm" :title="link.url">
+        {{ link.url }}
+      </p>
       <div class="mt-auto flex flex-col space-y-3">
         <div class="flex h-5 w-full min-w-0 space-x-2 overflow-hidden text-sm">
           <TooltipProvider>
@@ -329,8 +347,6 @@ function copyLink() {
               </Tooltip>
             </TooltipProvider>
           </template>
-          <Separator orientation="vertical" />
-          <span class="min-w-0 truncate">{{ link.url }}</span>
         </div>
         <div
           v-if="tags.length || countersMap"
