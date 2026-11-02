@@ -28,6 +28,9 @@
     "no_more": "Não há mais links",
     "load_failed": "Falha ao carregar links,",
     "download_qr_code": "Descarregar código QR",
+    "copy_short_link": "Copiar ligação curta",
+    "open_target_url": "Abrir URL de destino",
+    "more_actions": "Mais ações",
     "change_qr_color": "Alterar cor do código QR",
     "qr": {
       "text_alternative": "Código QR para {url}"

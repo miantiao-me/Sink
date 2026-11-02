@@ -67,6 +67,16 @@ const counters = computed(() => countersMap?.value?.[props.link.id])
 const counterErrorIds = inject(LINKS_COUNTER_ERROR_IDS_KEY)
 const retryCounters = inject(RETRY_LINK_COUNTERS_KEY)
 const countersError = computed(() => counterErrorIds?.value.has(props.link.id) ?? false)
+const statItems = computed(() => {
+  const value = counters.value
+  if (!value)
+    return []
+  return [
+    { key: 'visits', icon: MousePointerClick, value: value.visits, label: t('links.stats.visits', { count: value.visits }), name: t('dashboard.visits') },
+    { key: 'visitors', icon: Users, value: value.visitors, label: t('links.stats.visitors', { count: value.visitors }), name: t('dashboard.visitors') },
+    { key: 'referers', icon: Flame, value: value.referers, label: t('links.stats.referers', { count: value.referers }), name: t('dashboard.referers') },
+  ]
+})
 
 const requestUrl = useRequestURL()
 const host = requestUrl.host
@@ -81,6 +91,19 @@ const shortLink = computed(() => `${origin}/${props.link.slug}`)
 const linkIcon = computed(() => `https://unavatar.webp.se/${getLinkHost(props.link.url)}?fallback=https://sink.cool/icon.png`)
 const isExpired = computed(() => Boolean(props.link.expiration && props.link.expiration <= Math.floor(Date.now() / 1000)))
 const noteText = computed(() => props.link.comment?.trim() ?? '')
+const headerRef = useTemplateRef<HTMLElement>('header')
+const noteTooltipOpen = shallowRef(false)
+
+// The title link's overlay covers the whole card, so hovering anywhere on the
+// card would count as hovering the title. Open the comment tooltip only while
+// the pointer is over the header.
+function updateNoteTooltip(event: PointerEvent) {
+  const rect = headerRef.value?.getBoundingClientRect()
+  noteTooltipOpen.value = Boolean(noteText.value && rect
+    && event.clientX >= rect.left && event.clientX <= rect.right
+    && event.clientY >= rect.top && event.clientY <= rect.bottom)
+}
+
 const noteTitle = computed(() => noteText.value.split('\n')[0]?.trim() ?? '')
 const summaryText = computed(() => props.link.title?.trim() || props.link.description?.trim() || '')
 const tags = computed(() => props.link.tags ?? [])
@@ -96,7 +119,12 @@ function copyLink() {
 </script>
 
 <template>
-  <Card size="sm" class="relative isolate h-full min-w-0">
+  <Card
+    size="sm"
+    class="relative isolate h-full min-w-0"
+    @pointermove="updateNoteTooltip"
+    @pointerleave="noteTooltipOpen = false"
+  >
     <CardContent
       class="flex h-full min-w-0 flex-1 flex-col gap-3"
     >
@@ -104,6 +132,7 @@ function copyLink() {
         class="flex min-w-0 items-start gap-2"
       >
         <div
+          ref="header"
           class="group flex min-w-0 flex-1 cursor-pointer items-center gap-3"
         >
           <Avatar>
@@ -124,7 +153,10 @@ function copyLink() {
           <div class="min-w-0 flex-1 overflow-hidden">
             <div class="flex min-w-0 items-center">
               <TooltipProvider v-if="noteText">
-                <Tooltip>
+                <Tooltip
+                  :open="noteTooltipOpen"
+                  @update:open="(open: boolean) => { if (!open) noteTooltipOpen = false }"
+                >
                   <TooltipTrigger as-child>
                     <NuxtLink
                       class="
@@ -137,6 +169,8 @@ function copyLink() {
                         focus-visible:after:ring-ring/50
                       "
                       :to="getDashboardLinkDetailLocation(link.slug)"
+                      @focus="noteTooltipOpen = true"
+                      @blur="noteTooltipOpen = false"
                     >
                       <template v-if="noteTitle">
                         {{ noteTitle }}
@@ -152,8 +186,10 @@ function copyLink() {
                       </template>
                     </NuxtLink>
                   </TooltipTrigger>
-                  <TooltipContent class="max-w-[90svw] break-all">
-                    <p>{{ noteText }}</p>
+                  <TooltipContent class="max-w-[90svw]">
+                    <p class="wrap-break-word whitespace-pre-line">
+                      {{ noteText }}
+                    </p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
@@ -214,144 +250,145 @@ function copyLink() {
             sm:gap-0
           "
         >
-          <Button
-            variant="ghost"
-            :size="isDesktop ? 'icon' : 'icon-lg'"
-            :aria-label="copied ? $t('links.copy_success') : shortLink"
-            @click="copyLink"
-          >
-            <CopyCheck v-if="copied" aria-hidden="true" class="size-4" />
-            <Copy v-else aria-hidden="true" class="size-4" />
-          </Button>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Button
+                  variant="ghost"
+                  :size="isDesktop ? 'icon' : 'icon-lg'"
+                  :aria-label="copied ? $t('links.copy_success') : shortLink"
+                  @click="copyLink"
+                >
+                  <CopyCheck v-if="copied" aria-hidden="true" class="size-4" />
+                  <Copy v-else aria-hidden="true" class="size-4" />
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{{ $t('links.copy_short_link') }}</TooltipContent>
+            </Tooltip>
 
-          <Button as-child variant="ghost" :size="isDesktop ? 'icon' : 'icon-lg'">
-            <a
-              :href="link.url"
-              target="_blank"
-              rel="noopener noreferrer"
-              :aria-label="link.url"
-            >
-              <LinkIcon aria-hidden="true" />
-            </a>
-          </Button>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <Button as-child variant="ghost" :size="isDesktop ? 'icon' : 'icon-lg'">
+                  <a
+                    :href="link.url"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    :aria-label="link.url"
+                  >
+                    <LinkIcon aria-hidden="true" />
+                  </a>
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent>{{ $t('links.open_target_url') }}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
-          <Popover v-if="isDesktop">
-            <PopoverTrigger as-child>
-              <Button
-                variant="ghost"
-                size="icon"
-                :aria-label="$t('links.download_qr_code')"
-              >
-                <QrCode aria-hidden="true" />
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent>
-              <DashboardLinksQRCode
-                :data="shortLink"
-                :image="linkIcon"
-              />
-            </PopoverContent>
-          </Popover>
+          <TooltipProvider v-if="isDesktop">
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <span class="inline-flex">
+                  <Popover>
+                    <PopoverTrigger as-child>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        :aria-label="$t('links.download_qr_code')"
+                      >
+                        <QrCode aria-hidden="true" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent>
+                      <DashboardLinksQRCode
+                        :data="shortLink"
+                        :image="linkIcon"
+                      />
+                    </PopoverContent>
+                  </Popover>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>{{ $t('links.download_qr_code') }}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
 
-          <DropdownMenu v-model:open="editPopoverOpen">
-            <DropdownMenuTrigger as-child>
-              <Button
-                ref="actionsTrigger"
-                data-link-actions-trigger
-                variant="ghost"
-                :size="isDesktop ? 'icon' : 'icon-lg'"
-                :aria-label="`${$t('links.download_qr_code')} / ${$t('common.edit')} / ${$t('common.delete')}`"
-              >
-                <Ellipsis aria-hidden="true" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              :hide-when-detached="false"
-              @close-auto-focus="handlePopoverCloseAutoFocus"
-            >
-              <DropdownMenuItem
-                v-if="!isDesktop"
-                @select.prevent="openQrDialog"
-              >
-                <QrCode aria-hidden="true" />
-                {{ $t('links.download_qr_code') }}
-              </DropdownMenuItem>
+          <TooltipProvider>
+            <Tooltip>
+              <TooltipTrigger as-child>
+                <span class="inline-flex">
+                  <DropdownMenu v-model:open="editPopoverOpen">
+                    <DropdownMenuTrigger as-child>
+                      <Button
+                        ref="actionsTrigger"
+                        data-link-actions-trigger
+                        variant="ghost"
+                        :size="isDesktop ? 'icon' : 'icon-lg'"
+                        :aria-label="`${$t('links.download_qr_code')} / ${$t('common.edit')} / ${$t('common.delete')}`"
+                      >
+                        <Ellipsis aria-hidden="true" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      :hide-when-detached="false"
+                      @close-auto-focus="handlePopoverCloseAutoFocus"
+                    >
+                      <DropdownMenuItem
+                        v-if="!isDesktop"
+                        @select.prevent="openQrDialog"
+                      >
+                        <QrCode aria-hidden="true" />
+                        {{ $t('links.download_qr_code') }}
+                      </DropdownMenuItem>
 
-              <DropdownMenuItem
-                @select.prevent="openEditDialog"
-              >
-                <SquarePen aria-hidden="true" />
-                {{ $t('common.edit') }}
-              </DropdownMenuItem>
+                      <DropdownMenuItem
+                        @select.prevent="openEditDialog"
+                      >
+                        <SquarePen aria-hidden="true" />
+                        {{ $t('common.edit') }}
+                      </DropdownMenuItem>
 
-              <DropdownMenuSeparator />
+                      <DropdownMenuSeparator />
 
-              <DropdownMenuItem
-                variant="destructive"
-                @select.prevent="openDeleteDialog"
-              >
-                <Eraser aria-hidden="true" />
-                {{ $t('common.delete') }}
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+                      <DropdownMenuItem
+                        variant="destructive"
+                        @select.prevent="openDeleteDialog"
+                      >
+                        <Eraser aria-hidden="true" />
+                        {{ $t('common.delete') }}
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </span>
+              </TooltipTrigger>
+              <TooltipContent>{{ $t('links.more_actions') }}</TooltipContent>
+            </Tooltip>
+          </TooltipProvider>
         </div>
       </div>
       <p class="truncate text-sm" :title="link.url">
         {{ link.url }}
       </p>
       <div class="mt-auto flex flex-col space-y-3">
-        <div class="flex h-5 w-full min-w-0 space-x-2 overflow-hidden text-sm">
-          <TooltipProvider>
-            <Tooltip>
-              <TooltipTrigger as-child>
-                <button
-                  type="button"
-                  class="
-                    relative z-20 inline-flex items-center rounded-sm leading-5
-                    whitespace-nowrap outline-none
-                    focus-visible:ring-2 focus-visible:ring-ring/50
-                  "
-                  :aria-label="$t('links.created_at')"
-                >
-                  <CalendarPlus2 aria-hidden="true" class="mr-1 size-4" /> {{ shortDate(link.createdAt, locale) }}
-                </button>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>{{ $t('links.created_at') }}: {{ longDate(link.createdAt, locale) }}</p>
-                <p>{{ $t('links.updated_at') }}: {{ longDate(link.updatedAt, locale) }}</p>
-              </TooltipContent>
-            </Tooltip>
-          </TooltipProvider>
-          <template v-if="link.expiration">
-            <Separator orientation="vertical" />
-            <TooltipProvider>
-              <Tooltip>
-                <TooltipTrigger as-child>
-                  <button
-                    type="button"
-                    class="
-                      relative z-20 inline-flex items-center rounded-sm
-                      leading-5 whitespace-nowrap outline-none
-                      focus-visible:ring-2 focus-visible:ring-ring/50
-                    "
-                    :aria-label="$t('links.expires_at')"
-                  >
-                    <Hourglass aria-hidden="true" class="mr-1 size-4" /> {{ shortDate(link.expiration, locale) }}
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent>
-                  <p>{{ $t('links.expires_at') }}: {{ longDate(link.expiration, locale) }}</p>
-                </TooltipContent>
-              </Tooltip>
-            </TooltipProvider>
-          </template>
-        </div>
         <div
-          v-if="tags.length || countersMap"
-          class="flex h-5 w-full min-w-0 items-center gap-2 text-sm"
+          v-if="tags.length"
+          class="flex h-5 w-full min-w-0 items-center gap-1"
         >
+          <Badge
+            v-for="tag in visibleTags"
+            :key="tag"
+            variant="outline"
+            class="max-w-24 min-w-0 shrink truncate"
+          >
+            {{ tag }}
+          </Badge>
+          <Badge
+            v-if="hiddenTagCount"
+            variant="outline"
+            class="shrink-0 text-muted-foreground"
+          >
+            +{{ hiddenTagCount }}
+          </Badge>
+        </div>
+        <div class="flex h-5 w-full min-w-0 items-center gap-2 text-sm">
           <div
             v-if="countersMap"
             class="flex shrink-0 items-center gap-1 tabular-nums"
@@ -367,53 +404,79 @@ function copyLink() {
                 {{ $t('common.try_again') }}
               </Button>
             </template>
-            <template v-else-if="counters">
-              <Badge
-                variant="secondary"
-                class="shrink-0"
-                :aria-label="$t('links.stats.visits', { count: counters.visits })"
-              >
-                <MousePointerClick aria-hidden="true" class="size-3.5" />
-                {{ counters.visits }}
-              </Badge>
-              <Badge
-                variant="secondary"
-                class="shrink-0"
-                :aria-label="$t('links.stats.visitors', { count: counters.visitors })"
-              >
-                <Users aria-hidden="true" class="size-3.5" />
-                {{ counters.visitors }}
-              </Badge>
-              <Badge
-                variant="secondary"
-                class="shrink-0"
-                :aria-label="$t('links.stats.referers', { count: counters.referers })"
-              >
-                <Flame aria-hidden="true" class="size-3.5" />
-                {{ counters.referers }}
-              </Badge>
-            </template>
+            <TooltipProvider v-else-if="counters">
+              <Tooltip v-for="item in statItems" :key="item.key">
+                <TooltipTrigger as-child>
+                  <button
+                    type="button"
+                    class="
+                      relative z-20 inline-flex rounded-full outline-none
+                      focus-visible:ring-2 focus-visible:ring-ring/50
+                    "
+                    :aria-label="item.label"
+                  >
+                    <Badge variant="secondary" class="shrink-0">
+                      <component
+                        :is="item.icon" aria-hidden="true" class="size-3.5"
+                      />
+                      {{ item.value }}
+                    </Badge>
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <p>{{ item.name }}</p>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
             <Skeleton v-else class="h-5 w-28 rounded-full bg-secondary" />
           </div>
-          <div
-            v-if="tags.length"
-            class="ml-auto flex min-w-0 flex-1 items-center justify-end gap-1"
-          >
-            <Badge
-              v-for="tag in visibleTags"
-              :key="tag"
-              variant="outline"
-              class="max-w-24 min-w-0 shrink truncate"
-            >
-              {{ tag }}
-            </Badge>
-            <Badge
-              v-if="hiddenTagCount"
-              variant="outline"
-              class="shrink-0 text-muted-foreground"
-            >
-              +{{ hiddenTagCount }}
-            </Badge>
+          <div class="ml-auto flex shrink-0 items-center space-x-2">
+            <TooltipProvider>
+              <Tooltip>
+                <TooltipTrigger as-child>
+                  <button
+                    type="button"
+                    class="
+                      relative z-20 inline-flex items-center rounded-sm
+                      leading-5 whitespace-nowrap outline-none
+                      focus-visible:ring-2 focus-visible:ring-ring/50
+                    "
+                    :aria-label="$t('links.created_at')"
+                  >
+                    <CalendarPlus2 aria-hidden="true" class="mr-1 size-4" /> {{ shortDate(link.createdAt, locale) }}
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent>
+                  <div class="flex flex-col">
+                    <p>{{ $t('links.created_at') }}: {{ longDate(link.createdAt, locale) }}</p>
+                    <p>{{ $t('links.updated_at') }}: {{ longDate(link.updatedAt, locale) }}</p>
+                  </div>
+                </TooltipContent>
+              </Tooltip>
+            </TooltipProvider>
+            <template v-if="link.expiration">
+              <Separator orientation="vertical" />
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger as-child>
+                    <button
+                      type="button"
+                      class="
+                        relative z-20 inline-flex items-center rounded-sm
+                        leading-5 whitespace-nowrap outline-none
+                        focus-visible:ring-2 focus-visible:ring-ring/50
+                      "
+                      :aria-label="$t('links.expires_at')"
+                    >
+                      <Hourglass aria-hidden="true" class="mr-1 size-4" /> {{ shortDate(link.expiration, locale) }}
+                    </button>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>{{ $t('links.expires_at') }}: {{ longDate(link.expiration, locale) }}</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </template>
           </div>
         </div>
       </div>

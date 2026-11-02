@@ -28,6 +28,9 @@
     "no_more": "더 이상 링크가 없습니다",
     "load_failed": "링크를 불러오지 못했습니다,",
     "download_qr_code": "QR 코드 다운로드",
+    "copy_short_link": "단축 링크 복사",
+    "open_target_url": "대상 URL 열기",
+    "more_actions": "추가 작업",
     "change_qr_color": "QR 코드 색상 변경",
     "qr": {
       "text_alternative": "{url}의 QR 코드"

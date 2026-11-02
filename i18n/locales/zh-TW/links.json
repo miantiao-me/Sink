@@ -28,6 +28,9 @@
     "no_more": "沒有更多連結",
     "load_failed": "載入連結失敗,",
     "download_qr_code": "下載 QR code",
+    "copy_short_link": "複製短網址",
+    "open_target_url": "開啟目標網址",
+    "more_actions": "更多操作",
     "change_qr_color": "更改 QR code 顏色",
     "qr": {
       "text_alternative": "{url} 的 QR Code"

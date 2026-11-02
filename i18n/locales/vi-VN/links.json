@@ -28,6 +28,9 @@
     "no_more": "Không còn liên kết nào",
     "load_failed": "Tải liên kết thất bại,",
     "download_qr_code": "Tải mã QR",
+    "copy_short_link": "Sao chép liên kết rút gọn",
+    "open_target_url": "Mở URL đích",
+    "more_actions": "Thao tác khác",
     "change_qr_color": "Thay đổi màu mã QR",
     "qr": {
       "text_alternative": "Mã QR cho {url}"
