@@ -229,4 +229,19 @@ export default eventHandler(async (event) => {
       throw createError({ status: 404, statusText: 'Link not found' })
     }
   }
+
+  // A single-segment path that fails slugRegex (for example `/!` or `/%C3%A4`) can never be
+  // a short link, so it is an unknown short code too. Paths with more segments, a file
+  // extension or a leading underscore are left to the app, its assets and public files.
+  if (
+    notFoundRedirect
+    && slug
+    && !slug.includes('/')
+    && !slug.startsWith('_')
+    && !/\.\w+$/.test(slug)
+    && !reserveSlug.includes(slug)
+    && !slugRegex.test(slug)
+  ) {
+    return sendRedirect(event, notFoundRedirect, 302)
+  }
 })
