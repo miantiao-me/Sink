@@ -28,6 +28,9 @@
     "no_more": "没有更多链接",
     "load_failed": "加载链接失败,",
     "download_qr_code": "下载二维码",
+    "copy_short_link": "复制短链接",
+    "open_target_url": "打开目标网址",
+    "more_actions": "更多操作",
     "change_qr_color": "更改二维码颜色",
     "qr": {
       "text_alternative": "{url} 的二维码"

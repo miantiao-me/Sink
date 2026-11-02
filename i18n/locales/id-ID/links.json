@@ -28,6 +28,9 @@
     "no_more": "Tidak ada lagi tautan",
     "load_failed": "Gagal memuat tautan,",
     "download_qr_code": "Unduh Kode QR",
+    "copy_short_link": "Salin tautan pendek",
+    "open_target_url": "Buka URL tujuan",
+    "more_actions": "Tindakan lainnya",
     "change_qr_color": "Ubah warna QR",
     "qr": {
       "text_alternative": "Kode QR untuk {url}"
