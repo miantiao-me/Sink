@@ -1,11 +1,11 @@
 import type { BackupData } from '../../server/utils/backup'
 import type { Link } from '../../shared/schemas/link'
-import { env, exports } from 'cloudflare:workers'
+import { env } from 'cloudflare:workers'
 import { eq } from 'drizzle-orm'
 import { describe, expect, it } from 'vitest'
 import { links, linkTags, tags } from '../../server/database/schema'
 import { createBackupJsonStream, uploadBackupParts } from '../../server/utils/backup-json-stream'
-import { clearLinkMigrationState, db, deleteStoredLinks, postJson, setLinkStoreD1Mode } from '../utils'
+import { clearLinkMigrationState, db, deleteStoredLinks, postJson, runScheduledTasks, setLinkStoreD1Mode } from '../utils'
 
 function getManualBackupDate(key: string) {
   const match = key.match(/^backups\/manual-links-(.+)\.json$/)
@@ -13,23 +13,6 @@ function getManualBackupDate(key: string) {
     return undefined
 
   return new Date(match[1].replace(/T(\d{2})-(\d{2})-(\d{2})/, 'T$1:$2:$3'))
-}
-
-async function runScheduledBackup() {
-  const pending: Promise<unknown>[] = []
-  const context = {
-    waitUntil(promise: Promise<unknown>) {
-      pending.push(promise)
-    },
-    passThroughOnException() {},
-    props: {},
-  } as unknown as ExecutionContext
-  await exports.default.scheduled?.({
-    scheduledTime: Date.now(),
-    cron: '0 0 * * *',
-    noRetry() {},
-  }, env, context)
-  await Promise.all(pending)
 }
 
 describe('/api/backup', { concurrent: false }, () => {
@@ -43,7 +26,7 @@ describe('/api/backup', { concurrent: false }, () => {
     const before = new Set((await env.R2.list({ prefix: 'backups/' })).objects.map(object => object.key))
 
     try {
-      await runScheduledBackup()
+      await runScheduledTasks()
       expect((await postJson('/api/backup', {})).status).toBe(423)
       const after = new Set((await env.R2.list({ prefix: 'backups/' })).objects.map(object => object.key))
       expect(after).toEqual(before)

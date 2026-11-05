@@ -13,6 +13,23 @@ export const DEFAULT_ORIGIN = 'http://localhost'
 
 type FetchOptions = RequestInit & { origin?: string }
 
+export async function runScheduledTasks() {
+  const pending: Promise<unknown>[] = []
+  const context = {
+    waitUntil(promise: Promise<unknown>) {
+      pending.push(promise)
+    },
+    passThroughOnException() {},
+    props: {},
+  } as unknown as ExecutionContext
+  await exports.default.scheduled!({
+    scheduledTime: Date.now(),
+    cron: '0 0 * * *',
+    noRetry() {},
+  }, env, context)
+  await Promise.all(pending)
+}
+
 export function fetchWithAuth(path: string, options?: FetchOptions): Promise<Response> {
   const { origin = DEFAULT_ORIGIN, ...init } = options ?? {}
   const request = new Request(`${origin}${path}`, {

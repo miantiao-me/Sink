@@ -146,6 +146,12 @@ Click analytics store the target URL in Workers Analytics Engine, which limits a
 
 Safe browsing example: Cloudflare Family DNS `https://family.cloudflare-dns.com/dns-query`. See also [Link Features](/features/links).
 
+### Expired link retention
+
+Set runtime variable `NUXT_EXPIRED_LINK_RETENTION_DAYS=30` to permanently delete D1 links once they have been expired for 30 days. Unset or empty disables cleanup. Only non-negative integers are accepted; `0` deletes expired links on the next run. Invalid values skip cleanup and log a warning.
+
+Cleanup requires a completed KV-to-D1 migration and Workers cron (daily at **00:00 UTC** in this repository). It runs independently of `NUXT_DISABLE_AUTO_BACKUP` and does not require R2. Pages does not run automatic cleanup. Existing R2 backups are retained.
+
 ## Advanced defaults (usually leave alone)
 
 | Variable                      | Default                      | Purpose                                                                                                      |
