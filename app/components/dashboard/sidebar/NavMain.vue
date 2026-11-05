@@ -1,19 +1,17 @@
 <script setup lang="ts">
+import type { RouteLocationRaw } from 'vue-router'
 import { useSidebar } from '@/components/ui/sidebar'
 
+interface NavItem {
+  title: string
+  to: RouteLocationRaw
+  icon: Component
+  isActive?: boolean
+}
+
 defineProps<{
-  platformItems: {
-    title: string
-    url: string
-    icon: Component
-    isActive?: boolean
-  }[]
-  settingsItems: {
-    title: string
-    url: string
-    icon: Component
-    isActive?: boolean
-  }[]
+  platformItems: NavItem[]
+  settingsItems: NavItem[]
 }>()
 
 const { t } = useI18n()
@@ -41,7 +39,7 @@ watch(() => route.path, () => {
             data-active:rounded-4xl
           "
         >
-          <NuxtLink :to="item.url">
+          <NuxtLink :to="item.to">
             <component :is="item.icon" aria-hidden="true" />
             <span>{{ t(item.title) }}</span>
           </NuxtLink>
@@ -63,7 +61,7 @@ watch(() => route.path, () => {
             data-active:rounded-4xl
           "
         >
-          <NuxtLink :to="item.url">
+          <NuxtLink :to="item.to">
             <component :is="item.icon" aria-hidden="true" />
             <span>{{ t(item.title) }}</span>
           </NuxtLink>

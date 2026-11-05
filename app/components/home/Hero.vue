@@ -2,8 +2,11 @@
 import { ArrowRight } from '@lucide/vue'
 import { GitHubIcon, XIcon } from 'vue3-simple-icons'
 import heroUrl from '@/assets/images/hero.svg?url'
+import { dashboardHref } from '@/utils/dashboard-url'
 
 const { title, description, github, twitter } = useAppConfig()
+const { dashboardURL } = useRuntimeConfig().public
+const dashboardLink = dashboardHref()
 </script>
 
 <template>
@@ -77,7 +80,7 @@ const { title, description, github, twitter } = useAppConfig()
               as-child
               size="lg"
             >
-              <NuxtLink to="/dashboard">
+              <NuxtLink :to="dashboardLink" :external="!!dashboardURL">
                 <span class="text-nowrap">{{ $t('dashboard.title') }}</span>
               </NuxtLink>
             </Button>

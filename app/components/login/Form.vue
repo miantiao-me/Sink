@@ -38,7 +38,7 @@ async function handleSubmit() {
     isSubmitting.value = true
     setAuthToken(token.value)
     await useAPI('/api/verify')
-    await navigateTo('/dashboard')
+    await navigateTo({ name: 'links' })
   }
   catch (e) {
     removeAuthToken()

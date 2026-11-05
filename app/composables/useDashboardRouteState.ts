@@ -19,7 +19,7 @@ export function useDashboardAnalysisRouteState(options: { detail?: boolean } = {
   const route = useRoute()
   const router = useRouter()
   const store = useDashboardAnalysisStore()
-  const routePath = options.detail ? '/dashboard/link' : '/dashboard/analysis'
+  const routeName = options.detail ? 'link' : 'analysis'
   let applyingRoute = false
 
   function currentQuery() {
@@ -36,9 +36,9 @@ export function useDashboardAnalysisRouteState(options: { detail?: boolean } = {
   }
 
   watch(
-    () => [route.path, route.query] as const,
-    ([path, query]) => {
-      if (path !== routePath)
+    () => [route.name, route.query] as const,
+    ([name, query]) => {
+      if (name !== routeName)
         return
 
       applyingRoute = true
@@ -47,7 +47,7 @@ export function useDashboardAnalysisRouteState(options: { detail?: boolean } = {
 
       const canonicalQuery = currentQuery()
       if (!isSameDashboardQuery(query, canonicalQuery))
-        void router.replace({ path: routePath, query: canonicalQuery, hash: route.hash })
+        void router.replace({ name: routeName, query: canonicalQuery, hash: route.hash })
     },
     { deep: true, immediate: true, flush: 'sync' },
   )
@@ -61,12 +61,12 @@ export function useDashboardAnalysisRouteState(options: { detail?: boolean } = {
       () => store.heatmapMetric,
     ],
     () => {
-      if (applyingRoute || route.path !== routePath)
+      if (applyingRoute || route.name !== routeName)
         return
 
       const query = currentQuery()
       if (!isSameDashboardQuery(route.query, query))
-        void router.replace({ path: routePath, query, hash: route.hash })
+        void router.replace({ name: routeName, query, hash: route.hash })
     },
     { deep: true, flush: 'pre' },
   )
@@ -76,7 +76,7 @@ export function useDashboardRealtimeRouteState() {
   const route = useRoute()
   const router = useRouter()
   const store = useDashboardRealtimeStore()
-  const routePath = '/dashboard/realtime'
+  const routeName = 'realtime'
   let applyingRoute = false
 
   function currentQuery() {
@@ -87,9 +87,9 @@ export function useDashboardRealtimeRouteState() {
   }
 
   watch(
-    () => [route.path, route.query] as const,
-    ([path, query]) => {
-      if (path !== routePath)
+    () => [route.name, route.query] as const,
+    ([name, query]) => {
+      if (name !== routeName)
         return
 
       applyingRoute = true
@@ -98,7 +98,7 @@ export function useDashboardRealtimeRouteState() {
 
       const canonicalQuery = currentQuery()
       if (!isSameDashboardQuery(query, canonicalQuery))
-        void router.replace({ path: routePath, query: canonicalQuery, hash: route.hash })
+        void router.replace({ name: routeName, query: canonicalQuery, hash: route.hash })
     },
     { deep: true, immediate: true, flush: 'sync' },
   )
@@ -106,12 +106,12 @@ export function useDashboardRealtimeRouteState() {
   watch(
     [() => store.timeName, () => store.filters],
     () => {
-      if (applyingRoute || route.path !== routePath)
+      if (applyingRoute || route.name !== routeName)
         return
 
       const query = currentQuery()
       if (!isSameDashboardQuery(route.query, query))
-        void router.replace({ path: routePath, query, hash: route.hash })
+        void router.replace({ name: routeName, query, hash: route.hash })
     },
     { deep: true, flush: 'pre' },
   )
@@ -121,7 +121,7 @@ export function useDashboardLinksRouteState() {
   const route = useRoute()
   const router = useRouter()
   const store = useDashboardLinksStore()
-  const routePath = '/dashboard/links'
+  const routeName = 'links'
   let applyingRoute = false
 
   function currentQuery() {
@@ -133,9 +133,9 @@ export function useDashboardLinksRouteState() {
   }
 
   watch(
-    () => [route.path, route.query] as const,
-    ([path, query]) => {
-      if (path !== routePath)
+    () => [route.name, route.query] as const,
+    ([name, query]) => {
+      if (name !== routeName)
         return
 
       applyingRoute = true
@@ -144,7 +144,7 @@ export function useDashboardLinksRouteState() {
 
       const canonicalQuery = currentQuery()
       if (!isSameDashboardQuery(query, canonicalQuery))
-        void router.replace({ path: routePath, query: canonicalQuery, hash: route.hash })
+        void router.replace({ name: routeName, query: canonicalQuery, hash: route.hash })
     },
     { deep: true, immediate: true, flush: 'sync' },
   )
@@ -152,12 +152,12 @@ export function useDashboardLinksRouteState() {
   watch(
     [() => store.status, () => store.sortBy, () => store.tag],
     () => {
-      if (applyingRoute || route.path !== routePath)
+      if (applyingRoute || route.name !== routeName)
         return
 
       const query = currentQuery()
       if (!isSameDashboardQuery(route.query, query))
-        void router.replace({ path: routePath, query, hash: route.hash })
+        void router.replace({ name: routeName, query, hash: route.hash })
     },
     { flush: 'pre' },
   )

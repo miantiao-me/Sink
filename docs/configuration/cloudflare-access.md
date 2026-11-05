@@ -11,12 +11,12 @@ Short links stay public either way. Access only affects who can open the dashboa
 
 ## What changes after you enable it
 
-| Path                     | Without Access             | With recommended Access setup                                 |
-| ------------------------ | -------------------------- | ------------------------------------------------------------- |
-| Short links (`/abc`)     | Public                     | Still public                                                  |
-| Dashboard (`/dashboard`) | Anyone with the site token | Must pass Cloudflare Access first, then use the dashboard     |
-| API (`/api/**`)          | Site token (`Bearer …`)    | Site token **or** a valid Access login (browser cookie / JWT) |
-| API docs (`/_docs`)      | Public on your host        | Still public unless you protect it separately in Access       |
+| Path                 | Without Access             | With recommended Access setup                                 |
+| -------------------- | -------------------------- | ------------------------------------------------------------- |
+| Short links (`/abc`) | Public                     | Still public                                                  |
+| Dashboard            | Anyone with the site token | Must pass Cloudflare Access first, then use the dashboard     |
+| API (`/api/**`)      | Site token (`Bearer …`)    | Site token **or** a valid Access login (browser cookie / JWT) |
+| API docs (`/_docs`)  | Public on your host        | Still public unless you protect it separately in Access       |
 
 Sink never trusts “there is a cookie”. It verifies the Access **JWT** — think of it as a short-lived electronic pass (signature, issuer, audience, and expiry are all checked).
 
@@ -26,11 +26,15 @@ Goal: protect the dashboard with Access, keep short links public, and still allo
 
 ### 1. Create an Access application
 
-In Cloudflare Zero Trust, create a **self-hosted** Access application for your Sink hostname (for example `links.example.com`).
+In Cloudflare Zero Trust, create a **self-hosted** Access application for the hostname that serves your dashboard.
+
+If you set [`NUXT_PUBLIC_DASHBOARD_URL`](./#giving-the-dashboard-its-own-subdomain), that is the dashboard host (for example `dash.example.com`), and it is the simpler setup: the whole hostname is the admin surface, so you can protect all of it and skip step 2. Your short-link host stays outside Access.
+
+Otherwise it is your single Sink hostname (for example `links.example.com`), which serves short links and the dashboard together, so Access needs path rules.
 
 ### 2. Choose which paths Access protects
 
-In the Access application path rules:
+Only needed when one host serves both short links and the dashboard, which is the default. In the Access application path rules:
 
 | Path                      | Protect with Access? | Why                                                                                     |
 | ------------------------- | -------------------- | --------------------------------------------------------------------------------------- |

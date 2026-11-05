@@ -69,4 +69,10 @@ description: 通过 Git 集成将 Sink 部署到 Cloudflare Workers。
 存储初始化完成前，创建链接可能失败，并提示「存储未就绪」（HTTP 423）。
 :::
 
+## 5. 可选：给仪表盘单独的域名
+
+想用 `dash.你的域名` 访问仪表盘，而不是放在短链接域名上：在 **同一个** Worker 的 **Settings → Domains & Routes → Add → Custom domain** 添加该域名，然后在 Worker 的运行时变量里设置 `NUXT_PUBLIC_DASHBOARD_URL=https://dash.你的域名`。一个 Worker、两个域名、一次部署。
+
+该域名随后提供仪表盘和 `/api/**`；短链接域名只提供短链接，对 `/api/**` 返回 404。详情与完整行为表见[配置参考](/zh-CN/configuration/#给仪表盘单独的子域名)。
+
 后续升级见[升级 Sink](./upgrading)。
