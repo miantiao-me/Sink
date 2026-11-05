@@ -1,6 +1,7 @@
 import { env } from 'cloudflare:workers'
-import { afterAll, afterEach, beforeAll, describe, expect, it } from 'vitest'
-import { deleteStoredLink, deleteStoredLinks, fetch, fetchWithAuth, postJson, setLinkStoreD1Mode } from './utils'
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, it } from 'vitest'
+import { links } from '../server/database/schema'
+import { db, deleteStoredLink, deleteStoredLinks, fetch, fetchWithAuth, postJson, setLinkStoreD1Mode } from './utils'
 
 // `resolveHostSurface` compares against the host of NUXT_PUBLIC_DASHBOARD_URL, so these two
 // origins are the dashboard host and a short-link host of the same deployment.
@@ -27,12 +28,24 @@ async function createLink(slug: string, url: string, origin?: string): Promise<R
   return postJson('/api/link/create', { url, slug }, true, origin)
 }
 
-describe('with a dashboard host configured', () => {
-  beforeAll(() => {
-    env.NUXT_PUBLIC_DASHBOARD_URL = DASHBOARD_ORIGIN
+// We write this link to storage because the API rejects the slug. `shared/schemas/link.ts` reads
+// the reserved slug once at module load, so it does not follow changes to the variable in a test.
+async function storeDashboardLink(url: string) {
+  createdSlugs.push('dashboard')
+  await deleteStoredLink('dashboard')
+  const now = Math.floor(Date.now() / 1000)
+  await db.insert(links).values({
+    slug: 'dashboard',
+    id: crypto.randomUUID().slice(0, 8),
+    url,
+    createdAt: now,
+    updatedAt: now,
+    normalizedUrl: url,
   })
+}
 
-  afterEach(() => {
+describe('with a dashboard host configured', () => {
+  beforeEach(() => {
     env.NUXT_PUBLIC_DASHBOARD_URL = DASHBOARD_ORIGIN
   })
 
@@ -42,9 +55,8 @@ describe('with a dashboard host configured', () => {
     expect(response.headers.get('location')).toBe('/links')
   })
 
-  it('frees `dashboard` to be an ordinary slug on a short-link host', async () => {
-    const created = await createLink('dashboard', 'https://example.com/reclaimed', DASHBOARD_ORIGIN)
-    expect(created.status).toBe(201)
+  it('resolves a stored `dashboard` link on a short-link host', async () => {
+    await storeDashboardLink('https://example.com/reclaimed')
 
     for (const path of ['/dashboard', '/dashboard/']) {
       const response = await fetch(path, { redirect: 'manual', origin: LINKS_ORIGIN })
@@ -117,12 +129,7 @@ describe('with no dashboard host configured', () => {
   // The slug is reserved for new links, but one created while a dashboard host was configured
   // can still be stored. It must lose to the dashboard rather than shadow it.
   it('disables a stored `dashboard` link instead of resolving it', async () => {
-    env.NUXT_PUBLIC_DASHBOARD_URL = DASHBOARD_ORIGIN
-    await deleteStoredLink('dashboard')
-    const created = await createLink('dashboard', 'https://example.com/reclaimed', DASHBOARD_ORIGIN)
-    expect(created.status).toBe(201)
-
-    env.NUXT_PUBLIC_DASHBOARD_URL = ''
+    await storeDashboardLink('https://example.com/reclaimed')
 
     for (const path of ['/dashboard', '/dashboard/', '/Dashboard']) {
       const response = await fetch(path, { redirect: 'manual' })
