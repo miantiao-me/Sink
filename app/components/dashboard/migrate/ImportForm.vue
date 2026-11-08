@@ -51,7 +51,7 @@ function resetForm() {
           type="file"
           accept=".json"
           class="cursor-pointer"
-          :disabled="previewMode"
+          :disabled="!!previewMode"
           @change="handleFileSelect"
         />
         <p v-if="previewMode" class="mt-2 text-sm text-muted-foreground">
