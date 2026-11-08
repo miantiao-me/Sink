@@ -6,6 +6,19 @@ import { blobsMap } from './access-log'
 
 export type { Query }
 
+// Analytics Engine only retains a limited history window.
+const DEFAULT_COUNTER_LOOKBACK_SECONDS = 28 * 24 * 60 * 60
+
+export function withCounterLookback(query: Query, now = Date.now()): Query {
+  if (query.startAt !== undefined)
+    return query
+
+  return {
+    ...query,
+    startAt: Math.floor(now / 1000) - DEFAULT_COUNTER_LOOKBACK_SECONDS,
+  }
+}
+
 function queryValues(value: string, omitEmpty = false): string[] {
   if ([...value].some((character) => {
     const code = character.charCodeAt(0)
