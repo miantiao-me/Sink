@@ -15,7 +15,8 @@ describe('/api/verify', () => {
       authMethod: 'site-token',
       userID: 'root',
       userEmail: 'root@localhost',
-      accessEnabled: false,
+      accessEnabled: true,
+      isAdmin: true,
     })
   })
 
@@ -31,14 +32,14 @@ describe('/api/verify', () => {
     expect(response.status).toBe(401)
   })
 
-  it('does not trust an Access header when Access is not configured', async () => {
+  it('rejects an unsigned/garbage Access header', async () => {
     const response = await fetch('/api/verify', {
       headers: { 'Cf-Access-Jwt-Assertion': 'unsigned-token' },
     })
     expect(response.status).toBe(401)
   })
 
-  it('does not trust an Access cookie when Access is not configured', async () => {
+  it('rejects an unsigned/garbage Access cookie', async () => {
     const response = await fetch('/api/verify', {
       headers: { Cookie: 'CF_Authorization=unsigned-token' },
     })

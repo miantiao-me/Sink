@@ -37,6 +37,9 @@ export default defineConfig(async ({ mode }) => ({
         cf: true,
         bindings: {
           TEST_MIGRATIONS: await readD1Migrations('./drizzle'),
+          NUXT_CF_ACCESS_TEAM_DOMAIN: 'https://sink-test.cloudflareaccess.com',
+          NUXT_CF_ACCESS_AUD: 'sink-test-audience',
+          NUXT_ADMIN_EMAILS: 'admin@example.com',
         },
       },
     }),
