@@ -281,6 +281,24 @@ async function aiOg() {
               />
             </Field>
           </props.form.Field>
+
+          <props.form.Field v-slot="{ field }" name="favicon">
+            <Field>
+              <FieldLabel :for="`${idPrefix}-${field.name}`">
+                {{ $t('links.form.favicon') }}
+              </FieldLabel>
+              <FieldDescription>
+                {{ $t('links.form.favicon_description') }}
+              </FieldDescription>
+              <DashboardLinksEditorImageUploader
+                :model-value="field.state.value"
+                :slug="currentSlug"
+                :input-id="`${idPrefix}-${field.name}`"
+                kind="favicon"
+                @update:model-value="field.handleChange($event || '')"
+              />
+            </Field>
+          </props.form.Field>
         </FieldGroup>
       </AccordionContent>
     </AccordionItem>

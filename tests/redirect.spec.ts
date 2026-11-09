@@ -216,6 +216,26 @@ describe('/', () => {
     expect(html).toContain('allow-modals')
   })
 
+  it('renders the custom favicon with an absolute URL on cloaked links', async () => {
+    const slug = `cloaking-favicon-${crypto.randomUUID()}`
+    const favicon = `/_assets/images/${slug}/icon.png`
+
+    const createResponse = await postJson('/api/link/create', {
+      url: 'https://example.com/favicon-target',
+      slug,
+      cloaking: true,
+      favicon,
+    })
+    expect(createResponse.status).toBe(201)
+    createdSlugs.push(slug)
+
+    const response = await fetch(`/${slug}`, { redirect: 'manual' })
+    const html = await response.text()
+
+    expect(response.status).toBe(200)
+    expect(html).toMatch(new RegExp(`<link rel="icon" href="https?://[^/"]+${favicon}">`))
+  })
+
   it('proxies request to destination URL when proxy is enabled', async () => {
     mockUpstream({
       'upstream.test': () => new Response('proxied upstream body', {

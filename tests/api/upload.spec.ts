@@ -36,6 +36,48 @@ describe('/api/upload/image', () => {
     }
   })
 
+  it('stores an ICO favicon with an .ico extension', async () => {
+    const formData = new FormData()
+    const slug = `upload-${crypto.randomUUID()}`
+    formData.append('file', new File([TEST_PNG_BYTES], 'favicon.ico', { type: 'image/vnd.microsoft.icon' }))
+    formData.append('slug', slug)
+    formData.append('kind', 'favicon')
+
+    let key: string | undefined
+    try {
+      const response = await fetchWithAuth('/api/upload/image', {
+        method: 'POST',
+        body: formData,
+      })
+      expect(response.status).toBe(200)
+
+      key = (await response.json() as { key: string }).key
+      expect(key).toMatch(new RegExp(`^images/${slug}/[a-z0-9]+\\.ico$`))
+    }
+    finally {
+      if (key)
+        await env.R2.delete(key)
+    }
+  })
+
+  it('rejects ICO files for link preview images and SVG files for favicons', async () => {
+    for (const [kind, file] of [
+      ['image', new File(['ico'], 'favicon.ico', { type: 'image/x-icon' })],
+      ['favicon', new File(['<svg/>'], 'favicon.svg', { type: 'image/svg+xml' })],
+    ] as const) {
+      const formData = new FormData()
+      formData.append('file', file)
+      formData.append('slug', 'test-slug')
+      formData.append('kind', kind)
+
+      const response = await fetchWithAuth('/api/upload/image', {
+        method: 'POST',
+        body: formData,
+      })
+      expect(response.status).toBe(400)
+    }
+  })
+
   it('rejects asset paths outside images', async () => {
     const response = await fetch('/_assets/documents/test.txt')
     expect(response.status).toBe(403)

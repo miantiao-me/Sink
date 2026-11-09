@@ -81,6 +81,7 @@ export const LinkFieldsSchema = z.object({
   title: z.string().trim().max(256).optional().describe('Overrides the title in the link preview.'),
   description: z.string().trim().max(2048).optional().describe('Overrides the description in the link preview.'),
   image: z.string().trim().max(128).optional().describe('Overrides the image in the link preview.'),
+  favicon: z.string().trim().max(128).optional().describe('Browser tab icon on pages rendered for the link, such as cloaking.'),
   apple: z.string().trim().url().max(MAX_URL_LENGTH).optional().describe('Apple App Store redirect URL.'),
   google: z.string().trim().url().max(MAX_URL_LENGTH).optional().describe('Google Play Store redirect URL.'),
   cloaking: z.boolean().optional().describe('Mask the destination URL behind the short link.'),

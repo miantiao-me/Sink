@@ -133,18 +133,18 @@ export default eventHandler(async (event) => {
           const submittedPassword = typeof body?.password === 'string' ? body.password : ''
 
           if (!await verifyLinkPassword(submittedPassword, link.password)) {
-            return sendNoStoreHtml(generatePasswordHtml(slug, { hasError: true, locale: getLocale() }))
+            return sendNoStoreHtml(generatePasswordHtml(slug, { hasError: true, locale: getLocale(), favicon: link.favicon }))
           }
 
           // Password correct - show unsafe warning if needed
           if (link.unsafe && body?.confirm !== 'true') {
-            return sendNoStoreHtml(generateUnsafeWarningHtml(slug, finalTargetUrl, { password: submittedPassword || undefined, locale: getLocale() }))
+            return sendNoStoreHtml(generateUnsafeWarningHtml(slug, finalTargetUrl, { password: submittedPassword || undefined, locale: getLocale(), favicon: link.favicon }))
           }
 
           formConfirmed = true
         }
         else {
-          return sendNoStoreHtml(generatePasswordHtml(slug, { locale: getLocale() }))
+          return sendNoStoreHtml(generatePasswordHtml(slug, { locale: getLocale(), favicon: link.favicon }))
         }
       }
 
@@ -156,11 +156,11 @@ export default eventHandler(async (event) => {
             formConfirmed = true
           }
           else {
-            return sendNoStoreHtml(generateUnsafeWarningHtml(slug, finalTargetUrl, { locale: getLocale() }))
+            return sendNoStoreHtml(generateUnsafeWarningHtml(slug, finalTargetUrl, { locale: getLocale(), favicon: link.favicon }))
           }
         }
         else {
-          return sendNoStoreHtml(generateUnsafeWarningHtml(slug, finalTargetUrl, { locale: getLocale() }))
+          return sendNoStoreHtml(generateUnsafeWarningHtml(slug, finalTargetUrl, { locale: getLocale(), favicon: link.favicon }))
         }
       }
 

@@ -13,6 +13,10 @@ const CLOAKING_IFRAME_SANDBOX = [
   'allow-modals',
 ].join(' ')
 
+function buildFaviconTag(favicon?: string) {
+  return favicon ? `\n    <link rel="icon" href="${escape(favicon)}">` : ''
+}
+
 function buildMetaTags(link: Link, baseUrl: string) {
   const { host: hostname } = parseURL(link.url)
   const title = link.title || hostname || 'Link'
@@ -21,6 +25,7 @@ function buildMetaTags(link: Link, baseUrl: string) {
     ? `${baseUrl}${link.image}`
     : link.image
   const twitterCard = hasImage ? 'summary_large_image' : 'summary'
+  const faviconUrl = link.favicon?.startsWith('/') ? `${baseUrl}${link.favicon}` : link.favicon
 
   const tags = [
     link.description ? `<meta name="description" content="${escape(link.description)}">` : '',
@@ -33,7 +38,7 @@ function buildMetaTags(link: Link, baseUrl: string) {
     `<meta name="twitter:title" content="${escape(title)}">`,
     link.description ? `<meta name="twitter:description" content="${escape(link.description)}">` : '',
     hasImage ? `<meta name="twitter:image" content="${escape(imageUrl!)}">` : '',
-  ].filter(Boolean).join('\n    ')
+  ].filter(Boolean).join('\n    ') + buildFaviconTag(faviconUrl)
 
   return { title, tags }
 }
@@ -59,10 +64,11 @@ export function generateCloakingHtml(link: Link, targetUrl: string, baseUrl: str
 interface PasswordHtmlOptions {
   hasError?: boolean
   locale?: RedirectLocale
+  favicon?: string
 }
 
 export function generatePasswordHtml(slug: string, options: PasswordHtmlOptions = {}): string {
-  const { hasError = false, locale = 'en-US' } = options
+  const { hasError = false, locale = 'en-US', favicon } = options
   const t = REDIRECT_TRANSLATIONS[locale]
   return `<!DOCTYPE html>
 <html lang="${escape(locale)}">
@@ -70,7 +76,7 @@ export function generatePasswordHtml(slug: string, options: PasswordHtmlOptions 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="robots" content="noindex">
-    <title>${escape(t.passwordTitle)}</title>
+    <title>${escape(t.passwordTitle)}</title>${buildFaviconTag(favicon)}
     <style>
       *{margin:0;padding:0;box-sizing:border-box}
       body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#09090b;color:#fafafa}
@@ -101,10 +107,11 @@ export function generatePasswordHtml(slug: string, options: PasswordHtmlOptions 
 interface UnsafeWarningHtmlOptions {
   password?: string
   locale?: RedirectLocale
+  favicon?: string
 }
 
 export function generateUnsafeWarningHtml(slug: string, targetUrl: string, options: UnsafeWarningHtmlOptions = {}): string {
-  const { password, locale = 'en-US' } = options
+  const { password, locale = 'en-US', favicon } = options
   const t = REDIRECT_TRANSLATIONS[locale]
   return `<!DOCTYPE html>
 <html lang="${escape(locale)}">
@@ -112,7 +119,7 @@ export function generateUnsafeWarningHtml(slug: string, targetUrl: string, optio
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="robots" content="noindex">
-    <title>${escape(t.unsafeTitle)}</title>
+    <title>${escape(t.unsafeTitle)}</title>${buildFaviconTag(favicon)}
     <style>
       *{margin:0;padding:0;box-sizing:border-box}
       body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center;background:#09090b;color:#fafafa}
