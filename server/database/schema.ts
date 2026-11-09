@@ -13,6 +13,7 @@ export const links = sqliteTable('links', {
   title: text(),
   description: text(),
   image: text(),
+  favicon: text(),
   apple: text(),
   google: text(),
   cloaking: integer({ mode: 'boolean' }),

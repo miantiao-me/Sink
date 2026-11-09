@@ -22,6 +22,7 @@ describe('link form values', () => {
       title: '',
       description: '',
       image: '',
+      favicon: '',
       cloaking: false,
       redirectWithQuery: false,
       proxy: false,

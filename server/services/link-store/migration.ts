@@ -54,10 +54,10 @@ export async function insertMigratedKvLink(event: H3Event, link: Link, effective
   const insert = DB.prepare(`
     INSERT INTO links (
       slug, id, url, comment, created_at, updated_at, expiration, title,
-      description, image, apple, google, cloaking, redirect_with_query,
+      description, image, favicon, apple, google, cloaking, redirect_with_query,
       proxy, password, unsafe, geo, normalized_url, effective_expires_at
     )
-    SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+    SELECT ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
     WHERE NOT EXISTS (SELECT 1 FROM link_tombstones WHERE slug = ?)
     ON CONFLICT(slug) DO NOTHING
   `).bind(
@@ -71,6 +71,7 @@ export async function insertMigratedKvLink(event: H3Event, link: Link, effective
     values.title,
     values.description,
     values.image,
+    values.favicon,
     values.apple,
     values.google,
     values.cloaking === null ? null : Number(values.cloaking),

@@ -6,6 +6,7 @@ const editableOptionalLinkFields = [
   'title',
   'description',
   'image',
+  'favicon',
   'apple',
   'google',
   'cloaking',
