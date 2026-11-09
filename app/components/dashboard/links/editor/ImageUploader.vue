@@ -1,12 +1,16 @@
 <script setup lang="ts">
+import type { ImageUploadKind } from '#shared/utils/image'
 import { ImagePlus, Loader2, X } from '@lucide/vue'
 import { toast } from 'vue-sonner'
-import { IMAGE_ALLOWED_TYPES, IMAGE_MAX_SIZE } from '#shared/utils/image'
+import { IMAGE_UPLOAD_KINDS, isIconType } from '#shared/utils/image'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   slug: string
   inputId: string
-}>()
+  kind?: ImageUploadKind
+}>(), {
+  kind: 'image',
+})
 
 const imageUrl = defineModel<string>()
 
@@ -15,6 +19,13 @@ const canUpload = computed(() => !!props.slug?.trim())
 const uploading = ref(false)
 const dragOver = ref(false)
 const fileInput = useTemplateRef<HTMLInputElement>('fileInput')
+
+const isFavicon = computed(() => props.kind === 'favicon')
+const allowedTypes = computed(() => IMAGE_UPLOAD_KINDS[props.kind].types)
+const ratio = computed(() => isFavicon.value ? 1 : 1200 / 630)
+const formats = computed(() => [...new Set(allowedTypes.value.map(type =>
+  isIconType(type) ? 'ICO' : type.split('/')[1]!.toUpperCase(),
+))].join(', '))
 
 async function handleFile(file: File) {
   if (uploading.value)
@@ -25,21 +36,29 @@ async function handleFile(file: File) {
     return
   }
 
-  if (!IMAGE_ALLOWED_TYPES.includes(file.type)) {
-    toast.error(t('links.form.image_invalid_type'))
+  if (file.type === 'image/svg+xml') {
+    toast.error(t('links.form.image_svg_unsupported', { formats: formats.value }))
     return
   }
 
-  if (file.size > IMAGE_MAX_SIZE) {
-    toast.error(t('links.form.image_size_limit'))
+  if (!allowedTypes.value.includes(file.type)) {
+    toast.error(isFavicon.value
+      ? t('links.form.favicon_invalid_type', { formats: formats.value })
+      : t('links.form.image_invalid_type'))
+    return
+  }
+
+  if (file.size > IMAGE_UPLOAD_KINDS[props.kind].maxSize) {
+    toast.error(t(isFavicon.value ? 'links.form.favicon_size_limit' : 'links.form.image_size_limit'))
     return
   }
 
   uploading.value = true
   try {
     const formData = new FormData()
-    formData.append('file', file)
+    formData.append('file', isFavicon.value ? await resizeFavicon(file) : file)
     formData.append('slug', props.slug)
+    formData.append('kind', props.kind)
 
     const result = await useAPI<{ url: string }>('/api/upload/image', {
       method: 'POST',
@@ -95,20 +114,20 @@ function openFilePicker() {
 </script>
 
 <template>
-  <div class="space-y-2">
+  <div class="space-y-2" :class="{ 'max-w-40': isFavicon }">
     <input
       :id="inputId"
       ref="fileInput"
       type="file"
       name="image"
-      accept="image/jpeg,image/png,image/webp,image/gif"
+      :accept="allowedTypes.join(',')"
       class="hidden"
       :disabled="!canUpload || uploading"
       @change="onFileChange"
     >
     <AspectRatio
       v-if="!imageUrl"
-      :ratio="1200 / 630"
+      :ratio="ratio"
       class="
         relative flex cursor-pointer items-center justify-center rounded-md
         border-2 border-dashed transition-colors outline-none
@@ -134,7 +153,12 @@ function openFilePicker() {
       @dragover.prevent="onDragOver"
       @dragleave="onDragLeave"
     >
-      <div class="flex flex-col items-center gap-1 text-muted-foreground">
+      <div
+        class="
+          flex flex-col items-center gap-1 px-2 text-center
+          text-muted-foreground
+        "
+      >
         <Loader2
           v-if="uploading" class="
             size-8
@@ -144,22 +168,23 @@ function openFilePicker() {
         />
         <ImagePlus v-else aria-hidden="true" class="size-8" />
         <span class="text-sm">{{ canUpload ? $t('links.form.image_upload_hint') : $t('links.form.slug_required') }}</span>
-        <span v-if="canUpload" class="text-xs opacity-60">{{ $t('links.form.image_ratio_hint') }}</span>
+        <span v-if="canUpload" class="text-xs opacity-60">{{ $t(isFavicon ? 'links.form.favicon_ratio_hint' : 'links.form.image_ratio_hint') }}</span>
       </div>
     </AspectRatio>
 
-    <AspectRatio v-else :ratio="1200 / 630" class="relative">
+    <AspectRatio v-else :ratio="ratio" class="relative">
       <img
         :src="imageUrl"
-        :alt="$t('links.form.image_preview')"
-        class="size-full rounded-md object-cover"
+        :alt="$t(isFavicon ? 'links.form.favicon_preview' : 'links.form.image_preview')"
+        class="size-full rounded-md"
+        :class="isFavicon ? 'object-contain' : 'object-cover'"
       >
       <Button
         type="button"
         variant="destructive"
         size="icon"
         class="absolute top-2 right-2"
-        :aria-label="`${$t('common.delete')}: ${$t('links.form.image_preview')}`"
+        :aria-label="`${$t('common.delete')}: ${$t(isFavicon ? 'links.form.favicon_preview' : 'links.form.image_preview')}`"
         @click="clearImage"
       >
         <X aria-hidden="true" class="size-4" />
