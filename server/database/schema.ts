@@ -22,11 +22,13 @@ export const links = sqliteTable('links', {
   geo: text({ mode: 'json' }).$type<Link['geo']>(),
   normalizedUrl: text('normalized_url').notNull(),
   effectiveExpiresAt: integer('effective_expires_at'),
+  ownerEmail: text('owner_email'),
 }, table => [
   index('links_created_at_slug_idx').on(table.createdAt, table.slug),
   index('links_created_at_desc_slug_idx').on(sql`${table.createdAt} desc`, table.slug),
   index('links_normalized_url_idx').on(table.normalizedUrl),
   index('links_id_idx').on(table.id),
+  index('links_owner_email_idx').on(table.ownerEmail),
 ])
 
 export const tags = sqliteTable('tags', {

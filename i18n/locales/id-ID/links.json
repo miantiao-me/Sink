@@ -34,6 +34,9 @@
     },
     "expired": "Kedaluwarsa",
     "unsafe": "Tautan tidak aman",
+    "owner": {
+      "unassigned": "Belum ditugaskan"
+    },
     "filters": {
       "aria_label": "Filter tautan",
       "status_label": "Status",
@@ -42,7 +45,11 @@
       "tag_label": "Tag",
       "all_tags": "Semua tag",
       "tags_loading": "Memuat tag…",
-      "tags_failed": "Gagal memuat tag."
+      "tags_failed": "Gagal memuat tag.",
+      "owner_label": "Pemilik",
+      "all_owners": "Semua pemilik",
+      "owners_loading": "Memuat pemilik…",
+      "owners_failed": "Gagal memuat pemilik."
     },
     "stats": {
       "retry": "Coba lagi statistik {slug}",

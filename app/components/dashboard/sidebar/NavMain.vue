@@ -50,7 +50,7 @@ watch(() => route.path, () => {
     </SidebarMenu>
   </SidebarGroup>
 
-  <SidebarGroup>
+  <SidebarGroup v-if="settingsItems.length">
     <SidebarGroupLabel>{{ $t('sidebar.settings') }}</SidebarGroupLabel>
     <SidebarMenu>
       <SidebarMenuItem v-for="item in settingsItems" :key="item.title">

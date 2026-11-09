@@ -2,8 +2,8 @@ import type { H3Event } from 'h3'
 import { sql } from 'kysely'
 import { QuerySchema } from '#shared/schemas/query'
 
-function query2sql(query: Query, event: H3Event) {
-  const filter = buildAnalyticsFilter(query)
+async function query2sql(query: Query, event: H3Event) {
+  const filter = buildAnalyticsFilter(await scopeAnalyticsQuery(event, query))
   const { dataset } = useRuntimeConfig(event)
   const limit = Math.max(0, Math.floor(query.limit))
   const analyticsQuery = createAnalyticsQuery(dataset)
@@ -53,7 +53,7 @@ function events2logs(events: WAEEvents[]) {
 
 export default eventHandler(async (event) => {
   const query = await getValidatedQuery(event, QuerySchema.parse)
-  const sql = query2sql(query, event)
+  const sql = await query2sql(query, event)
 
   const logs = await useWAE(event, sql) as { data: WAEEvents[] }
   return events2logs(logs?.data || [])

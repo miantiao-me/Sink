@@ -1,6 +1,6 @@
 import type { H3Event } from 'h3'
 import type { Link } from '#shared/schemas/link'
-import type { LinkSearchItem } from '#shared/types/link'
+import type { LinkOwner, LinkSearchItem } from '#shared/types/link'
 import type { ExpectedLinkVersion, LinkFilterOptions, ListLinksOptions, ListLinksResult, SearchLinksOptions } from '../services/link-store/d1'
 import { getRequestHost, getRequestProtocol } from 'h3'
 import {
@@ -15,6 +15,7 @@ import {
   d1HasActiveLinkVersion,
   d1IterateAllLinks,
   d1ListLinks,
+  d1ListOwners,
   d1ListTags,
   d1SearchLinks,
   d1UpdateLink,
@@ -57,8 +58,9 @@ export async function getLink(event: H3Event, slug: string, cacheTtl?: number): 
   return stored.link
 }
 
-export async function getAuthoritativeLink(event: H3Event, slug: string): Promise<Link | null> {
-  return (await d1GetActiveLink(event, slug))?.link ?? null
+export async function getAuthoritativeLink(event: H3Event, slug: string): Promise<{ link: Link, ownerEmail: string | null } | null> {
+  const result = await d1GetActiveLink(event, slug)
+  return result ? { link: result.link, ownerEmail: result.ownerEmail } : null
 }
 
 export async function getAnyAuthoritativeLink(event: H3Event, slug: string): Promise<Link | null> {
@@ -163,4 +165,8 @@ export async function countLinks(event: H3Event, options: LinkFilterOptions): Pr
 
 export async function listTags(event: H3Event): Promise<{ name: string, count: number }[]> {
   return await d1ListTags(event)
+}
+
+export async function listOwners(event: H3Event): Promise<LinkOwner[]> {
+  return await d1ListOwners(event)
 }

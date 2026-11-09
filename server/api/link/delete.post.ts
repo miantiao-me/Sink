@@ -37,5 +37,14 @@ export default eventHandler(async (event) => {
 
   const body = await readValidatedBody(event, DeleteSchema.parse)
   const slug = normalizeSlug(event, body.slug)
+
+  const existingLink = await getAnyAuthoritativeLink(event, slug)
+  if (!existingLink) {
+    throw createError({
+      status: 404,
+      statusText: 'Link not found',
+    })
+  }
+
   await deleteLink(event, slug)
 })

@@ -34,6 +34,9 @@
     },
     "expired": "Abgelaufen",
     "unsafe": "Unsicherer Link",
+    "owner": {
+      "unassigned": "Nicht zugewiesen"
+    },
     "filters": {
       "aria_label": "Linkfilter",
       "status_label": "Status",
@@ -42,7 +45,11 @@
       "tag_label": "Tag",
       "all_tags": "Alle Tags",
       "tags_loading": "Tags werden geladen…",
-      "tags_failed": "Tags konnten nicht geladen werden."
+      "tags_failed": "Tags konnten nicht geladen werden.",
+      "owner_label": "Eigentümer",
+      "all_owners": "Alle Eigentümer",
+      "owners_loading": "Eigentümer werden geladen…",
+      "owners_failed": "Eigentümer konnten nicht geladen werden."
     },
     "stats": {
       "retry": "Statistik für {slug} erneut laden",

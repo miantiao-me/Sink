@@ -6,6 +6,10 @@ defineRouteMeta({
 })
 
 export default eventHandler(async (event) => {
+  if (!isAdmin(event)) {
+    throw createError({ status: 403, statusText: 'Forbidden' })
+  }
+
   const env = event.context.cloudflare.env
   const result = await backupLinksToR2(env, true)
   if (!result.completed && result.reason === 'migration-incomplete')

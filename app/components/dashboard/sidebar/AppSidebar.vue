@@ -8,6 +8,7 @@ interface NavItem {
 
 const { title } = useAppConfig()
 const { isActive } = useDashboardRoute()
+const { isAdmin } = useAuthSession()
 
 const platformItems = computed<NavItem[]>(() => [
   {
@@ -36,14 +37,16 @@ const platformItems = computed<NavItem[]>(() => [
   },
 ])
 
-const settingsItems = computed<NavItem[]>(() => [
-  {
-    title: 'nav.migrate',
-    url: '/dashboard/migrate',
-    icon: DASHBOARD_ROUTES.migrate.icon,
-    isActive: isActive('migrate'),
-  },
-])
+const settingsItems = computed<NavItem[]>(() => isAdmin.value
+  ? [
+      {
+        title: 'nav.migrate',
+        url: '/dashboard/migrate',
+        icon: DASHBOARD_ROUTES.migrate.icon,
+        isActive: isActive('migrate'),
+      },
+    ]
+  : [])
 </script>
 
 <template>

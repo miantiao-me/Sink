@@ -34,6 +34,9 @@
     },
     "expired": "만료됨",
     "unsafe": "안전하지 않은 링크",
+    "owner": {
+      "unassigned": "미할당"
+    },
     "filters": {
       "aria_label": "링크 필터",
       "status_label": "상태",
@@ -42,7 +45,11 @@
       "tag_label": "태그",
       "all_tags": "모든 태그",
       "tags_loading": "태그 불러오는 중…",
-      "tags_failed": "태그를 불러오지 못했습니다."
+      "tags_failed": "태그를 불러오지 못했습니다.",
+      "owner_label": "소유자",
+      "all_owners": "모든 소유자",
+      "owners_loading": "소유자 불러오는 중…",
+      "owners_failed": "소유자를 불러오지 못했습니다."
     },
     "stats": {
       "retry": "{slug} 통계 다시 불러오기",

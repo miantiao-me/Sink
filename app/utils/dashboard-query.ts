@@ -52,6 +52,8 @@ export interface LinksQueryState {
   status: DashboardLinkStatusQuery
   sort: DashboardLinkSort
   tag?: string
+  /** Admin-only owner filter: an email, or UNASSIGNED_OWNER. Ignored server-side for non-admins. */
+  owner?: string
 }
 
 export interface DashboardSlugFilters {
@@ -176,10 +178,12 @@ export function serializeRealtimeQuery(state: RealtimeQueryState): DashboardQuer
 
 export function parseLinksQuery(query: DashboardQuery): LinksQueryState {
   const tag = firstQueryValue(query.tag)?.trim().toLowerCase()
+  const owner = firstQueryValue(query.owner)?.trim().toLowerCase()
   return {
     status: enumValue(query.status, LINK_STATUSES) ?? DEFAULT_LINK_STATUS,
     sort: enumValue(query.sort, LINK_SORTS) ?? DEFAULT_LINK_SORT,
     tag: tag && tag.length <= 32 ? tag : undefined,
+    owner: owner && owner.length <= 320 ? owner : undefined,
   }
 }
 
@@ -191,6 +195,8 @@ export function serializeLinksQuery(state: LinksQueryState): DashboardQueryOutpu
     query.sort = state.sort
   if (state.tag)
     query.tag = state.tag
+  if (state.owner)
+    query.owner = state.owner
   return query
 }
 

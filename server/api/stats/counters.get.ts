@@ -7,8 +7,8 @@ function weightedDistinct(column: string): RawBuilder<number> {
   return sql<number>`ROUND(COUNT(DISTINCT ${sql.ref(column)}) * SUM(_sample_interval) / COUNT())`
 }
 
-function query2sql(query: Query, event: H3Event) {
-  const filter = buildAnalyticsFilter(query)
+async function query2sql(query: Query, event: H3Event) {
+  const filter = buildAnalyticsFilter(await scopeAnalyticsQuery(event, query))
   const { dataset } = useRuntimeConfig(event)
   const analyticsQuery = createAnalyticsQuery(dataset)
   const filteredQuery = filter ? analyticsQuery.where(filter) : analyticsQuery
@@ -26,6 +26,6 @@ function query2sql(query: Query, event: H3Event) {
 
 export default eventHandler(async (event) => {
   const query = await getValidatedQuery(event, QuerySchema.parse)
-  const sql = query2sql(query, event)
+  const sql = await query2sql(query, event)
   return useWAE(event, sql)
 })

@@ -4,6 +4,8 @@ export type DashboardLinkStatus = 'active' | 'expired'
 
 export type DashboardLink = Link & {
   tags?: string[]
+  /** Present only in list responses when the caller is admin. */
+  ownerEmail?: string | null
 }
 
 export type DashboardLinkFormData = Omit<LinkFormData, 'tags'> & {

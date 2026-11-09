@@ -42,5 +42,6 @@ export default eventHandler((event) => {
     userID,
     userEmail,
     accessEnabled: isCloudflareAccessConfigured(cfAccessTeamDomain, cfAccessAud),
+    isAdmin: isAdmin(event),
   }
 })

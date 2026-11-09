@@ -14,6 +14,7 @@ export const useDashboardLinksStore = defineStore('dashboard-links', () => {
   const sortBy = ref<DashboardLinkSort>('newest')
   const status = ref<DashboardLinkStatus>('active')
   const tag = ref<string>()
+  const owner = ref<string>()
 
   const showLinkEditor = ref(false)
   const editingLink = ref<Record<string, unknown> | null>(null)
@@ -44,12 +45,14 @@ export const useDashboardLinksStore = defineStore('dashboard-links', () => {
     sortBy.value = state.sort
     status.value = state.status
     tag.value = state.tag
+    owner.value = state.owner
   }
 
   return {
     sortBy,
     status,
     tag,
+    owner,
     showLinkEditor,
     editingLink,
     openLinkEditor,

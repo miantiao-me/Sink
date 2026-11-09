@@ -17,8 +17,8 @@ const ViewsQuerySchema = QuerySchema.extend({
     .default('Etc/UTC'),
 })
 
-function query2sql(query: z.infer<typeof ViewsQuerySchema>, event: H3Event) {
-  const filter = buildAnalyticsFilter(query)
+async function query2sql(query: z.infer<typeof ViewsQuerySchema>, event: H3Event) {
+  const filter = buildAnalyticsFilter(await scopeAnalyticsQuery(event, query))
   const { dataset } = useRuntimeConfig(event)
   const timezone = getSafeTimezone(query.clientTimezone)
   const analyticsQuery = createAnalyticsQuery(dataset)
@@ -36,6 +36,6 @@ function query2sql(query: z.infer<typeof ViewsQuerySchema>, event: H3Event) {
 
 export default eventHandler(async (event) => {
   const query = await getValidatedQuery(event, ViewsQuerySchema.parse)
-  const sql = query2sql(query, event)
+  const sql = await query2sql(query, event)
   return useWAE(event, sql)
 })

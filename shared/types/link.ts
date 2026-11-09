@@ -33,3 +33,11 @@ export interface LinkListResponse {
 
 export type LinkSortBy = 'newest' | 'oldest' | 'az' | 'za'
 export type LinkStatus = 'active' | 'expired' | 'all'
+
+/** Sentinel owner filter value meaning "pre-migration links with no owner", admin-only. */
+export const UNASSIGNED_OWNER = '__unassigned__'
+
+export interface LinkOwner {
+  email: string | null
+  count: number
+}

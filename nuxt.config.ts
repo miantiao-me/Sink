@@ -18,6 +18,7 @@ export default defineNuxtConfig({
     siteToken: process.env.NUXT_SITE_TOKEN || randomBytes(32).toString('base64url'),
     cfAccessTeamDomain: '',
     cfAccessAud: '',
+    adminEmails: '',
     redirectStatusCode: '301',
     linkCacheTtl: 60,
     redirectWithQuery: false,

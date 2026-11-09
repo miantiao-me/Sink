@@ -11,8 +11,8 @@ const MetricsQuerySchema = QuerySchema.extend({
   type: z.enum(validMetricTypes),
 })
 
-function query2sql(query: z.infer<typeof MetricsQuerySchema>, event: H3Event) {
-  const filter = buildAnalyticsFilter(query)
+async function query2sql(query: z.infer<typeof MetricsQuerySchema>, event: H3Event) {
+  const filter = buildAnalyticsFilter(await scopeAnalyticsQuery(event, query))
   const { dataset } = useRuntimeConfig(event)
   const limit = Math.max(0, Math.floor(query.limit))
   const metricColumn = logsMap[query.type] as string
@@ -31,6 +31,6 @@ function query2sql(query: z.infer<typeof MetricsQuerySchema>, event: H3Event) {
 
 export default eventHandler(async (event) => {
   const query = await getValidatedQuery(event, MetricsQuerySchema.parse)
-  const sql = query2sql(query, event)
+  const sql = await query2sql(query, event)
   return useWAE(event, sql)
 })

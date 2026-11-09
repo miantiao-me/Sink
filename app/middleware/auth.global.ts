@@ -15,6 +15,9 @@ export default defineNuxtRouteMiddleware(async (to) => {
 
     if (to.path === '/dashboard/login')
       return navigateTo('/dashboard')
+
+    if (to.path.startsWith('/dashboard/migrate') && !response.isAdmin)
+      return navigateTo('/dashboard/links')
   }
   catch {
     clearAuthSession()

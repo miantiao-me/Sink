@@ -1,12 +1,14 @@
 import type { BatchItem } from 'drizzle-orm/batch'
 import type { H3Event } from 'h3'
 import type { Link } from '#shared/schemas/link'
-import type { LinkSearchItem, LinkSortBy, LinkStatus } from '#shared/types/link'
+import type { LinkOwner, LinkSearchItem, LinkSortBy, LinkStatus } from '#shared/types/link'
 import { and, asc, count, desc, eq, exists, gt, inArray, isNotNull, isNull, lt, lte, or, sql } from 'drizzle-orm'
 import { drizzle } from 'drizzle-orm/d1'
 import { createError } from 'h3'
 import { parseURL, stringifyParsedURL } from 'ufo'
+import { UNASSIGNED_OWNER } from '#shared/types/link'
 import { links, linkTags, linkTombstones, tags } from '../../database/schema'
+import { canAccessLink, getOwnerScope, ownerEmailForNewLink } from '../../utils/ownership'
 import { getExpiration } from '../../utils/time'
 
 const D1_CURSOR_PREFIX = 'd1:v1:'
@@ -25,10 +27,12 @@ export interface ListLinksOptions {
   tag?: string
   status?: LinkStatus
   backfillExpiration?: boolean
+  /** Admin-only: restrict to one owner's links, or UNASSIGNED_OWNER. Ignored for non-admins, who are already scoped to themselves. */
+  owner?: string
 }
 
 export interface ListLinksResult {
-  links: Link[]
+  links: (Link & { ownerEmail?: string | null })[]
   list_complete: boolean
   cursor?: string
 }
@@ -71,6 +75,18 @@ function statusCondition(status: LinkStatus, now = Math.floor(Date.now() / 1000)
   if (status === 'expired')
     return and(isNotNull(links.effectiveExpiresAt), lte(links.effectiveExpiresAt, now))
   return undefined
+}
+
+function ownerCondition(event: H3Event) {
+  const scope = getOwnerScope(event)
+  return scope.admin ? undefined : eq(links.ownerEmail, scope.email)
+}
+
+/** Admin-only "show just this owner" filter for the links list UI. Ignored for non-admins. */
+function adminOwnerFilterCondition(event: H3Event, owner: string | undefined) {
+  if (!owner || !getOwnerScope(event).admin)
+    return undefined
+  return owner === UNASSIGNED_OWNER ? isNull(links.ownerEmail) : eq(links.ownerEmail, owner.toLowerCase())
 }
 
 function exactTagCondition(db: ReturnType<typeof getDatabase>, tag: string | undefined) {
@@ -155,27 +171,34 @@ export function buildD1LinkValues(event: H3Event, link: Link, effectiveExpiresAt
     geo: link.geo ?? null,
     normalizedUrl: withoutQuery(link.url),
     effectiveExpiresAt: effectiveExpiresAt === undefined ? getExpiration(event, link.expiration) ?? null : effectiveExpiresAt,
+    ownerEmail: ownerEmailForNewLink(event),
   }
 }
 
-export async function d1GetActiveLink(event: H3Event, slug: string): Promise<{ link: Link, effectiveExpiresAt: number | null } | null> {
+/** Not owner-gated: backs public redirect resolution and create/upsert conflict detection, which must see any slug's active link regardless of owner. */
+export async function d1GetActiveLink(event: H3Event, slug: string): Promise<{ link: Link, effectiveExpiresAt: number | null, ownerEmail: string | null } | null> {
   const rows = await getDatabase(event).select().from(links).where(and(eq(links.slug, slug), activeCondition())).limit(1)
   const row = rows[0]
   if (!row)
     return null
   const [link] = await rowsToLinks(event, [row])
-  return link ? { link, effectiveExpiresAt: row.effectiveExpiresAt } : null
+  return link ? { link, effectiveExpiresAt: row.effectiveExpiresAt, ownerEmail: row.ownerEmail } : null
 }
 
+/** Owner-gated: returns null (as if not found) for a link the caller cannot access, unless admin. */
 export async function d1GetAnyLink(event: H3Event, slug: string): Promise<Link | null> {
   const rows = await getDatabase(event).select().from(links).where(eq(links.slug, slug)).limit(1)
-  return rows[0] ? (await rowsToLinks(event, rows))[0] ?? null : null
+  const row = rows[0]
+  if (!row || !canAccessLink(event, row))
+    return null
+  return (await rowsToLinks(event, [row]))[0] ?? null
 }
 
+/** Owner-gated: returns a null link (as if not found) for a link the caller cannot access, unless admin. */
 export async function d1GetLinkWithMetadata(event: H3Event, slug: string): Promise<{ link: Link | null, metadata: Record<string, unknown> | null }> {
   const rows = await getDatabase(event).select().from(links).where(eq(links.slug, slug)).limit(1)
   const row = rows[0]
-  const link = row ? (await rowsToLinks(event, [row]))[0] ?? null : null
+  const link = row && canAccessLink(event, row) ? (await rowsToLinks(event, [row]))[0] ?? null : null
   return {
     link,
     metadata: row && link
@@ -267,7 +290,7 @@ export async function d1CreateLinks(event: H3Event, importedLinks: Link[]): Prom
 }
 
 export async function d1UpdateLink(event: H3Event, link: Link, expected?: ExpectedLinkVersion): Promise<{ updated: boolean, effectiveExpiresAt: number | null }> {
-  const values = buildD1LinkValues(event, link)
+  const { ownerEmail: _ownerEmail, ...values } = buildD1LinkValues(event, link)
   const db = getDatabase(event)
   const update = db.update(links).set(values).where(and(
     eq(links.slug, link.slug),
@@ -352,7 +375,8 @@ export async function d1ListLinks(event: H3Event, options: ListLinksOptions): Pr
   }
 
   const tagCondition = exactTagCondition(db, options.tag)
-  const rows = await db.select().from(links).where(and(statusCondition(status), tagCondition, cursorCondition)).orderBy(...order).limit(options.limit + 1)
+  const ownerFilterCondition = adminOwnerFilterCondition(event, options.owner)
+  const rows = await db.select().from(links).where(and(statusCondition(status), tagCondition, cursorCondition, ownerCondition(event), ownerFilterCondition)).orderBy(...order).limit(options.limit + 1)
   const hasMore = rows.length > options.limit
   const page = hasMore ? rows.slice(0, options.limit) : rows
   if (options.backfillExpiration) {
@@ -360,8 +384,10 @@ export async function d1ListLinks(event: H3Event, options: ListLinksOptions): Pr
       row.expiration ??= row.effectiveExpiresAt
   }
   const last = page.at(-1)
+  const isAdminCaller = getOwnerScope(event).admin
+  const pageLinks = await rowsToLinks(event, page)
   return {
-    links: await rowsToLinks(event, page),
+    links: isAdminCaller ? pageLinks.map((link, index) => ({ ...link, ownerEmail: page[index]!.ownerEmail })) : pageLinks,
     list_complete: !hasMore,
     cursor: hasMore && last ? encodeCursor({ sort, slug: last.slug, createdAt: last.createdAt, tag: options.tag, status }) : undefined,
   }
@@ -397,9 +423,9 @@ export async function* d1IterateAllLinks(env: Cloudflare.Env): AsyncIterable<Lin
   } while (lastSlug)
 }
 
-function linkFilterCondition(db: ReturnType<typeof getDatabase>, options: LinkFilterOptions) {
+function linkFilterCondition(db: ReturnType<typeof getDatabase>, options: LinkFilterOptions, event: H3Event) {
   const status = options.status ?? 'active'
-  const conditions = [statusCondition(status)]
+  const conditions = [statusCondition(status), ownerCondition(event)]
   if (options.tag)
     conditions.push(exactTagCondition(db, options.tag))
   if (options.url)
@@ -419,7 +445,7 @@ function linkFilterCondition(db: ReturnType<typeof getDatabase>, options: LinkFi
 
 export async function d1SearchLinks(event: H3Event, options: SearchLinksOptions): Promise<LinkSearchItem[]> {
   const db = getDatabase(event)
-  let query = db.select({ slug: links.slug, url: links.normalizedUrl, comment: links.comment }).from(links).where(linkFilterCondition(db, options)).orderBy(asc(links.slug)).$dynamic()
+  let query = db.select({ slug: links.slug, url: links.normalizedUrl, comment: links.comment }).from(links).where(linkFilterCondition(db, options, event)).orderBy(asc(links.slug)).$dynamic()
   if (options.limit)
     query = query.limit(options.limit)
   const rows = await query
@@ -429,7 +455,7 @@ export async function d1SearchLinks(event: H3Event, options: SearchLinksOptions)
 
 export async function d1CountLinks(event: H3Event, options: LinkFilterOptions): Promise<number> {
   const db = getDatabase(event)
-  const [result] = await db.select({ count: count() }).from(links).where(linkFilterCondition(db, options))
+  const [result] = await db.select({ count: count() }).from(links).where(linkFilterCondition(db, options, event))
   return result?.count ?? 0
 }
 
@@ -438,6 +464,19 @@ export async function d1ListTags(event: H3Event): Promise<{ name: string, count:
     .select({ name: tags.name, count: count(linkTags.linkSlug) })
     .from(tags)
     .innerJoin(linkTags, eq(linkTags.tagName, tags.name))
+    .innerJoin(links, eq(links.slug, linkTags.linkSlug))
+    .where(ownerCondition(event))
     .groupBy(tags.name)
     .orderBy(asc(tags.name))
+}
+
+/** Distinct owners with link counts, including an unassigned (null-owner) bucket. Admin-only; callers must gate access. */
+export async function d1ListOwners(event: H3Event): Promise<LinkOwner[]> {
+  const db = getDatabase(event)
+  const rows = await db
+    .select({ email: links.ownerEmail, count: count() })
+    .from(links)
+    .groupBy(links.ownerEmail)
+    .orderBy(asc(links.ownerEmail))
+  return rows.map(row => ({ email: row.email, count: row.count }))
 }

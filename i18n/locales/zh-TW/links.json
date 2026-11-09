@@ -34,6 +34,9 @@
     },
     "expired": "已過期",
     "unsafe": "不安全連結",
+    "owner": {
+      "unassigned": "未分配"
+    },
     "filters": {
       "aria_label": "連結篩選",
       "status_label": "狀態",
@@ -42,7 +45,11 @@
       "tag_label": "標籤",
       "all_tags": "全部標籤",
       "tags_loading": "正在載入標籤…",
-      "tags_failed": "標籤載入失敗。"
+      "tags_failed": "標籤載入失敗。",
+      "owner_label": "擁有者",
+      "all_owners": "全部擁有者",
+      "owners_loading": "正在載入擁有者…",
+      "owners_failed": "擁有者載入失敗。"
     },
     "stats": {
       "retry": "重新載入 {slug} 的統計資料",

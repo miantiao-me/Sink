@@ -1,8 +1,14 @@
+import type { H3Event } from 'h3'
 import type { RawBuilder } from 'kysely'
 import type { Query } from '#shared/schemas/query'
 import type { BlobsKey } from './access-log'
+import { eq } from 'drizzle-orm'
+import { drizzle } from 'drizzle-orm/d1'
+import { createError } from 'h3'
 import { sql } from 'kysely'
+import { links } from '../database/schema'
 import { blobsMap } from './access-log'
+import { getOwnerScope } from './ownership'
 
 export type { Query }
 
@@ -23,6 +29,39 @@ function inFilter(column: string, values: string[]): RawBuilder<boolean> | undef
     return
 
   return sql<boolean>`${sql.ref(column)} in (${sql.join(values.map(value => sql.lit(value)))})`
+}
+
+async function getOwnedLinkIds(event: H3Event, email: string): Promise<string[]> {
+  const db = drizzle(event.context.cloudflare.env.DB)
+  const rows = await db.select({ id: links.id }).from(links).where(eq(links.ownerEmail, email))
+  return rows.map(row => row.id)
+}
+
+/** A link id that can never exist, used to force "match nothing" when a non-admin owns no links. */
+const UNREACHABLE_LINK_ID = '__no-owned-links__'
+
+/**
+ * Resolves `query.id` against the caller's own links before it reaches buildAnalyticsFilter.
+ * Admins pass through untouched. Non-admins requesting specific ids they do not own get a 404
+ * (existence is not revealed); non-admins requesting no id are auto-scoped to only their own ids.
+ */
+export async function scopeAnalyticsQuery(event: H3Event, query: Query): Promise<Query> {
+  const scope = getOwnerScope(event)
+  if (scope.admin)
+    return query
+
+  const ownedIds = await getOwnedLinkIds(event, scope.email)
+  const requestedIds = query.id ? queryValues(query.id, true) : undefined
+
+  if (requestedIds) {
+    const ownedSet = new Set(ownedIds)
+    if (requestedIds.some(id => !ownedSet.has(id))) {
+      throw createError({ status: 404, statusText: 'Not Found' })
+    }
+    return query
+  }
+
+  return { ...query, id: ownedIds.length ? ownedIds.join(',') : UNREACHABLE_LINK_ID }
 }
 
 export function buildAnalyticsFilter(query: Query): RawBuilder<boolean> | undefined {

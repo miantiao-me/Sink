@@ -34,6 +34,9 @@
     },
     "expired": "Expirado",
     "unsafe": "Link não seguro",
+    "owner": {
+      "unassigned": "Não atribuído"
+    },
     "filters": {
       "aria_label": "Filtros de links",
       "status_label": "Status",
@@ -42,7 +45,11 @@
       "tag_label": "Tag",
       "all_tags": "Todas as tags",
       "tags_loading": "Carregando tags…",
-      "tags_failed": "Falha ao carregar as tags."
+      "tags_failed": "Falha ao carregar as tags.",
+      "owner_label": "Proprietário",
+      "all_owners": "Todos os proprietários",
+      "owners_loading": "Carregando proprietários…",
+      "owners_failed": "Falha ao carregar os proprietários."
     },
     "stats": {
       "retry": "Tentar novamente as estatísticas de {slug}",

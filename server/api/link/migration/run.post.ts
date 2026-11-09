@@ -79,6 +79,10 @@ function completedResult(): LinkMigrationRunResult {
 }
 
 export default eventHandler(async (event): Promise<LinkMigrationRunResult> => {
+  if (!isAdmin(event)) {
+    throw createError({ status: 403, statusText: 'Forbidden' })
+  }
+
   const body = await readBody<Record<string, unknown> | null>(event)
   const input = LinkMigrationRunSchema.parse(Object.assign({}, getQuery(event), body))
   const { DB, KV } = event.context.cloudflare.env

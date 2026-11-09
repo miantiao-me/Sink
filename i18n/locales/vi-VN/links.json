@@ -34,6 +34,9 @@
     },
     "expired": "Đã hết hạn",
     "unsafe": "Liên kết không an toàn",
+    "owner": {
+      "unassigned": "Chưa được gán"
+    },
     "filters": {
       "aria_label": "Bộ lọc liên kết",
       "status_label": "Trạng thái",
@@ -42,7 +45,11 @@
       "tag_label": "Thẻ",
       "all_tags": "Tất cả thẻ",
       "tags_loading": "Đang tải thẻ…",
-      "tags_failed": "Không thể tải thẻ."
+      "tags_failed": "Không thể tải thẻ.",
+      "owner_label": "Chủ sở hữu",
+      "all_owners": "Tất cả chủ sở hữu",
+      "owners_loading": "Đang tải chủ sở hữu…",
+      "owners_failed": "Không thể tải chủ sở hữu."
     },
     "stats": {
       "retry": "Thử lại số liệu của {slug}",

@@ -7,4 +7,5 @@ export interface VerifyResponse {
   userID: string
   userEmail: string
   accessEnabled: boolean
+  isAdmin: boolean
 }

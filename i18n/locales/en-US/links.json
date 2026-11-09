@@ -34,6 +34,9 @@
     },
     "expired": "Expired",
     "unsafe": "Unsafe link",
+    "owner": {
+      "unassigned": "Unassigned"
+    },
     "filters": {
       "aria_label": "Link filters",
       "status_label": "Status",
@@ -42,7 +45,11 @@
       "tag_label": "Tag",
       "all_tags": "All tags",
       "tags_loading": "Loading tags…",
-      "tags_failed": "Failed to load tags."
+      "tags_failed": "Failed to load tags.",
+      "owner_label": "Owner",
+      "all_owners": "All owners",
+      "owners_loading": "Loading owners…",
+      "owners_failed": "Failed to load owners."
     },
     "stats": {
       "retry": "Retry statistics for {slug}",

@@ -11,6 +11,12 @@ const props = defineProps<{
 }>()
 
 const { t, locale } = useI18n()
+const { isAdmin } = useAuthSession()
+const ownerLabel = computed(() => {
+  if (!isAdmin.value || props.link.ownerEmail === undefined)
+    return undefined
+  return props.link.ownerEmail || t('links.owner.unassigned')
+})
 const editPopoverOpen = shallowRef(false)
 const qrDialogOpen = shallowRef(false)
 const editDialogOpen = shallowRef(false)
@@ -184,6 +190,14 @@ function copyLink() {
                 class="ml-1 shrink-0"
               >
                 {{ $t('links.expired') }}
+              </Badge>
+              <Badge
+                v-if="ownerLabel"
+                variant="outline"
+                class="ml-1 max-w-32 min-w-0 shrink-0 truncate"
+                :title="ownerLabel"
+              >
+                {{ ownerLabel }}
               </Badge>
             </div>
 

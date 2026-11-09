@@ -33,33 +33,37 @@ Save as `docs-internal/owner-scoping-plan.md` (NOT under `docs/`, which is the p
 ## Change map
 
 New file, e.g. `server/utils/ownership.ts`:
+
 - `isAdmin(event): boolean`
 - `getOwnerScope(event): { admin: true } | { admin: false, email: string }`
 - `assertCanAccessLink(event, link)` — throws 404 (not 403) for a link the caller does not own, so existence is not revealed.
 
 Schema and migration:
+
 - Add `ownerEmail` to `links` in `server/database/schema.ts` plus an index.
 - Run `pnpm db:generate`. Commit the generated migration in `drizzle/`.
 
 Server endpoints:
 
-| Area | Files | Change |
-|---|---|---|
-| Listing | `link/list.get.ts`, `search.get.ts`, `count.get.ts`, `tags.get.ts`, `export.get.ts` | Add an owner condition to the D1 query. `server/services/link-store/d1.ts` already has a shared `linkFilterCondition` / `LinkFilterOptions` pattern to extend. |
-| Single link | `link/query.get.ts`, `edit.put.ts`, `delete.post.ts` | 404 unless owner or admin. |
-| Creating | `link/create.post.ts`, `upsert.post.ts`, `import.post.ts` | Stamp the owner. Fix `upsert` so it does not return another user's existing link. |
-| Duplicate check | `link/check.post.ts` | Only match against the caller's own links. |
-| Analytics | `api/stats/*`, `api/logs/*` | For non-admins, constrain queries to the caller's own link IDs and reject requests for IDs they do not own. Implement in `server/utils/query-filter.ts` so every consumer inherits it. |
-| Admin only | `api/backup.post.ts`, `api/link/migration/run.post.ts` | Reject non-admins. |
-| Session | `api/verify.get.ts` | Also return `isAdmin`. |
+| Area            | Files                                                                               | Change                                                                                                                                                                                 |
+| --------------- | ----------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Listing         | `link/list.get.ts`, `search.get.ts`, `count.get.ts`, `tags.get.ts`, `export.get.ts` | Add an owner condition to the D1 query. `server/services/link-store/d1.ts` already has a shared `linkFilterCondition` / `LinkFilterOptions` pattern to extend.                         |
+| Single link     | `link/query.get.ts`, `edit.put.ts`, `delete.post.ts`                                | 404 unless owner or admin.                                                                                                                                                             |
+| Creating        | `link/create.post.ts`, `upsert.post.ts`, `import.post.ts`                           | Stamp the owner. Fix `upsert` so it does not return another user's existing link.                                                                                                      |
+| Duplicate check | `link/check.post.ts`                                                                | Only match against the caller's own links.                                                                                                                                             |
+| Analytics       | `api/stats/*`, `api/logs/*`                                                         | For non-admins, constrain queries to the caller's own link IDs and reject requests for IDs they do not own. Implement in `server/utils/query-filter.ts` so every consumer inherits it. |
+| Admin only      | `api/backup.post.ts`, `api/link/migration/run.post.ts`                              | Reject non-admins.                                                                                                                                                                     |
+| Session         | `api/verify.get.ts`                                                                 | Also return `isAdmin`.                                                                                                                                                                 |
 
 Frontend:
+
 - Owner label on link cards, admin only.
 - Owner filter on the links page, admin only.
 - Hide the Migrate page and backup actions for non-admins.
 - `app/composables/useAuthSession.ts` carries `isAdmin` through from `verify`.
 
 i18n:
+
 - Every new string must be added to all 11 locale directories under `i18n/locales/`. Run `pnpm locales:check`.
 
 ## Workflow

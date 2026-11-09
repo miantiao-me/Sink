@@ -34,6 +34,9 @@
     },
     "expired": "已过期",
     "unsafe": "不安全链接",
+    "owner": {
+      "unassigned": "未分配"
+    },
     "filters": {
       "aria_label": "链接筛选",
       "status_label": "状态",
@@ -42,7 +45,11 @@
       "tag_label": "标签",
       "all_tags": "全部标签",
       "tags_loading": "正在加载标签…",
-      "tags_failed": "标签加载失败。"
+      "tags_failed": "标签加载失败。",
+      "owner_label": "所有者",
+      "all_owners": "全部所有者",
+      "owners_loading": "正在加载所有者…",
+      "owners_failed": "所有者加载失败。"
     },
     "stats": {
       "retry": "重试加载 {slug} 的统计数据",
